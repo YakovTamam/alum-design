@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { ADMIN_SESSION_COOKIE, createSessionToken, verifyAdminPassword } from "@/lib/auth";
+import {
+  ADMIN_SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  createSessionToken,
+  verifyAdminPassword,
+} from "@/lib/auth";
 
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
@@ -25,7 +30,7 @@ export async function POST(request: Request) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 12,
+    maxAge: SESSION_TTL_SECONDS,
   });
   return response;
 }

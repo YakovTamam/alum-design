@@ -2,7 +2,8 @@ import { createHmac, timingSafeEqual } from "crypto";
 import bcrypt from "bcryptjs";
 
 export const ADMIN_SESSION_COOKIE = "alum_admin_session";
-const SESSION_TTL_MS = 1000 * 60 * 60 * 12; // 12 hours
+export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
+const SESSION_TTL_MS = SESSION_TTL_SECONDS * 1000;
 
 function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
