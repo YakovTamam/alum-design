@@ -17,8 +17,33 @@ const NAV_GROUPS = [
   },
 ];
 
-export default function AdminSideNav() {
+const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
+
+export default function AdminSideNav({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
+
+  if (mobile) {
+    return (
+      <nav className="flex gap-1 py-2">
+        {ALL_ITEMS.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`shrink-0 rounded-lg px-4 py-2 text-sm transition-colors whitespace-nowrap ${
+                active
+                  ? "bg-gold/15 text-gold"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+    );
+  }
 
   return (
     <nav className="flex flex-col gap-6 text-sm">
