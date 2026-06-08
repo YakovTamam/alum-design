@@ -15,7 +15,7 @@ const COLUMNS = [
 
 export default function SiteFooter() {
   return (
-    <footer id="contact" className="border-t border-white/5 bg-[#0b0b0d]">
+    <footer className="border-t border-white/5 bg-[#0b0b0d]">
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_repeat(3,1fr)]">
           <div>

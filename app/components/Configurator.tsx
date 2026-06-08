@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import PhotoPlaceholder from "./PhotoPlaceholder";
+import LeadCaptureModal from "./LeadCaptureModal";
 
 const STEPS = [
   "בחירת פרופיל",
@@ -43,6 +44,7 @@ export default function Configurator() {
   const [width, setWidth] = useState(400);
   const [height, setHeight] = useState(250);
   const [lighting, setLighting] = useState(true);
+  const [leadModalOpen, setLeadModalOpen] = useState(false);
 
   const system = SYSTEM_TYPES.find((s) => s.id === systemId)!;
   const model = MODELS.find((m) => m.id === modelId)!;
@@ -245,15 +247,30 @@ export default function Configurator() {
               <p className="mt-1 text-[11px] text-zinc-500">כולל מע&quot;מ · אינדיקציה בלבד</p>
             </div>
 
-            <a
-              href="#contact"
+            <button
+              type="button"
+              onClick={() => setLeadModalOpen(true)}
               className="flex items-center justify-center gap-2 rounded-full bg-gold py-3 text-sm font-semibold text-[#1a1308] transition-colors hover:bg-gold-light"
             >
               המשך להצעת מחיר <span aria-hidden>←</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>
+
+      <LeadCaptureModal
+        open={leadModalOpen}
+        onClose={() => setLeadModalOpen(false)}
+        configurator={{
+          systemType: system.label,
+          model: model.label,
+          color: color.label,
+          width,
+          height,
+          lighting,
+          estimatedPrice: Math.round(price),
+        }}
+      />
     </section>
   );
 }

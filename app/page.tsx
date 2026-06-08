@@ -6,6 +6,7 @@ import SolutionsSystem from "./components/SolutionsSystem";
 import Configurator from "./components/Configurator";
 import ProcessSteps from "./components/ProcessSteps";
 import FinalCta from "./components/FinalCta";
+import ContactSection from "./components/ContactSection";
 import SiteFooter from "./components/SiteFooter";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
         <Configurator />
         <ProcessSteps />
         <FinalCta />
+        <ContactSection />
       </main>
       <SiteFooter />
     </div>
