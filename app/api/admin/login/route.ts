@@ -3,7 +3,7 @@ import {
   ADMIN_SESSION_COOKIE,
   SESSION_TTL_SECONDS,
   createSessionToken,
-  verifyAdminPassword,
+  verifyOrSetAdminPassword,
 } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -19,7 +19,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "יש להזין סיסמה" }, { status: 400 });
   }
 
-  const valid = await verifyAdminPassword(password);
+  let valid: boolean;
+  try {
+    valid = await verifyOrSetAdminPassword(password);
+  } catch {
+    return NextResponse.json(
+      { error: "החיבור למסד הנתונים נכשל, נסו שוב מאוחר יותר" },
+      { status: 503 },
+    );
+  }
+
   if (!valid) {
     return NextResponse.json({ error: "סיסמה שגויה" }, { status: 401 });
   }

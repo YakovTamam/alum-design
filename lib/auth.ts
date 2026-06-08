@@ -1,5 +1,11 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import bcrypt from "bcryptjs";
+import { getDb } from "./mongodb";
+
+const ADMIN_SETTINGS_COLLECTION = "admin_settings";
+const ADMIN_SETTINGS_ID = "admin";
+
+type AdminSettings = { _id: string; passwordHash: string };
 
 export const ADMIN_SESSION_COOKIE = "alum_admin_session";
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
@@ -40,8 +46,20 @@ export function isValidSessionToken(token: string | undefined | null): boolean {
   }
 }
 
-export async function verifyAdminPassword(password: string): Promise<boolean> {
-  const hash = process.env.ADMIN_PASSWORD_HASH;
-  if (!hash) throw new Error("ADMIN_PASSWORD_HASH is not set");
-  return bcrypt.compare(password, hash);
+/**
+ * First password ever entered becomes the admin password (stored hashed in
+ * MongoDB). Every later attempt is verified against that stored hash.
+ */
+export async function verifyOrSetAdminPassword(password: string): Promise<boolean> {
+  const db = await getDb();
+  const settings = db.collection<AdminSettings>(ADMIN_SETTINGS_COLLECTION);
+  const existing = await settings.findOne({ _id: ADMIN_SETTINGS_ID });
+
+  if (!existing) {
+    const passwordHash = await bcrypt.hash(password, 10);
+    await settings.insertOne({ _id: ADMIN_SETTINGS_ID, passwordHash });
+    return true;
+  }
+
+  return bcrypt.compare(password, existing.passwordHash);
 }
