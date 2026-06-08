@@ -1,22 +1,16 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type LeadStatus } from "@/lib/leads";
-import { ADMIN_SESSION_COOKIE, isValidSessionToken } from "@/lib/auth";
+import { requireAdminSession } from "@/lib/auth";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "closed"];
-
-async function requireSession() {
-  const cookieStore = await cookies();
-  return isValidSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-}
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await requireSession())) {
+  if (!(await requireAdminSession())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

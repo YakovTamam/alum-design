@@ -1,16 +1,10 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead } from "@/lib/leads";
-import { ADMIN_SESSION_COOKIE, isValidSessionToken } from "@/lib/auth";
-
-async function requireSession() {
-  const cookieStore = await cookies();
-  return isValidSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-}
+import { requireAdminSession } from "@/lib/auth";
 
 export async function GET() {
-  if (!(await requireSession())) {
+  if (!(await requireAdminSession())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

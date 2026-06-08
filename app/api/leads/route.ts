@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type LeadSource } from "@/lib/leads";
+import { sendLeadEmails } from "@/lib/email";
 
 const SOURCES: LeadSource[] = ["contact-form", "configurator"];
 
@@ -66,6 +67,8 @@ export async function POST(request: Request) {
     console.error("Failed to save lead", err);
     return NextResponse.json({ error: "שמירת הפנייה נכשלה, נסו שוב מאוחר יותר" }, { status: 500 });
   }
+
+  void sendLeadEmails(lead);
 
   return NextResponse.json({ ok: true });
 }

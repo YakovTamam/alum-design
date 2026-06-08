@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { getDb } from "./mongodb";
 
@@ -44,6 +45,11 @@ export function isValidSessionToken(token: string | undefined | null): boolean {
   } catch {
     return false;
   }
+}
+
+export async function requireAdminSession(): Promise<boolean> {
+  const cookieStore = await cookies();
+  return isValidSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
 }
 
 /**

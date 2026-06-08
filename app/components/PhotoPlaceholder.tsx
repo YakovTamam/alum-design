@@ -1,18 +1,40 @@
+import Image from "next/image";
+
 type PhotoPlaceholderProps = {
   label: string;
   className?: string;
   variant?: "warm" | "cool";
+  imageUrl?: string;
 };
 
 export default function PhotoPlaceholder({
   label,
   className = "",
   variant = "warm",
+  imageUrl,
 }: PhotoPlaceholderProps) {
   const tint =
     variant === "warm"
       ? "from-[#3a2f22] via-[#1c1a1d] to-[#0b0b0d]"
       : "from-[#22262f] via-[#1a1c20] to-[#0b0b0d]";
+
+  if (imageUrl) {
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        <Image
+          src={imageUrl}
+          alt={label}
+          fill
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+        <span className="absolute bottom-4 right-4 text-xs tracking-wide text-white/70">
+          {label}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div

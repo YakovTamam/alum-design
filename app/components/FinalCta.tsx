@@ -1,10 +1,11 @@
 import PhotoPlaceholder from "./PhotoPlaceholder";
 
-export default function FinalCta() {
+export default function FinalCta({ imageUrl }: { imageUrl?: string }) {
   return (
     <section className="relative overflow-hidden">
       <PhotoPlaceholder
         label="פרויקט ALUM DESIGN | תכנון חכם, ביצוע מדויק"
+        imageUrl={imageUrl}
         className="absolute inset-0 h-full w-full"
       />
       <div className="absolute inset-0 bg-gradient-to-l from-black/30 via-black/70 to-black/90" />

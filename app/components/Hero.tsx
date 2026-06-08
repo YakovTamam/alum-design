@@ -34,7 +34,7 @@ function ProfileIcon({ kind }: { kind: (typeof PROFILE_TYPES)[number]["icon"] })
   );
 }
 
-export default function Hero() {
+export default function Hero({ imageUrl }: { imageUrl?: string }) {
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:px-10 lg:py-24">
@@ -130,6 +130,7 @@ export default function Hero() {
         <div className="order-1 lg:order-2">
           <PhotoPlaceholder
             label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
+            imageUrl={imageUrl}
             className="aspect-[4/5] w-full rounded-3xl border border-white/10 sm:aspect-[16/11] lg:aspect-[4/5]"
           />
         </div>

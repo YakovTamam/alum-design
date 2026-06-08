@@ -1,29 +1,38 @@
 import PhotoPlaceholder from "./PhotoPlaceholder";
+import type { ContentSlotKey } from "@/lib/content";
 
 const CATEGORIES = [
   {
     title: "וילות יוקרה",
     desc: "פרויקטי בית יוקרתיים בהתאמה אישית מלאה",
     variant: "warm" as const,
+    slot: "category-luxury-villas" as ContentSlotKey,
   },
   {
     title: "בנייני מגורים",
     desc: "פתרונות אלומיניום מתקדמים לבנייה רוויה",
     variant: "cool" as const,
+    slot: "category-residential" as ContentSlotKey,
   },
   {
     title: "עסקים ומסעדות",
     desc: "חזיתות, פרגולות ופרטיזיציה מקצועית",
     variant: "warm" as const,
+    slot: "category-business" as ContentSlotKey,
   },
   {
     title: "מתחמים מסחריים",
     desc: "פתרונות אלומיניום למרכזים מסחריים",
     variant: "cool" as const,
+    slot: "category-commercial" as ContentSlotKey,
   },
 ];
 
-export default function ProjectCategories() {
+type ProjectCategoriesProps = {
+  images?: Partial<Record<ContentSlotKey, string>>;
+};
+
+export default function ProjectCategories({ images = {} }: ProjectCategoriesProps) {
   return (
     <section id="categories" className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
       <h2 className="text-center text-2xl font-semibold text-white sm:text-3xl">
@@ -41,6 +50,7 @@ export default function ProjectCategories() {
             <PhotoPlaceholder
               label={c.title}
               variant={c.variant}
+              imageUrl={images[c.slot]}
               className="aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-[1.03]"
             />
             <div className="flex items-center justify-between gap-3 p-5">
