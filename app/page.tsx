@@ -10,6 +10,7 @@ import FinalCta from "./components/FinalCta";
 import ContactSection from "./components/ContactSection";
 import SiteFooter from "./components/SiteFooter";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
+import StickyLeadButton from "./components/StickyLeadButton";
 import Reveal from "./components/Reveal";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides";
@@ -30,6 +31,7 @@ export default async function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <FloatingWhatsApp />
+      <StickyLeadButton />
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} />
