@@ -1,5 +1,4 @@
 import CategoryCarousel from "./CategoryCarousel";
-import ProjectCarousel from "./ProjectCarousel";
 import type { ContentSlotKey } from "@/lib/content";
 
 type ProjectCategoriesProps = {
@@ -20,9 +19,6 @@ export default function ProjectCategories({ images = {} }: ProjectCategoriesProp
         <CategoryCarousel images={images} />
       </div>
 
-      <div className="mt-8 lg:mt-10">
-        <ProjectCarousel />
-      </div>
     </section>
   );
 }
