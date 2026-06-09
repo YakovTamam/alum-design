@@ -7,6 +7,7 @@ import type { SerializedHeroSlide, TitleSize, SubtitleSize } from "@/lib/hero-sl
 const TITLE_SIZE_LABELS: Record<TitleSize, string> = { sm: "S", md: "M", lg: "L", xl: "XL" };
 const SUBTITLE_SIZE_LABELS: Record<SubtitleSize, string> = { sm: "S", md: "M", lg: "L" };
 import type { SerializedMedia } from "@/lib/media";
+import Accordion from "./Accordion";
 
 type Props = {
   slides: SerializedHeroSlide[];
@@ -84,7 +85,7 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
         </p>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="flex flex-col gap-3">
         {[1, 2, 3].map((id) => {
           const slide = slides[id];
           if (!slide) return null;
@@ -92,9 +93,10 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
           const isSaved = saved === id;
 
           return (
-            <div
+            <Accordion
               key={id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]"
+              title={`שקופית ${id} — ${slide.title}`}
+              subtitle={slide.subtitle.slice(0, 60)}
             >
               {/* Image/video preview */}
               <div className="relative aspect-video bg-black/30">
@@ -256,7 +258,7 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
                   {isBusy ? "שומר…" : isSaved ? "✓ נשמר" : "שמור שינויים"}
                 </button>
               </div>
-            </div>
+            </Accordion>
           );
         })}
       </div>

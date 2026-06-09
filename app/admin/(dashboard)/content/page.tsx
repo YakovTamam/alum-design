@@ -7,9 +7,11 @@ import {
 } from "@/lib/content";
 import { getHeroSlides, type SerializedHeroSlide } from "@/lib/hero-slides";
 import { getSetting } from "@/lib/settings";
+import { getScrollSection } from "@/lib/scroll-sections";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
 import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";
+import ScrollSectionManager from "../../../components/admin/ScrollSectionManager";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +38,7 @@ export default async function ContentSlotsPage() {
   // getHeroSlides handles its own errors and always returns data (defaults as fallback)
   heroSlides = await getHeroSlides();
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
+  const scrollSection = await getScrollSection();
 
   return (
     <div className="flex flex-col gap-12">
@@ -68,6 +71,15 @@ export default async function ContentSlotsPage() {
           בחרו ערך vh או px (למשל 75vh, 600px). בדסקטופ הגובה תמיד 100vh.
         </p>
         <HeroHeightSetting initialValue={heroMobileHeight} />
+      </div>
+
+      {/* Scroll Video Section */}
+      <div>
+        <h2 className="mb-1 text-sm font-semibold text-white">סקשן סקרול וידאו</h2>
+        <p className="mb-5 text-xs text-zinc-500">
+          וידאו המתקדם עם הגלילה עם שכבות טקסט מונפשות.
+        </p>
+        <ScrollSectionManager initialSection={scrollSection} media={media} />
       </div>
 
       {/* Image Slots */}

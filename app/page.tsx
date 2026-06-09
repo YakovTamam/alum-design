@@ -12,9 +12,11 @@ import SiteFooter from "./components/SiteFooter";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import StickyLeadButton from "./components/StickyLeadButton";
 import Reveal from "./components/Reveal";
+import ScrollVideoSection from "./components/ScrollVideoSection";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides";
 import { getSetting } from "@/lib/settings";
+import { getScrollSection } from "@/lib/scroll-sections";
 
 export const revalidate = 60;
 
@@ -29,6 +31,7 @@ export default async function Home() {
   // getHeroSlides never throws — returns defaults if MongoDB is unavailable
   const heroSlides = await getHeroSlides();
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
+  const scrollSection = await getScrollSection();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -43,6 +46,9 @@ export default async function Home() {
         </Reveal>
         <Reveal>
           <ProjectCategories images={images} />
+        </Reveal>
+        <Reveal>
+          <ScrollVideoSection section={scrollSection} />
         </Reveal>
         <Reveal>
           <SolutionsSystem />
