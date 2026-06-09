@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 export default function ContactSection() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -21,6 +22,7 @@ export default function ContactSection() {
           source: "contact-form",
           name,
           phone,
+          city,
           email: email || undefined,
           message: message || undefined,
         }),
@@ -29,6 +31,7 @@ export default function ContactSection() {
       setStatus("success");
       setName("");
       setPhone("");
+      setCity("");
       setEmail("");
       setMessage("");
     } catch {
@@ -100,18 +103,32 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="contact-email" className="mb-1.5 block text-xs text-zinc-500">
-                  אימייל (לא חובה)
-                </label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  dir="ltr"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
-                />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="contact-city" className="mb-1.5 block text-xs text-zinc-500">
+                    עיר
+                  </label>
+                  <input
+                    id="contact-city"
+                    required
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-email" className="mb-1.5 block text-xs text-zinc-500">
+                    אימייל (לא חובה)
+                  </label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    dir="ltr"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
+                  />
+                </div>
               </div>
 
               <div>

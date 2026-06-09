@@ -59,8 +59,8 @@ export default function StickyLeadButton() {
           source: "sticky-cta",
           name,
           phone,
+          city,
           message: [
-            `עיר: ${city}`,
             projectType && `סוג עבודה: ${projectType}`,
             email && `מייל: ${email}`,
           ].filter(Boolean).join(" | "),

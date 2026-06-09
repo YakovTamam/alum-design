@@ -3,7 +3,7 @@ import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type LeadSource } from "@/lib/leads";
 import { sendLeadEmails } from "@/lib/email";
 
-const SOURCES: LeadSource[] = ["contact-form", "configurator"];
+const SOURCES: LeadSource[] = ["contact-form", "configurator", "contractor-leads", "sticky-cta"];
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { source, name, phone, email, message, configurator } = body;
+  const { source, name, phone, email, city, message, configurator } = body;
 
   if (!SOURCES.includes(source as LeadSource)) {
     return NextResponse.json({ error: "מקור הליד אינו תקין" }, { status: 400 });
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
   };
 
   if (isNonEmptyString(email)) lead.email = email.trim().slice(0, 200);
+  if (isNonEmptyString(city)) lead.city = city.trim().slice(0, 100);
   if (isNonEmptyString(message)) lead.message = message.trim().slice(0, 2000);
 
   if (configurator && typeof configurator === "object") {

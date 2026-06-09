@@ -1,6 +1,6 @@
 import type { ObjectId } from "mongodb";
 
-export type LeadSource = "contact-form" | "configurator";
+export type LeadSource = "contact-form" | "configurator" | "contractor-leads" | "sticky-cta";
 export type LeadStatus = "new" | "contacted" | "closed";
 
 export type ConfiguratorSnapshot = {
@@ -19,6 +19,7 @@ export type Lead = {
   name: string;
   phone: string;
   email?: string;
+  city?: string;
   message?: string;
   configurator?: ConfiguratorSnapshot;
   status: LeadStatus;
@@ -35,6 +36,8 @@ export type SerializedLead = Omit<Lead, "_id" | "createdAt"> & {
 export const SOURCE_LABELS: Record<LeadSource, string> = {
   "contact-form": "טופס יצירת קשר",
   configurator: "קונפיגורטור",
+  "contractor-leads": "פנייה עסקית (קבלנים)",
+  "sticky-cta": "כפתור פנייה מהירה",
 };
 
 export const STATUS_LABELS: Record<LeadStatus, string> = {

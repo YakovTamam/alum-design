@@ -40,10 +40,6 @@ export default async function Home() {
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} mobileHeight={heroMobileHeight} />
-        <TrustBar />
-        <Reveal>
-          <StatsSection />
-        </Reveal>
         <Reveal>
           <ProjectCategories images={images} />
         </Reveal>
@@ -56,10 +52,14 @@ export default async function Home() {
         <Reveal>
           <ContractorLeads />
         </Reveal>
+        <TrustBar />
         <Reveal>
           <ProcessSteps />
         </Reveal>
         <FinalCta imageUrl={images["final-cta"]} />
+        <Reveal>
+          <StatsSection />
+        </Reveal>
         <Reveal>
           <ContactSection />
         </Reveal>

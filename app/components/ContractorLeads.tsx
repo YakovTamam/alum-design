@@ -62,6 +62,7 @@ export default function ContractorLeads() {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
   const [projectType, setProjectType] = useState("");
   const [projectScale, setProjectScale] = useState("");
   const [message, setMessage] = useState("");
@@ -78,6 +79,7 @@ export default function ContractorLeads() {
           source: "contractor-leads",
           name,
           phone,
+          city,
           message: [company && `חברה: ${company}`, projectType && `סוג: ${projectType}`, projectScale && `היקף: ${projectScale}`, message].filter(Boolean).join(" | "),
         }),
       });
@@ -174,17 +176,29 @@ export default function ContractorLeads() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="mb-1.5 block text-xs font-medium text-zinc-500">טלפון *</label>
-                  <input
-                    required
-                    type="tel"
-                    dir="ltr"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="050-0000000"
-                    className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition focus:border-gold/70 focus:ring-2 focus:ring-gold/10"
-                  />
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-zinc-500">טלפון *</label>
+                    <input
+                      required
+                      type="tel"
+                      dir="ltr"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="050-0000000"
+                      className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition focus:border-gold/70 focus:ring-2 focus:ring-gold/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-zinc-500">עיר *</label>
+                    <input
+                      required
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="תל אביב"
+                      className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition focus:border-gold/70 focus:ring-2 focus:ring-gold/10"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">

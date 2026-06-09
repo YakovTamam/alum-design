@@ -26,6 +26,7 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
     `מקור: ${sourceLabel}`,
     `שם: ${lead.name}`,
     `טלפון: ${lead.phone}`,
+    lead.city ? `עיר: ${lead.city}` : null,
     lead.email ? `אימייל: ${lead.email}` : null,
     lead.message ? `הודעה: ${lead.message}` : null,
     lead.configurator

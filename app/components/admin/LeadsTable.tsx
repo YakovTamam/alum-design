@@ -67,6 +67,7 @@ export default function LeadsTable({ leads }: { leads: SerializedLead[] }) {
             <th className="px-4 py-3 font-medium">תאריך</th>
             <th className="px-4 py-3 font-medium">שם</th>
             <th className="px-4 py-3 font-medium">טלפון</th>
+            <th className="px-4 py-3 font-medium">עיר</th>
             <th className="px-4 py-3 font-medium">אימייל</th>
             <th className="px-4 py-3 font-medium">מקור</th>
             <th className="px-4 py-3 font-medium">פרטי פנייה</th>
@@ -84,6 +85,9 @@ export default function LeadsTable({ leads }: { leads: SerializedLead[] }) {
                 <a href={`tel:${lead.phone}`} className="hover:text-gold">
                   {lead.phone}
                 </a>
+              </td>
+              <td className="whitespace-nowrap px-4 py-3">
+                {lead.city || <span className="text-zinc-500">—</span>}
               </td>
               <td className="whitespace-nowrap px-4 py-3" dir="ltr">
                 {lead.email ? (
