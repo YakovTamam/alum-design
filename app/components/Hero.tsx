@@ -138,10 +138,10 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
             />
           </div>
 
-          {/* Darkening gradient — heavy at bottom for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/40 to-black/15" />
-          {/* Subtle side vignettes */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-transparent" />
+          {/* Light top vignette so image blends with header */}
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
+          {/* Main gradient behind text — covers bottom 60% */}
+          <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/75 via-black/55 to-transparent" />
 
           {/* Text overlay — sits at bottom of image */}
           <div className="absolute inset-x-0 bottom-0 px-6 pb-10">
