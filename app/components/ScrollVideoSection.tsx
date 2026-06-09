@@ -117,6 +117,19 @@ export default function ScrollVideoSection({ section }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  // Track the sticky site header's height so the video can fill the
+  // remaining viewport below it instead of being covered by it
+  useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+    const update = () => setHeaderHeight(header.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
 
   // rAF-throttled scroll progress, robust against 0 / negative scroll range
   useEffect(() => {
@@ -127,7 +140,7 @@ export default function ScrollVideoSection({ section }: Props) {
       const el = sectionRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const range = el.offsetHeight - window.innerHeight;
+      const range = el.offsetHeight - window.innerHeight + headerHeight;
       const p = range > 0 ? clamp((-rect.top / range) * 100, 0, 100) : 0;
       setProgress(p);
     }
@@ -142,7 +155,7 @@ export default function ScrollVideoSection({ section }: Props) {
     window.addEventListener("scroll", onScroll, { passive: true });
     update();
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [headerHeight]);
 
   // Wait for the video to actually be ready before scrubbing it
   useEffect(() => {
@@ -186,7 +199,10 @@ export default function ScrollVideoSection({ section }: Props) {
       style={{ height: `${section.sectionHeight}vh` }}
       className="relative"
     >
-      <div className="sticky top-0 h-svh overflow-hidden">
+      <div
+        className="sticky overflow-hidden"
+        style={{ top: headerHeight, height: `calc(100svh - ${headerHeight}px)` }}
+      >
         <video
           ref={videoRef}
           src={section.videoUrl}
