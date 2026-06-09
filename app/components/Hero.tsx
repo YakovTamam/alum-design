@@ -127,13 +127,16 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
-          className="relative min-h-[78svh]"
+          className="relative min-h-[78svh] overflow-hidden"
         >
-          <PhotoPlaceholder
-            label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
-            imageUrl={imageUrl}
-            className="absolute inset-0 h-full w-full"
-          />
+          {/* Wrapper takes absolute fill; PhotoPlaceholder fills it naturally */}
+          <div className="absolute inset-0">
+            <PhotoPlaceholder
+              label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
+              imageUrl={imageUrl}
+              className="h-full w-full"
+            />
+          </div>
 
           {/* Darkening gradient — heavy at bottom for text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/40 to-black/15" />
