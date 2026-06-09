@@ -2,6 +2,11 @@ import { getDb } from "./mongodb";
 
 export const HERO_SLIDES_COLLECTION = "hero_slides";
 
+export const TITLE_SIZES = ["sm", "md", "lg", "xl"] as const;
+export const SUBTITLE_SIZES = ["sm", "md", "lg"] as const;
+export type TitleSize = (typeof TITLE_SIZES)[number];
+export type SubtitleSize = (typeof SUBTITLE_SIZES)[number];
+
 export type HeroSlide = {
   _id: number; // 1, 2, 3
   title: string;
@@ -12,6 +17,10 @@ export type HeroSlide = {
   mediaId?: string;
   mediaType?: "image" | "video";
   duration: number; // seconds
+  titleSize?: TitleSize;
+  titleColor?: string;
+  subtitleSize?: SubtitleSize;
+  subtitleColor?: string;
   updatedAt: Date;
 };
 
@@ -25,6 +34,10 @@ export type SerializedHeroSlide = {
   mediaId?: string;
   mediaType?: "image" | "video";
   duration: number;
+  titleSize?: TitleSize;
+  titleColor?: string;
+  subtitleSize?: SubtitleSize;
+  subtitleColor?: string;
   updatedAt: string;
 };
 

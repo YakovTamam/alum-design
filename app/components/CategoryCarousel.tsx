@@ -103,20 +103,25 @@ export default function CategoryCarousel({ images = {} }: Props) {
         <a
           key={i}
           href="#projects"
-          className="group snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200/80 backdrop-blur-md transition-all hover:border-gold/50 hover:shadow-gold/10"
+          className="group snap-start shrink-0 w-[72vw] sm:w-[42vw] lg:w-64 overflow-hidden rounded-3xl bg-white transition-all duration-300 hover:-translate-y-2"
+          style={{
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06), 0 8px 28px rgba(0,0,0,0.09)",
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 20px rgba(0,0,0,0.08), 0 24px 52px rgba(0,0,0,0.14), 0 0 0 1px rgba(207,161,92,0.25)"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 8px rgba(0,0,0,0.06), 0 8px 28px rgba(0,0,0,0.09)"; }}
         >
           <PhotoPlaceholder
             label={c.title}
             variant={c.variant}
             imageUrl={images[c.slot]}
-            className="aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-[1.03]"
+            className="aspect-square w-full transition-transform duration-500 group-hover:scale-[1.04]"
           />
-          <div className="flex items-center justify-between gap-3 p-5">
+          <div className="flex items-center justify-between gap-3 p-4">
             <div>
-              <h3 className="text-sm font-semibold text-zinc-900">{c.title}</h3>
-              <p className="mt-1 text-xs leading-5 text-zinc-500">{c.desc}</p>
+              <h3 className="text-sm font-bold text-zinc-900">{c.title}</h3>
+              <p className="mt-0.5 text-xs leading-5 text-zinc-500">{c.desc}</p>
             </div>
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/40 text-gold transition-transform group-hover:-translate-x-1">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold transition-all duration-300 group-hover:bg-gold/20 group-hover:-translate-x-1">
               ←
             </span>
           </div>

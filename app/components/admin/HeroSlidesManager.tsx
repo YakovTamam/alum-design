@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import type { SerializedHeroSlide } from "@/lib/hero-slides";
+import type { SerializedHeroSlide, TitleSize, SubtitleSize } from "@/lib/hero-slides";
+
+const TITLE_SIZE_LABELS: Record<TitleSize, string> = { sm: "S", md: "M", lg: "L", xl: "XL" };
+const SUBTITLE_SIZE_LABELS: Record<SubtitleSize, string> = { sm: "S", md: "M", lg: "L" };
 import type { SerializedMedia } from "@/lib/media";
 
 type Props = {
@@ -40,6 +43,10 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
           ctaLink: slide.ctaLink,
           duration: slide.duration,
           mediaId: slide.mediaId ?? "",
+          titleSize: slide.titleSize,
+          titleColor: slide.titleColor,
+          subtitleSize: slide.subtitleSize,
+          subtitleColor: slide.subtitleColor,
         }),
       });
       const data = await res.json();
@@ -155,6 +162,54 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
                     className="w-full resize-none rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20"
                   />
                 </div>
+                {/* Typography controls */}
+                <div className="grid grid-cols-2 gap-2 rounded-lg border border-white/[0.07] bg-black/20 p-2.5">
+                  {/* Title size */}
+                  <div>
+                    <label className="mb-1.5 block text-[11px] text-zinc-500">גודל כותרת</label>
+                    <div className="flex gap-1">
+                      {(["sm", "md", "lg", "xl"] as TitleSize[]).map((s) => (
+                        <button key={s} type="button" onClick={() => update(id, { titleSize: s })}
+                          className={`flex-1 rounded py-1 text-[11px] font-medium transition-colors ${slide.titleSize === s || (!slide.titleSize && s === "lg") ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-zinc-300"}`}>
+                          {TITLE_SIZE_LABELS[s]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Title color */}
+                  <div>
+                    <label className="mb-1.5 block text-[11px] text-zinc-500">צבע כותרת</label>
+                    <div className="flex items-center gap-2">
+                      <input type="color" value={slide.titleColor ?? "#ffffff"}
+                        onChange={(e) => update(id, { titleColor: e.target.value })}
+                        className="h-7 w-10 cursor-pointer rounded border border-white/10 bg-transparent p-0.5" />
+                      <span className="text-[11px] text-zinc-500 dir-ltr">{slide.titleColor ?? "#ffffff"}</span>
+                    </div>
+                  </div>
+                  {/* Subtitle size */}
+                  <div>
+                    <label className="mb-1.5 block text-[11px] text-zinc-500">גודל תיאור</label>
+                    <div className="flex gap-1">
+                      {(["sm", "md", "lg"] as SubtitleSize[]).map((s) => (
+                        <button key={s} type="button" onClick={() => update(id, { subtitleSize: s })}
+                          className={`flex-1 rounded py-1 text-[11px] font-medium transition-colors ${slide.subtitleSize === s || (!slide.subtitleSize && s === "md") ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-zinc-300"}`}>
+                          {SUBTITLE_SIZE_LABELS[s]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Subtitle color */}
+                  <div>
+                    <label className="mb-1.5 block text-[11px] text-zinc-500">צבע תיאור</label>
+                    <div className="flex items-center gap-2">
+                      <input type="color" value={slide.subtitleColor ?? "#e4e4e7"}
+                        onChange={(e) => update(id, { subtitleColor: e.target.value })}
+                        className="h-7 w-10 cursor-pointer rounded border border-white/10 bg-transparent p-0.5" />
+                      <span className="text-[11px] text-zinc-500 dir-ltr">{slide.subtitleColor ?? "#e4e4e7"}</span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="mb-1 block text-[11px] text-zinc-400">טקסט כפתור</label>

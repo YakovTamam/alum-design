@@ -6,6 +6,8 @@ import { MEDIA_COLLECTION, type Media } from "@/lib/media";
 import {
   HERO_SLIDES_COLLECTION,
   DEFAULT_SLIDES,
+  TITLE_SIZES,
+  SUBTITLE_SIZES,
   serializeHeroSlide,
   type HeroSlide,
 } from "@/lib/hero-slides";
@@ -33,7 +35,7 @@ export async function PUT(
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { title, subtitle, ctaText, ctaLink, mediaId, duration } = body;
+  const { title, subtitle, ctaText, ctaLink, mediaId, duration, titleSize, titleColor, subtitleSize, subtitleColor } = body;
 
   const db = await getDb();
   const existing = await db
@@ -83,6 +85,10 @@ export async function PUT(
     imageUrl,
     mediaId: resolvedMediaId,
     mediaType: resolvedMediaType,
+    titleSize: TITLE_SIZES.includes(titleSize as never) ? (titleSize as HeroSlide["titleSize"]) : (existing?.titleSize),
+    titleColor: typeof titleColor === "string" && /^#[0-9a-fA-F]{6}$/.test(titleColor) ? titleColor : existing?.titleColor,
+    subtitleSize: SUBTITLE_SIZES.includes(subtitleSize as never) ? (subtitleSize as HeroSlide["subtitleSize"]) : (existing?.subtitleSize),
+    subtitleColor: typeof subtitleColor === "string" && /^#[0-9a-fA-F]{6}$/.test(subtitleColor) ? subtitleColor : existing?.subtitleColor,
     updatedAt: new Date(),
   };
 

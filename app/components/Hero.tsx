@@ -4,7 +4,20 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import PhotoPlaceholder from "./PhotoPlaceholder";
-import type { SerializedHeroSlide } from "@/lib/hero-slides";
+import type { SerializedHeroSlide, TitleSize, SubtitleSize } from "@/lib/hero-slides";
+
+const TITLE_SIZE_CLASS: Record<TitleSize, string> = {
+  sm: "text-2xl sm:text-3xl lg:text-[2.5rem]",
+  md: "text-[2rem] sm:text-4xl lg:text-[3rem] xl:text-[3.5rem]",
+  lg: "text-[2.5rem] sm:text-5xl lg:text-[3.8rem] xl:text-[4.5rem]",
+  xl: "text-[3rem] sm:text-5xl lg:text-[5rem] xl:text-[5.5rem]",
+};
+
+const SUBTITLE_SIZE_CLASS: Record<SubtitleSize, string> = {
+  sm: "text-sm leading-6",
+  md: "text-base leading-7",
+  lg: "text-lg leading-7",
+};
 
 const STATS = [
   { value: "500+", label: "פרויקטים הושלמו" },
@@ -156,13 +169,16 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-2xl"
           >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold/80">
-              ALUM DESIGN — פתרונות מקצועיים
-            </p>
-            <h1 className="text-[2.5rem] font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-[3.8rem] xl:text-[4.5rem]">
+            <h1
+              className={`font-extrabold leading-[1.1] ${TITLE_SIZE_CLASS[slide?.titleSize ?? "lg"]}`}
+              style={{ color: slide?.titleColor ?? "#ffffff" }}
+            >
               {slide?.title}
             </h1>
-            <p className="mt-4 max-w-lg text-base leading-7 text-zinc-200/80 lg:text-lg">
+            <p
+              className={`mt-4 max-w-lg ${SUBTITLE_SIZE_CLASS[slide?.subtitleSize ?? "md"]}`}
+              style={{ color: slide?.subtitleColor ?? "rgba(228,228,231,0.8)" }}
+            >
               {slide?.subtitle}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">

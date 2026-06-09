@@ -9,9 +9,9 @@ export default function ProjectCategories({ images = {} }: ProjectCategoriesProp
   return (
     <section id="categories" className="py-12 lg:py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">
+        <h2 className="text-center text-3xl font-bold text-zinc-900 sm:text-4xl">
           כל פתרונות{" "}
-          <span className="text-gold">האלומיניום</span> לפרויקט שלך
+          <span className="gradient-gold">האלומיניום</span> לפרויקט שלך
         </h2>
       </div>
 
