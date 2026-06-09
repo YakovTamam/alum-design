@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import PhotoPlaceholder from "./PhotoPlaceholder";
@@ -15,39 +15,79 @@ const STATS = [
 export default function Hero({ slides }: { slides: SerializedHeroSlide[] }) {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const pausedProgressRef = useRef(0);
+  const swipeStartX = useRef<number | null>(null);
 
   const duration = slides[current]?.duration ?? 6;
   const count = slides.length;
 
-  // Auto-advance timer — restarts whenever current slide changes
+  // Auto-advance timer — restarts when current slide or paused state changes
   useEffect(() => {
+    if (paused) return;
     const durationMs = duration * 1000;
-    const startTime = Date.now();
-    setProgress(0);
+    const startElapsed = (pausedProgressRef.current / 100) * durationMs;
+    const startTime = Date.now() - startElapsed;
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       if (elapsed >= durationMs) {
         clearInterval(interval);
+        pausedProgressRef.current = 0;
         setCurrent((c) => (c + 1) % count);
       } else {
-        setProgress((elapsed / durationMs) * 100);
+        const p = (elapsed / durationMs) * 100;
+        pausedProgressRef.current = p;
+        setProgress(p);
       }
     }, 50);
 
     return () => clearInterval(interval);
-  }, [current, duration, count]);
+  }, [current, duration, count, paused]);
 
   function goTo(i: number) {
     if (i === current) return;
+    pausedProgressRef.current = 0;
     setProgress(0);
     setCurrent(i);
+  }
+
+  function handlePointerDown(e: React.PointerEvent) {
+    swipeStartX.current = e.clientX;
+    setPaused(true);
+  }
+
+  function handlePointerUp(e: React.PointerEvent) {
+    if (swipeStartX.current !== null) {
+      const delta = e.clientX - swipeStartX.current;
+      if (Math.abs(delta) > 50) {
+        pausedProgressRef.current = 0;
+        setProgress(0);
+        if (delta > 0) {
+          setCurrent((c) => (c + 1) % count);
+        } else {
+          setCurrent((c) => (c - 1 + count) % count);
+        }
+      }
+      swipeStartX.current = null;
+    }
+    setPaused(false);
+  }
+
+  function handlePointerLeave() {
+    swipeStartX.current = null;
+    setPaused(false);
   }
 
   const slide = slides[current];
 
   return (
-    <section className="relative h-svh min-h-[580px] overflow-hidden">
+    <section
+      className="relative h-svh min-h-[580px] select-none overflow-hidden cursor-grab active:cursor-grabbing"
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
+    >
 
       {/* ── Slide backgrounds — all rendered, crossfade via CSS opacity ── */}
       {slides.map((s, i) => (
