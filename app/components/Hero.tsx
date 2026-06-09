@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import PhotoPlaceholder from "./PhotoPlaceholder";
-import type { SerializedHeroSlide, TitleSize, SubtitleSize } from "@/lib/hero-slides";
+import type { SerializedHeroSlide, TitleSize, SubtitleSize, OverlayDirection } from "@/lib/hero-slides";
 
 const TITLE_SIZE_CLASS: Record<TitleSize, string> = {
   sm: "text-2xl sm:text-3xl lg:text-[2.5rem]",
@@ -18,6 +18,26 @@ const SUBTITLE_SIZE_CLASS: Record<SubtitleSize, string> = {
   md: "text-base leading-7",
   lg: "text-lg leading-7",
 };
+
+const OVERLAY_GRADIENT_DIR: Record<Exclude<OverlayDirection, "full" | "none">, string> = {
+  bottom: "to top",
+  top: "to bottom",
+  left: "to right",
+  right: "to left",
+};
+
+function getOverlayStyle(direction: OverlayDirection | undefined, intensity: number | undefined): React.CSSProperties | null {
+  const dir = direction ?? "bottom";
+  if (dir === "none") return null;
+  const i = (intensity ?? 75) / 100;
+  if (dir === "full") {
+    return { backgroundColor: `rgba(0,0,0,${(0.6 * i).toFixed(2)})` };
+  }
+  const [from, via, to] = [0.85, 0.45, 0.15].map((v) => (v * i).toFixed(2));
+  return {
+    backgroundImage: `linear-gradient(${OVERLAY_GRADIENT_DIR[dir]}, rgba(0,0,0,${from}) 0%, rgba(0,0,0,${via}) 50%, rgba(0,0,0,${to}) 100%)`,
+  };
+}
 
 const STATS = [
   { value: "500+", label: "פרויקטים הושלמו" },
@@ -154,8 +174,11 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
         </div>
       ))}
 
-      {/* Persistent dark overlays */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15" />
+      {/* Per-slide overlay */}
+      {(() => {
+        const overlayStyle = getOverlayStyle(slide?.overlayDirection, slide?.overlayIntensity);
+        return overlayStyle ? <div className="pointer-events-none absolute inset-0" style={overlayStyle} /> : null;
+      })()}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent" />
 
       {/* ── Slide text — AnimatePresence for enter/exit animation ── */}

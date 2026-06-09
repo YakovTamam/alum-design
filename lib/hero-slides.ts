@@ -4,8 +4,10 @@ export const HERO_SLIDES_COLLECTION = "hero_slides";
 
 export const TITLE_SIZES = ["sm", "md", "lg", "xl"] as const;
 export const SUBTITLE_SIZES = ["sm", "md", "lg"] as const;
+export const OVERLAY_DIRECTIONS = ["bottom", "top", "left", "right", "full", "none"] as const;
 export type TitleSize = (typeof TITLE_SIZES)[number];
 export type SubtitleSize = (typeof SUBTITLE_SIZES)[number];
+export type OverlayDirection = (typeof OVERLAY_DIRECTIONS)[number];
 
 export type HeroSlide = {
   _id: number; // 1, 2, 3
@@ -21,6 +23,8 @@ export type HeroSlide = {
   titleColor?: string;
   subtitleSize?: SubtitleSize;
   subtitleColor?: string;
+  overlayDirection?: OverlayDirection;
+  overlayIntensity?: number;
   updatedAt: Date;
 };
 
@@ -38,6 +42,8 @@ export type SerializedHeroSlide = {
   titleColor?: string;
   subtitleSize?: SubtitleSize;
   subtitleColor?: string;
+  overlayDirection?: OverlayDirection;
+  overlayIntensity?: number;
   updatedAt: string;
 };
 

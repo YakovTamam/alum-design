@@ -2,10 +2,19 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import type { SerializedHeroSlide, TitleSize, SubtitleSize } from "@/lib/hero-slides";
+import type { SerializedHeroSlide, TitleSize, SubtitleSize, OverlayDirection } from "@/lib/hero-slides";
+import { OVERLAY_DIRECTIONS } from "@/lib/hero-slides";
 
 const TITLE_SIZE_LABELS: Record<TitleSize, string> = { sm: "S", md: "M", lg: "L", xl: "XL" };
 const SUBTITLE_SIZE_LABELS: Record<SubtitleSize, string> = { sm: "S", md: "M", lg: "L" };
+const OVERLAY_DIRECTION_LABELS: Record<OverlayDirection, string> = {
+  bottom: "תחתון",
+  top: "עליון",
+  left: "שמאל",
+  right: "ימין",
+  full: "מלא",
+  none: "ללא",
+};
 import type { SerializedMedia } from "@/lib/media";
 import Accordion from "./Accordion";
 
@@ -48,6 +57,8 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
           titleColor: slide.titleColor,
           subtitleSize: slide.subtitleSize,
           subtitleColor: slide.subtitleColor,
+          overlayDirection: slide.overlayDirection,
+          overlayIntensity: slide.overlayIntensity,
         }),
       });
       const data = await res.json();
@@ -209,6 +220,36 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
                         className="h-7 w-10 cursor-pointer rounded border border-white/10 bg-transparent p-0.5" />
                       <span className="text-[11px] text-zinc-500 dir-ltr">{slide.subtitleColor ?? "#e4e4e7"}</span>
                     </div>
+                  </div>
+                </div>
+
+                {/* Overlay controls */}
+                <div className="rounded-lg border border-white/[0.07] bg-black/20 p-2.5">
+                  <label className="mb-1.5 block text-[11px] text-zinc-500">כיוון הצללה על התמונה</label>
+                  <div className="flex flex-wrap gap-1">
+                    {OVERLAY_DIRECTIONS.map((d) => (
+                      <button key={d} type="button" onClick={() => update(id, { overlayDirection: d })}
+                        className={`rounded px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                          (slide.overlayDirection ?? "bottom") === d ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-zinc-300"
+                        }`}>
+                        {OVERLAY_DIRECTION_LABELS[d]}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-3">
+                    <div className="mb-1.5 flex items-center justify-between text-[11px] text-zinc-500">
+                      <span>עוצמת הצללה</span>
+                      <span className="text-zinc-400">{slide.overlayIntensity ?? 75}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={slide.overlayIntensity ?? 75}
+                      onChange={(e) => update(id, { overlayIntensity: Number(e.target.value) })}
+                      disabled={(slide.overlayDirection ?? "bottom") === "none"}
+                      className="w-full accent-gold disabled:opacity-40"
+                    />
                   </div>
                 </div>
 

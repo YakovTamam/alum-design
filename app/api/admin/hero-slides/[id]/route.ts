@@ -8,6 +8,7 @@ import {
   DEFAULT_SLIDES,
   TITLE_SIZES,
   SUBTITLE_SIZES,
+  OVERLAY_DIRECTIONS,
   serializeHeroSlide,
   type HeroSlide,
 } from "@/lib/hero-slides";
@@ -35,7 +36,20 @@ export async function PUT(
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { title, subtitle, ctaText, ctaLink, mediaId, duration, titleSize, titleColor, subtitleSize, subtitleColor } = body;
+  const {
+    title,
+    subtitle,
+    ctaText,
+    ctaLink,
+    mediaId,
+    duration,
+    titleSize,
+    titleColor,
+    subtitleSize,
+    subtitleColor,
+    overlayDirection,
+    overlayIntensity,
+  } = body;
 
   const db = await getDb();
   const existing = await db
@@ -89,6 +103,11 @@ export async function PUT(
     titleColor: typeof titleColor === "string" && /^#[0-9a-fA-F]{6}$/.test(titleColor) ? titleColor : existing?.titleColor,
     subtitleSize: SUBTITLE_SIZES.includes(subtitleSize as never) ? (subtitleSize as HeroSlide["subtitleSize"]) : (existing?.subtitleSize),
     subtitleColor: typeof subtitleColor === "string" && /^#[0-9a-fA-F]{6}$/.test(subtitleColor) ? subtitleColor : existing?.subtitleColor,
+    overlayDirection: OVERLAY_DIRECTIONS.includes(overlayDirection as never) ? (overlayDirection as HeroSlide["overlayDirection"]) : (existing?.overlayDirection),
+    overlayIntensity:
+      typeof overlayIntensity === "number" && overlayIntensity >= 0 && overlayIntensity <= 100
+        ? Math.round(overlayIntensity)
+        : (existing?.overlayIntensity),
     updatedAt: new Date(),
   };
 
