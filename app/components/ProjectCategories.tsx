@@ -47,7 +47,7 @@ export default function ProjectCategories({ images = {} }: ProjectCategoriesProp
             <a
               key={c.title}
               href="#projects"
-              className="group overflow-hidden rounded-2xl border border-white/10 bg-panel/60 transition-colors hover:border-gold/40"
+              className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md transition-colors hover:border-gold/40"
             >
               <PhotoPlaceholder
                 label={c.title}

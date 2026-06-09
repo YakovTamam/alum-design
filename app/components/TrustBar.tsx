@@ -46,7 +46,7 @@ export default function TrustBar() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
             href="#configurator"
-            className="flex items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-[#1a1308] transition-colors hover:bg-gold-light"
+            className="btn-gold flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#1a1308]"
           >
             <span aria-hidden>←</span>
             קבל הצעת מחיר

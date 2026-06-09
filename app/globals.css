@@ -38,3 +38,46 @@ body {
 .carousel-track:hover {
   animation-play-state: paused;
 }
+
+/* Gold gradient text */
+.gradient-gold {
+  background: linear-gradient(135deg, #e8c896 0%, #cfa15c 55%, #a87a3a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated shimmer on primary CTA buttons */
+@keyframes gold-shimmer {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+
+.btn-gold {
+  background: linear-gradient(105deg, #a87a3a 0%, #cfa15c 30%, #e8c896 50%, #cfa15c 70%, #a87a3a 100%);
+  background-size: 200% 100%;
+  animation: gold-shimmer 3s ease infinite;
+}
+
+.btn-gold:hover {
+  filter: brightness(1.12);
+}
+
+/* Stat counters gradient */
+.stat-number {
+  background: linear-gradient(to bottom, #e8c896, #cfa15c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* WhatsApp floating button pulse */
+@keyframes wa-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.wa-pulse {
+  animation: wa-pulse 2.2s ease infinite;
+}

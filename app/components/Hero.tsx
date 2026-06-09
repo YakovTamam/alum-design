@@ -37,17 +37,26 @@ function ProfileIcon({ kind }: { kind: (typeof PROFILE_TYPES)[number]["icon"] })
 export default function Hero({ imageUrl }: { imageUrl?: string }) {
   return (
     <section className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:px-10 lg:py-24">
+      {/* Radial glow */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 left-1/4 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-gold/[0.06] blur-[120px]" />
+        <div className="absolute top-1/2 left-0 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-gold/[0.04] blur-[80px]" />
+      </div>
+
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:px-10 lg:py-28">
         {/* Text + planner card */}
         <div className="order-2 flex flex-col gap-10 lg:order-1">
           <div>
-            <h1 className="text-4xl font-bold leading-[1.15] text-white sm:text-5xl lg:text-[3.4rem]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold/70">
+              ALUM DESIGN — פתרונות מקצועיים
+            </p>
+            <h1 className="text-5xl font-extrabold leading-[1.1] text-white sm:text-6xl lg:text-7xl">
               פתרונות{" "}
-              <span className="text-gold">אלומיניום</span>
+              <span className="gradient-gold">אלומיניום</span>
               <br />
-              חכמים
+              <span className="gradient-gold">חכמים</span>
             </h1>
-            <p className="mt-3 text-xl text-zinc-300 sm:text-2xl">
+            <p className="mt-4 text-xl font-light text-zinc-300 sm:text-2xl">
               לפרויקטים מודרניים
             </p>
             <p className="mt-5 max-w-md text-sm leading-7 text-zinc-400">
@@ -56,8 +65,8 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
             </p>
           </div>
 
-          {/* Planner card */}
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-panel/80 p-6 shadow-2xl shadow-black/40 backdrop-blur">
+          {/* Planner card — glassmorphism */}
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40 backdrop-blur-md">
             <h2 className="text-base font-semibold text-white">
               התחל לתכנן את הפרויקט שלך
             </h2>
@@ -118,7 +127,7 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
 
             <a
               href="#configurator"
-              className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-gold py-3 text-sm font-semibold text-[#1a1308] transition-colors hover:bg-gold-light"
+              className="btn-gold mt-7 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-[#1a1308]"
             >
               קבלי הצעת מחיר ראשונית
               <span aria-hidden>←</span>
@@ -131,7 +140,7 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
           <PhotoPlaceholder
             label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
             imageUrl={imageUrl}
-            className="aspect-[4/5] w-full rounded-3xl border border-white/10 sm:aspect-[16/11] lg:aspect-[4/5]"
+            className="aspect-[4/5] w-full rounded-3xl border border-white/10 shadow-2xl shadow-black/50 sm:aspect-[16/11] lg:aspect-[4/5]"
           />
         </div>
       </div>
