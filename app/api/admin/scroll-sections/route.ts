@@ -6,10 +6,10 @@ import {
   ANIM_TYPES,
   FONT_SIZES,
   serializeScrollSection,
-  getScrollSection,
   type ScrollSection,
   type TextOverlay,
 } from "@/lib/scroll-sections";
+import { getScrollSection } from "@/lib/scroll-sections-data";
 
 export async function GET() {
   if (!(await requireAdminSession())) {

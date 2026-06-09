@@ -5,9 +5,10 @@ import {
   SITE_CONTENT_COLLECTION,
   type SiteContentEntry,
 } from "@/lib/content";
-import { getHeroSlides, type SerializedHeroSlide } from "@/lib/hero-slides";
+import type { SerializedHeroSlide } from "@/lib/hero-slides";
+import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
-import { getScrollSection } from "@/lib/scroll-sections";
+import { getScrollSection } from "@/lib/scroll-sections-data";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
 import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";

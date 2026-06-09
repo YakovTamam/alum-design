@@ -1,5 +1,3 @@
-import { getDb } from "./mongodb";
-
 export const HERO_SLIDES_COLLECTION = "hero_slides";
 
 export const TITLE_SIZES = ["sm", "md", "lg", "xl"] as const;
@@ -77,39 +75,4 @@ export const DEFAULT_SLIDES: Array<Omit<HeroSlide, "updatedAt">> = [
 export function serializeHeroSlide(slide: HeroSlide): SerializedHeroSlide {
   const { _id, updatedAt, ...rest } = slide;
   return { ...rest, id: _id, updatedAt: updatedAt.toISOString(), mediaType: slide.mediaType };
-}
-
-export async function getHeroSlides(): Promise<SerializedHeroSlide[]> {
-  try {
-    const db = await getDb();
-    const docs = await db
-      .collection<HeroSlide>(HERO_SLIDES_COLLECTION)
-      .find({})
-      .sort({ _id: 1 })
-      .toArray();
-
-    return DEFAULT_SLIDES.map((def) => {
-      const dbSlide = docs.find((d) => d._id === def._id);
-      if (dbSlide) return serializeHeroSlide(dbSlide);
-      return {
-        id: def._id,
-        title: def.title,
-        subtitle: def.subtitle,
-        ctaText: def.ctaText,
-        ctaLink: def.ctaLink,
-        duration: def.duration,
-        updatedAt: new Date(0).toISOString(),
-      };
-    });
-  } catch {
-    return DEFAULT_SLIDES.map((def) => ({
-      id: def._id,
-      title: def.title,
-      subtitle: def.subtitle,
-      ctaText: def.ctaText,
-      ctaLink: def.ctaLink,
-      duration: def.duration,
-      updatedAt: new Date(0).toISOString(),
-    }));
-  }
 }

@@ -1,5 +1,3 @@
-import { getDb } from "./mongodb";
-
 export const SCROLL_SECTIONS_COLLECTION = "scroll_sections";
 
 export const ANIM_TYPES = ["fade", "slide-up", "slide-down", "slide-left", "slide-right", "zoom"] as const;
@@ -48,17 +46,4 @@ export function serializeScrollSection(s: ScrollSection): SerializedScrollSectio
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _id, ...rest } = s;
   return { ...rest, updatedAt: s.updatedAt.toISOString() };
-}
-
-export async function getScrollSection(): Promise<SerializedScrollSection> {
-  try {
-    const db = await getDb();
-    const doc = await db
-      .collection<ScrollSection>(SCROLL_SECTIONS_COLLECTION)
-      .findOne({ _id: "main" } as never);
-    if (!doc) return DEFAULT_SCROLL_SECTION;
-    return serializeScrollSection(doc);
-  } catch {
-    return DEFAULT_SCROLL_SECTION;
-  }
 }

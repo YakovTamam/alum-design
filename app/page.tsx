@@ -14,9 +14,9 @@ import StickyLeadButton from "./components/StickyLeadButton";
 import Reveal from "./components/Reveal";
 import ScrollVideoSection from "./components/ScrollVideoSection";
 import { getSiteContentMap } from "@/lib/content";
-import { getHeroSlides } from "@/lib/hero-slides";
+import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
-import { getScrollSection } from "@/lib/scroll-sections";
+import { getScrollSection } from "@/lib/scroll-sections-data";
 
 export const revalidate = 60;
 
