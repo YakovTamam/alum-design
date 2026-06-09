@@ -144,7 +144,7 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
           <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/75 via-black/55 to-transparent" />
 
           {/* Text overlay — sits at bottom of image */}
-          <div className="absolute inset-x-0 bottom-0 px-6 pb-10">
+          <div className="absolute inset-x-0 bottom-0 px-6 pb-5">
             <motion.p {...fly(0.15)} className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold/80">
               ALUM DESIGN — פתרונות מקצועיים
             </motion.p>
