@@ -25,3 +25,16 @@ body {
   color: var(--foreground);
   font-family: var(--font-heebo), Arial, Helvetica, sans-serif;
 }
+
+@keyframes carousel-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.carousel-track {
+  animation: carousel-scroll 35s linear infinite;
+}
+
+.carousel-track:hover {
+  animation-play-state: paused;
+}
