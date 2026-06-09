@@ -18,6 +18,7 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
   const [paused, setPaused] = useState(false);
   const pausedProgressRef = useRef(0);
   const swipeStartX = useRef<number | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const duration = slides[current]?.duration ?? 6;
   const count = slides.length;
@@ -44,6 +45,20 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
 
     return () => clearInterval(interval);
   }, [current, duration, count, paused]);
+
+  // Play/pause video slides based on current index
+  useEffect(() => {
+    slides.forEach((_, i) => {
+      const video = videoRefs.current[i];
+      if (!video) return;
+      if (i === current) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, [current, slides]);
 
   function goTo(i: number) {
     if (i === current) return;
@@ -99,7 +114,17 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
           style={{ opacity: i === current ? 1 : 0 }}
           aria-hidden={i !== current}
         >
-          {s.imageUrl ? (
+          {s.mediaType === "video" && s.imageUrl ? (
+            <video
+              ref={(el) => { videoRefs.current[i] = el; }}
+              src={s.imageUrl}
+              autoPlay={i === 0}
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : s.imageUrl ? (
             <Image
               src={s.imageUrl}
               alt={s.title}

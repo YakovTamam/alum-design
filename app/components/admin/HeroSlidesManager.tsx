@@ -57,7 +57,11 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
   function assignImage(slideId: number, mediaId: string) {
     const m = mediaById.get(mediaId);
     if (!m) return;
-    update(slideId, { imageUrl: m.url, mediaId });
+    update(slideId, {
+      imageUrl: m.url,
+      mediaId,
+      mediaType: m.fileType === "video" ? "video" : "image",
+    });
     setPickerFor(null);
   }
 
@@ -85,9 +89,16 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
               key={id}
               className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]"
             >
-              {/* Image preview */}
+              {/* Image/video preview */}
               <div className="relative aspect-video bg-black/30">
-                {slide.imageUrl ? (
+                {slide.imageUrl && slide.mediaType === "video" ? (
+                  <video
+                    src={slide.imageUrl + "#t=0.001"}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    preload="metadata"
+                    muted
+                  />
+                ) : slide.imageUrl ? (
                   <Image
                     src={slide.imageUrl}
                     alt={slide.title}
@@ -221,7 +232,7 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
 
             {media.length === 0 ? (
               <p className="text-sm text-zinc-400">
-                אין עדיין תמונות בספרייה. עברו ל&quot;ספריית התמונות&quot; כדי להעלות תמונה תחילה.
+                אין עדיין קבצים בספרייה. עברו ל&quot;ספריית המדיה&quot; כדי להעלות קובץ תחילה.
               </p>
             ) : (
               <div className="grid grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-4">
@@ -232,13 +243,27 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
                     onClick={() => assignImage(pickerFor, item._id)}
                     className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 transition-colors hover:border-gold/60"
                   >
-                    <Image
-                      src={item.url}
-                      alt=""
-                      fill
-                      sizes="200px"
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
+                    {item.fileType === "video" ? (
+                      <video
+                        src={item.url + "#t=0.001"}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
+                        preload="metadata"
+                        muted
+                      />
+                    ) : (
+                      <Image
+                        src={item.url}
+                        alt=""
+                        fill
+                        sizes="200px"
+                        className="object-cover transition-transform group-hover:scale-105"
+                      />
+                    )}
+                    {item.fileType === "video" && (
+                      <span className="absolute left-1.5 top-1.5 rounded-full bg-gold/90 px-1.5 py-0.5 text-[10px] font-semibold text-[#1a1308]">
+                        וידאו
+                      </span>
+                    )}
                   </button>
                 ))}
               </div>
