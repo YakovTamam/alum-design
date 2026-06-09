@@ -4,7 +4,7 @@ import TrustBar from "./components/TrustBar";
 import StatsSection from "./components/StatsSection";
 import ProjectCategories from "./components/ProjectCategories";
 import SolutionsSystem from "./components/SolutionsSystem";
-import Configurator from "./components/Configurator";
+import ContractorLeads from "./components/ContractorLeads";
 import ProcessSteps from "./components/ProcessSteps";
 import FinalCta from "./components/FinalCta";
 import ContactSection from "./components/ContactSection";
@@ -40,7 +40,7 @@ export default async function Home() {
           <SolutionsSystem />
         </Reveal>
         <Reveal>
-          <Configurator />
+          <ContractorLeads />
         </Reveal>
         <Reveal>
           <ProcessSteps />
