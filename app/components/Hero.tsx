@@ -84,9 +84,11 @@ export default function Hero({ slides }: { slides: SerializedHeroSlide[] }) {
   return (
     <section
       className="relative h-svh min-h-[580px] select-none overflow-hidden cursor-grab active:cursor-grabbing"
+      style={{ touchAction: "pan-y" }}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
+      onPointerCancel={handlePointerLeave}
     >
 
       {/* ── Slide backgrounds — all rendered, crossfade via CSS opacity ── */}
