@@ -1,0 +1,94 @@
+import { getDb } from "./mongodb";
+
+export const HERO_SLIDES_COLLECTION = "hero_slides";
+
+export type HeroSlide = {
+  _id: number; // 1, 2, 3
+  title: string;
+  subtitle: string;
+  ctaText: string;
+  ctaLink: string;
+  imageUrl?: string;
+  mediaId?: string;
+  duration: number; // seconds
+  updatedAt: Date;
+};
+
+export type SerializedHeroSlide = {
+  id: number;
+  title: string;
+  subtitle: string;
+  ctaText: string;
+  ctaLink: string;
+  imageUrl?: string;
+  mediaId?: string;
+  duration: number;
+  updatedAt: string;
+};
+
+export const DEFAULT_SLIDES: Array<Omit<HeroSlide, "updatedAt">> = [
+  {
+    _id: 1,
+    title: "הספק שקבלנים מסתמכים עליו",
+    subtitle: "פרגולות, חלונות, שערים וסגירות זכוכית — בהיקפים גדולים ואיכות פרימיום",
+    ctaText: "השאר פרטים לפרויקט",
+    ctaLink: "#contractor",
+    duration: 6,
+  },
+  {
+    _id: 2,
+    title: "פרגולות אלומיניום יוקרתיות",
+    subtitle: "תכנון מותאם אישית, ייצור מדויק והתקנה מקצועית בכל הארץ",
+    ctaText: "צפה בפרויקטים",
+    ctaLink: "#categories",
+    duration: 6,
+  },
+  {
+    _id: 3,
+    title: "ליווי מקצועי מהתכנון ועד ההתקנה",
+    subtitle: "נציג ייעודי לכל פרויקט — מהסקיצה הראשונה ועד מסירת המפתח",
+    ctaText: "צור קשר",
+    ctaLink: "#contact",
+    duration: 6,
+  },
+];
+
+export function serializeHeroSlide(slide: HeroSlide): SerializedHeroSlide {
+  const { _id, updatedAt, ...rest } = slide;
+  return { ...rest, id: _id, updatedAt: updatedAt.toISOString() };
+}
+
+export async function getHeroSlides(): Promise<SerializedHeroSlide[]> {
+  try {
+    const db = await getDb();
+    const docs = await db
+      .collection<HeroSlide>(HERO_SLIDES_COLLECTION)
+      .find({})
+      .sort({ _id: 1 })
+      .toArray();
+
+    return DEFAULT_SLIDES.map((def) => {
+      const dbSlide = docs.find((d) => d._id === def._id);
+      if (dbSlide) return serializeHeroSlide(dbSlide);
+      return {
+        id: def._id,
+        title: def.title,
+        subtitle: def.subtitle,
+        ctaText: def.ctaText,
+        ctaLink: def.ctaLink,
+        duration: def.duration,
+        updatedAt: new Date(0).toISOString(),
+      };
+    });
+  } catch {
+    return DEFAULT_SLIDES.map((def) => ({
+      id: def._id,
+      title: def.title,
+      subtitle: def.subtitle,
+      ctaText: def.ctaText,
+      ctaLink: def.ctaLink,
+      duration: def.duration,
+      updatedAt: new Date(0).toISOString(),
+    }));
+  }
+}

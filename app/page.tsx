@@ -12,6 +12,7 @@ import SiteFooter from "./components/SiteFooter";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import Reveal from "./components/Reveal";
 import { getSiteContentMap } from "@/lib/content";
+import { getHeroSlides } from "@/lib/hero-slides";
 
 export const revalidate = 60;
 
@@ -23,12 +24,15 @@ export default async function Home() {
     console.error("Failed to load site content images", err);
   }
 
+  // getHeroSlides never throws — returns defaults if MongoDB is unavailable
+  const heroSlides = await getHeroSlides();
+
   return (
     <div className="flex flex-1 flex-col">
       <FloatingWhatsApp />
       <SiteHeader />
       <main className="flex flex-1 flex-col">
-        <Hero imageUrl={images.hero} />
+        <Hero slides={heroSlides} />
         <TrustBar />
         <Reveal>
           <StatsSection />

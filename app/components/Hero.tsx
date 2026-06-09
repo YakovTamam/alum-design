@@ -1,7 +1,10 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
 import PhotoPlaceholder from "./PhotoPlaceholder";
+import type { SerializedHeroSlide } from "@/lib/hero-slides";
 
 const STATS = [
   { value: "500+", label: "פרויקטים הושלמו" },
@@ -9,207 +12,156 @@ const STATS = [
   { value: "200+", label: "קבלנים פעילים" },
 ];
 
-const TAGS = ["פרגולות אלומיניום", "חלונות ודלתות", "שערים חשמליים", "סגירות זכוכית"];
+export default function Hero({ slides }: { slides: SerializedHeroSlide[] }) {
+  const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-const fly = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const, delay },
-});
+  const duration = slides[current]?.duration ?? 6;
+  const count = slides.length;
 
-export default function Hero({ imageUrl }: { imageUrl?: string }) {
+  // Auto-advance timer — restarts whenever current slide changes
+  useEffect(() => {
+    const durationMs = duration * 1000;
+    const startTime = Date.now();
+    setProgress(0);
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      if (elapsed >= durationMs) {
+        clearInterval(interval);
+        setCurrent((c) => (c + 1) % count);
+      } else {
+        setProgress((elapsed / durationMs) * 100);
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [current, duration, count]);
+
+  function goTo(i: number) {
+    if (i === current) return;
+    setProgress(0);
+    setCurrent(i);
+  }
+
+  const slide = slides[current];
+
   return (
-    <section className="relative overflow-hidden bg-[#f0ece5]">
+    <section className="relative h-svh min-h-[580px] overflow-hidden">
 
-      {/* ── MOBILE layout: full-bleed image + overlay ── */}
-      <div className="lg:hidden">
-        <motion.div
-          initial={{ opacity: 0, scale: 1.04 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
-          className="relative min-h-[78svh] overflow-hidden"
+      {/* ── Slide backgrounds — all rendered, crossfade via CSS opacity ── */}
+      {slides.map((s, i) => (
+        <div
+          key={i}
+          className="absolute inset-0 transition-opacity duration-[900ms] ease-in-out"
+          style={{ opacity: i === current ? 1 : 0 }}
+          aria-hidden={i !== current}
         >
-          <div className="absolute inset-0">
-            <PhotoPlaceholder
-              label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
-              imageUrl={imageUrl}
-              className="h-full w-full"
+          {s.imageUrl ? (
+            <Image
+              src={s.imageUrl}
+              alt={s.title}
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className="object-cover"
             />
-          </div>
+          ) : (
+            <div className="absolute inset-0">
+              <PhotoPlaceholder label={s.title} className="h-full w-full" />
+            </div>
+          )}
+        </div>
+      ))}
 
-          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-[68%] bg-gradient-to-t from-black/85 via-black/65 to-transparent" />
+      {/* Persistent dark overlays */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent" />
 
-          <div className="absolute inset-x-0 bottom-0 px-6 pb-8">
-            <motion.span
-              {...fly(0.1)}
-              className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/20 px-3 py-1 text-[10px] font-semibold tracking-widest text-gold backdrop-blur-sm"
-            >
-              ✦ פתרונות לקבלנים ויזמים
-            </motion.span>
-
-            <motion.h1 {...fly(0.2)} className="text-[2.4rem] font-extrabold leading-[1.1] text-white">
-              הספק שקבלנים{" "}
-              <span className="gradient-gold">מסתמכים עליו</span>
-            </motion.h1>
-
-            <motion.p {...fly(0.3)} className="mt-3 max-w-xs text-sm leading-6 text-zinc-200/85">
-              פרגולות, חלונות, שערים וסגירות זכוכית — בהיקפים גדולים ואיכות פרימיום
-            </motion.p>
-
-            <motion.div {...fly(0.4)} className="mt-5 flex flex-wrap gap-3">
+      {/* ── Slide text — AnimatePresence for enter/exit animation ── */}
+      <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-28 lg:justify-center lg:px-16 lg:pb-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-2xl"
+          >
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold/80">
+              ALUM DESIGN — פתרונות מקצועיים
+            </p>
+            <h1 className="text-[2.5rem] font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-[3.8rem] xl:text-[4.5rem]">
+              {slide?.title}
+            </h1>
+            <p className="mt-4 max-w-lg text-base leading-7 text-zinc-200/80 lg:text-lg">
+              {slide?.subtitle}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
               <a
-                href="#contractor"
-                className="btn-gold flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-[#1a1308]"
+                href={slide?.ctaLink}
+                className="btn-gold flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-[#1a1308] shadow-lg shadow-gold/20"
               >
-                השאר פרטים <span aria-hidden>←</span>
+                {slide?.ctaText} <span aria-hidden>←</span>
               </a>
               <a
-                href="#systems"
-                className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                href="tel:0729444444"
+                className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
               >
-                המערכות שלנו
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6l.85-.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 16z" />
+                </svg>
+                072-3944444
               </a>
-            </motion.div>
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Mobile stats strip */}
+        {/* Stats row — desktop only */}
         <motion.div
-          {...fly(0.5)}
-          className="flex divide-x divide-x-reverse divide-zinc-200 border-b border-zinc-200 bg-white"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="mt-12 hidden items-center gap-10 lg:flex"
         >
           {STATS.map((s) => (
-            <div key={s.label} className="flex-1 py-5 text-center">
-              <p className="text-xl font-extrabold text-zinc-900">{s.value}</p>
-              <p className="mt-0.5 text-[11px] text-zinc-500">{s.label}</p>
+            <div key={s.label}>
+              <p className="text-2xl font-extrabold text-white">{s.value}</p>
+              <p className="mt-0.5 text-xs text-zinc-400">{s.label}</p>
             </div>
           ))}
         </motion.div>
       </div>
 
-      {/* ── DESKTOP layout ── */}
-      <div className="relative mx-auto hidden max-w-7xl items-center gap-14 px-10 py-24 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] xl:py-28">
+      {/* ── Slide number indicator (top-right) ── */}
+      <div className="absolute left-6 top-6 z-20 hidden items-center gap-2 text-xs font-medium text-white/50 lg:flex">
+        <span className="text-white">{String(current + 1).padStart(2, "0")}</span>
+        <span className="h-px w-6 bg-white/30" />
+        <span>{String(count).padStart(2, "0")}</span>
+      </div>
 
-        {/* Left: headline + CTAs + stats */}
-        <div>
-          <motion.span
-            {...fly(0.05)}
-            className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-gold"
-          >
-            ✦ שותפים מועדפים לקבלנים ויזמים
-          </motion.span>
-
-          <motion.h1
-            {...fly(0.15)}
-            className="mt-5 text-[3.8rem] font-extrabold leading-[1.1] text-zinc-900 xl:text-[4.5rem]"
-          >
-            הספק שקבלנים{" "}
-            <span className="gradient-gold">מסתמכים עליו</span>
-            <br />
-            בפרויקטים גדולים
-          </motion.h1>
-
-          <motion.p {...fly(0.25)} className="mt-6 max-w-lg text-base leading-7 text-zinc-600">
-            ALUM DESIGN מתמחה בפתרונות אלומיניום לקבלנים, יזמים ומפתחי נדל&quot;ן —
-            פרגולות, חלונות, שערים וסגירות זכוכית בהיקפים גדולים, עם מחירי נפח
-            וליווי מקצועי צמוד.
-          </motion.p>
-
-          <motion.div {...fly(0.35)} className="mt-8 flex flex-wrap items-center gap-4">
-            <a
-              href="#contractor"
-              className="btn-gold flex items-center gap-2 rounded-full px-8 py-4 text-sm font-bold text-[#1a1308] shadow-lg shadow-gold/20 transition-shadow hover:shadow-gold/30"
-            >
-              השאר פרטים לפרויקט
-              <span aria-hidden>←</span>
-            </a>
-            <a
-              href="#systems"
-              className="flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-7 py-4 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-900"
-            >
-              המערכות שלנו
-            </a>
-          </motion.div>
-
-          {/* Product tags */}
-          <motion.div {...fly(0.42)} className="mt-6 flex flex-wrap gap-2">
-            {TAGS.map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs text-zinc-500"
-              >
-                {t}
-              </span>
-            ))}
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            {...fly(0.5)}
-            className="mt-10 flex items-center gap-10 border-t border-zinc-200 pt-8"
-          >
-            {STATS.map((s) => (
-              <div key={s.label}>
-                <p className="text-3xl font-extrabold text-zinc-900">{s.value}</p>
-                <p className="mt-0.5 text-sm text-zinc-500">{s.label}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Right: image with floating badge */}
-        <motion.div
-          initial={{ opacity: 0, x: -24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-          className="relative"
-        >
-          <PhotoPlaceholder
-            label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
-            imageUrl={imageUrl}
-            className="aspect-[4/5] w-full rounded-3xl border border-zinc-200 shadow-2xl shadow-zinc-300/50"
+      {/* ── Dot navigation ── */}
+      <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => goTo(i)}
+            aria-label={`שקופית ${i + 1}`}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === current ? "w-8 bg-gold" : "w-2 bg-white/35 hover:bg-white/60"
+            }`}
           />
+        ))}
+      </div>
 
-          {/* Floating trust badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute -bottom-6 -right-6 rounded-2xl border border-zinc-200 bg-white px-5 py-4 shadow-xl shadow-zinc-200/70"
-          >
-            <p className="text-xs font-semibold text-zinc-400">ביצועים מוכחים</p>
-            <p className="mt-1 text-xl font-extrabold text-zinc-900">
-              500+ <span className="text-sm font-medium text-zinc-500">פרויקטים</span>
-            </p>
-            <div className="mt-2 flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#cfa15c">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Top-left accent badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute -left-6 top-8 flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3 shadow-xl shadow-zinc-200/70"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 text-gold">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z" />
-                <path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <div>
-              <p className="text-xs font-semibold text-zinc-900">אחריות מלאה</p>
-              <p className="text-[10px] text-zinc-500">על כל פרויקט</p>
-            </div>
-          </motion.div>
-        </motion.div>
+      {/* ── Gold progress bar ── */}
+      <div className="absolute inset-x-0 bottom-0 z-20 h-[3px] bg-white/[0.07]">
+        <div
+          className="h-full bg-gold"
+          style={{ width: `${progress}%`, transition: "width 80ms linear" }}
+        />
       </div>
     </section>
   );
