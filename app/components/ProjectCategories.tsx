@@ -8,19 +8,19 @@ type ProjectCategoriesProps = {
 
 export default function ProjectCategories({ images = {} }: ProjectCategoriesProps) {
   return (
-    <section id="categories" className="py-20">
+    <section id="categories" className="py-12 lg:py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <h2 className="text-center text-2xl font-semibold text-white sm:text-3xl">
+        <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">
           כל פתרונות{" "}
           <span className="text-gold">האלומיניום</span> לפרויקט שלך
         </h2>
       </div>
 
-      <div className="mt-10">
+      <div className="mt-8 lg:mt-10">
         <CategoryCarousel images={images} />
       </div>
 
-      <div className="mt-10">
+      <div className="mt-8 lg:mt-10">
         <ProjectCarousel />
       </div>
     </section>

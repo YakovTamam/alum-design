@@ -51,18 +51,18 @@ function StepIcon({ kind }: { kind: (typeof STEPS)[number]["icon"] }) {
 
 export default function ProcessSteps() {
   return (
-    <section className="border-y border-white/10 bg-[#0e0e11] py-20">
+    <section className="border-y border-white/10 bg-[#0e0e11] py-12 lg:py-20">
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
-        <h2 className="text-center text-2xl font-semibold text-white sm:text-3xl">
+        <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">
           מתכנון ועד התקנה —{" "}
           <span className="gradient-gold">בצורה פשוטה וברורה</span>
         </h2>
 
-        <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-5">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5 sm:gap-5 lg:mt-14">
           {STEPS.map((s, i) => (
             <div
               key={s.label}
-              className="flex flex-col items-center rounded-2xl border border-white/[0.12] bg-white/[0.05] p-6 text-center shadow-lg shadow-black/30 backdrop-blur-sm transition-colors hover:border-gold/25"
+              className={`flex flex-col items-center rounded-2xl border border-white/[0.12] bg-white/[0.05] p-5 text-center shadow-lg shadow-black/30 backdrop-blur-sm transition-colors hover:border-gold/25 lg:p-6 ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
             >
               <span className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gold/[0.1] text-gold shadow-lg shadow-black/30">
                 <StepIcon kind={s.icon} />

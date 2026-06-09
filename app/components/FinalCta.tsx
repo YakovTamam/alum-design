@@ -10,8 +10,8 @@ export default function FinalCta({ imageUrl }: { imageUrl?: string }) {
       />
       <div className="absolute inset-0 bg-gradient-to-l from-black/30 via-black/70 to-black/90" />
 
-      <div className="relative mx-auto flex max-w-7xl flex-col gap-6 px-6 py-24 lg:px-10">
-        <h2 className="max-w-xl text-3xl font-bold leading-snug text-white sm:text-4xl">
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-6 px-6 py-16 lg:px-10 lg:py-24">
+        <h2 className="max-w-xl text-4xl font-bold leading-snug text-white sm:text-5xl">
           הפרויקט הבא שלך,
           <br />
           <span className="text-gold">מתוכנן חכם יותר.</span>

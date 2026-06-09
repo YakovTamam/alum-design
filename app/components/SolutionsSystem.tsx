@@ -59,13 +59,13 @@ function SolutionIcon({ kind }: { kind: (typeof SOLUTIONS)[number]["icon"] }) {
 export default function SolutionsSystem() {
   return (
     <section id="systems" className="border-y border-white/5 bg-panel/30">
-      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
-        <h2 className="text-center text-2xl font-semibold text-white sm:text-3xl">
+      <div className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-20">
+        <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">
           מערכת פתרונות{" "}
           <span className="text-gold">אלומיניום</span> מתקדמים
         </h2>
 
-        <div className="relative mt-14">
+        <div className="relative mt-8 lg:mt-14">
           <div
             aria-hidden
             className="absolute top-9 right-0 left-0 hidden h-px bg-[repeating-linear-gradient(to_left,rgba(207,161,92,0.5)_0_8px,transparent_8px_16px)] lg:block"
@@ -85,7 +85,7 @@ export default function SolutionsSystem() {
           </div>
         </div>
 
-        <p className="mx-auto mt-14 max-w-2xl text-center text-sm leading-7 text-zinc-400">
+        <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-7 text-zinc-400 lg:mt-14">
           כל המערכות מתחברות לחוויה אחת מושלמת — מהבחירה הראשונית ועד ההתקנה
           הסופית, בליווי צמוד של צוות ALUM DESIGN.
         </p>
