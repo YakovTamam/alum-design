@@ -26,17 +26,13 @@ body {
   font-family: var(--font-heebo), Arial, Helvetica, sans-serif;
 }
 
-@keyframes carousel-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+/* Hide scrollbar for snap carousel (cross-browser) */
+.carousel-snap {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-.carousel-track {
-  animation: carousel-scroll 35s linear infinite;
-}
-
-.carousel-track:hover {
-  animation-play-state: paused;
+.carousel-snap::-webkit-scrollbar {
+  display: none;
 }
 
 /* Gold gradient text */

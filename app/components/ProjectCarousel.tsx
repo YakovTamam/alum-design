@@ -11,30 +11,27 @@ const CARDS = [
   { title: "מחיצות זכוכית", desc: "עיצוב פנים מודרני ופתוח", variant: "cool" as const },
 ];
 
-// Duplicate for seamless loop
-const TRACK = [...CARDS, ...CARDS];
-
 export default function ProjectCarousel() {
   return (
-    <div className="overflow-hidden" aria-hidden>
-      <div className="carousel-track flex gap-4" style={{ width: "max-content" }}>
-        {TRACK.map((card, i) => (
-          <div
-            key={i}
-            className="w-56 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-panel/60 sm:w-64"
-          >
-            <PhotoPlaceholder
-              label={card.title}
-              variant={card.variant}
-              className="aspect-[4/3] w-full"
-            />
-            <div className="p-4">
-              <p className="text-sm font-semibold text-white">{card.title}</p>
-              <p className="mt-1 text-xs leading-5 text-zinc-400">{card.desc}</p>
-            </div>
+    <div
+      className="carousel-snap flex gap-4 overflow-x-auto snap-x snap-mandatory ps-4 pe-4 scroll-ps-4 lg:ps-10 lg:pe-10 lg:scroll-ps-10"
+    >
+      {CARDS.map((card, i) => (
+        <div
+          key={i}
+          className="snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-white/10 bg-panel/60"
+        >
+          <PhotoPlaceholder
+            label={card.title}
+            variant={card.variant}
+            className="aspect-[4/3] w-full"
+          />
+          <div className="p-4">
+            <p className="text-sm font-semibold text-white">{card.title}</p>
+            <p className="mt-1 text-xs leading-5 text-zinc-400">{card.desc}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
