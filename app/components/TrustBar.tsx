@@ -6,7 +6,7 @@ const BADGES = [
 ] as const;
 
 function BadgeIcon({ kind }: { kind: (typeof BADGES)[number]["icon"] }) {
-  const common = { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6 };
+  const common = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6 };
   switch (kind) {
     case "shield":
       return (
@@ -41,8 +41,8 @@ function BadgeIcon({ kind }: { kind: (typeof BADGES)[number]["icon"] }) {
 
 export default function TrustBar() {
   return (
-    <section className="border-y border-white/5 bg-panel/40">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-8 lg:flex-row lg:items-center lg:justify-between lg:px-10">
+    <section className="border-y border-white/10 bg-panel/70 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
             href="#configurator"
@@ -53,20 +53,20 @@ export default function TrustBar() {
           </a>
           <a
             href="#projects"
-            className="flex items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm text-zinc-200 transition-colors hover:border-white/35"
+            className="flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm text-zinc-200 transition-colors hover:border-white/40 hover:text-white"
           >
             <span aria-hidden>↻</span>
             צפה בתוכניות
           </a>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-sm text-zinc-300 sm:flex sm:flex-wrap sm:items-center sm:gap-10">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-sm text-zinc-200 sm:flex sm:flex-wrap sm:items-center sm:gap-8">
           {BADGES.map((b) => (
-            <div key={b.label} className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-gold">
+            <div key={b.label} className="flex items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/[0.08] text-gold">
                 <BadgeIcon kind={b.icon} />
               </span>
-              <span>{b.label}</span>
+              <span className="font-medium">{b.label}</span>
             </div>
           ))}
         </div>

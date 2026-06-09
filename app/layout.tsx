@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "./components/SmoothScroll";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-[#0b0b0d] text-zinc-100">
+        <SmoothScroll />
         {children}
       </body>
     </html>

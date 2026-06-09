@@ -51,30 +51,29 @@ function StepIcon({ kind }: { kind: (typeof STEPS)[number]["icon"] }) {
 
 export default function ProcessSteps() {
   return (
-    <section className="border-y border-white/5 bg-[#0e0e11]">
-      <div className="mx-auto max-w-6xl px-6 py-20 lg:px-10">
+    <section className="border-y border-white/10 bg-[#0e0e11] py-20">
+      <div className="mx-auto max-w-6xl px-6 lg:px-10">
         <h2 className="text-center text-2xl font-semibold text-white sm:text-3xl">
           מתכנון ועד התקנה —{" "}
           <span className="gradient-gold">בצורה פשוטה וברורה</span>
         </h2>
 
-        <div className="relative mt-16">
-          <div
-            aria-hidden
-            className="absolute top-7 right-[8%] left-[8%] hidden h-px bg-[repeating-linear-gradient(to_left,rgba(207,161,92,0.4)_0_8px,transparent_8px_16px)] sm:block"
-          />
-          <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-5 sm:gap-x-4">
-            {STEPS.map((s, i) => (
-              <div key={s.label} className="flex flex-col items-center text-center">
-                <span className="z-10 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-panel/80 text-gold shadow-lg shadow-black/30 backdrop-blur-sm">
-                  <StepIcon kind={s.icon} />
-                </span>
-                <span className="mt-3 text-xs font-semibold text-gold/80">שלב {i + 1}</span>
-                <h3 className="mt-1 text-sm font-semibold text-white">{s.label}</h3>
-                <p className="mt-1 max-w-[10rem] text-xs leading-5 text-zinc-400">{s.desc}</p>
-              </div>
-            ))}
-          </div>
+        <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-5">
+          {STEPS.map((s, i) => (
+            <div
+              key={s.label}
+              className="flex flex-col items-center rounded-2xl border border-white/[0.12] bg-white/[0.05] p-6 text-center shadow-lg shadow-black/30 backdrop-blur-sm transition-colors hover:border-gold/25"
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gold/[0.1] text-gold shadow-lg shadow-black/30">
+                <StepIcon kind={s.icon} />
+              </span>
+              <span className="mt-4 text-[10px] font-bold uppercase tracking-widest text-gold/60">
+                שלב {i + 1}
+              </span>
+              <h3 className="mt-2 text-sm font-semibold text-white">{s.label}</h3>
+              <p className="mt-2 text-xs leading-5 text-zinc-400">{s.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

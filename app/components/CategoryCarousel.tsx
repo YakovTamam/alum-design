@@ -103,7 +103,7 @@ export default function CategoryCarousel({ images = {} }: Props) {
         <a
           key={i}
           href="#projects"
-          className="group snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md transition-colors hover:border-gold/40"
+          className="group snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-white/[0.14] bg-white/[0.07] shadow-xl shadow-black/40 backdrop-blur-md transition-colors hover:border-gold/50 hover:shadow-gold/5"
         >
           <PhotoPlaceholder
             label={c.title}

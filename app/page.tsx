@@ -10,7 +10,7 @@ import FinalCta from "./components/FinalCta";
 import ContactSection from "./components/ContactSection";
 import SiteFooter from "./components/SiteFooter";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
-import ScrollRevealSetup from "./components/ScrollRevealSetup";
+import Reveal from "./components/Reveal";
 import { getSiteContentMap } from "@/lib/content";
 
 export const revalidate = 60;
@@ -25,31 +25,30 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <ScrollRevealSetup />
       <FloatingWhatsApp />
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <Hero imageUrl={images.hero} />
         <TrustBar />
-        <div data-reveal>
+        <Reveal>
           <StatsSection />
-        </div>
-        <div data-reveal>
+        </Reveal>
+        <Reveal>
           <ProjectCategories images={images} />
-        </div>
-        <div data-reveal>
+        </Reveal>
+        <Reveal>
           <SolutionsSystem />
-        </div>
-        <div data-reveal>
+        </Reveal>
+        <Reveal>
           <Configurator />
-        </div>
-        <div data-reveal>
+        </Reveal>
+        <Reveal>
           <ProcessSteps />
-        </div>
+        </Reveal>
         <FinalCta imageUrl={images["final-cta"]} />
-        <div data-reveal>
+        <Reveal>
           <ContactSection />
-        </div>
+        </Reveal>
       </main>
       <SiteFooter />
     </div>

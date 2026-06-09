@@ -19,7 +19,7 @@ export default function ProjectCarousel() {
       {CARDS.map((card, i) => (
         <div
           key={i}
-          className="snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-white/10 bg-panel/60"
+          className="snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-white/[0.14] bg-white/[0.06] shadow-xl shadow-black/40"
         >
           <PhotoPlaceholder
             label={card.title}

@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "motion/react";
 import PhotoPlaceholder from "./PhotoPlaceholder";
 
 const PROFILE_TYPES = [
@@ -34,39 +37,45 @@ function ProfileIcon({ kind }: { kind: (typeof PROFILE_TYPES)[number]["icon"] })
   );
 }
 
+const fly = (delay = 0) => ({
+  initial: { opacity: 0, y: 28 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const, delay },
+});
+
 export default function Hero({ imageUrl }: { imageUrl?: string }) {
   return (
     <section className="relative overflow-hidden">
       {/* Radial glow */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 left-1/4 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-gold/[0.06] blur-[120px]" />
-        <div className="absolute top-1/2 left-0 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-gold/[0.04] blur-[80px]" />
+        <div className="absolute -top-20 left-1/4 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-gold/[0.07] blur-[130px]" />
+        <div className="absolute top-1/2 left-0 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-gold/[0.05] blur-[100px]" />
       </div>
 
       <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:px-10 lg:py-28">
         {/* Text + planner card */}
         <div className="order-2 flex flex-col gap-10 lg:order-1">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold/70">
+            <motion.p {...fly(0.1)} className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold/70">
               ALUM DESIGN — פתרונות מקצועיים
-            </p>
-            <h1 className="text-5xl font-extrabold leading-[1.1] text-white sm:text-6xl lg:text-7xl">
+            </motion.p>
+            <motion.h1 {...fly(0.2)} className="text-5xl font-extrabold leading-[1.1] text-white sm:text-6xl lg:text-7xl">
               פתרונות{" "}
               <span className="gradient-gold">אלומיניום</span>
               <br />
               <span className="gradient-gold">חכמים</span>
-            </h1>
-            <p className="mt-4 text-xl font-light text-zinc-300 sm:text-2xl">
+            </motion.h1>
+            <motion.p {...fly(0.3)} className="mt-4 text-xl font-light text-zinc-300 sm:text-2xl">
               לפרויקטים מודרניים
-            </p>
-            <p className="mt-5 max-w-md text-sm leading-7 text-zinc-400">
+            </motion.p>
+            <motion.p {...fly(0.4)} className="mt-5 max-w-md text-sm leading-7 text-zinc-400">
               תכנון, התאמה והצעת מחיר תוך דקות — הכל במקום אחד. ALUM DESIGN
               מלווה אתכם משלב הרעיון ועד ההתקנה הסופית.
-            </p>
+            </motion.p>
           </div>
 
-          {/* Planner card — glassmorphism */}
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/40 backdrop-blur-md">
+          {/* Planner card */}
+          <motion.div {...fly(0.5)} className="w-full max-w-md rounded-2xl border border-white/[0.12] bg-white/[0.06] p-6 shadow-2xl shadow-black/50 backdrop-blur-md">
             <h2 className="text-base font-semibold text-white">
               התחל לתכנן את הפרויקט שלך
             </h2>
@@ -95,15 +104,13 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
               <div>
                 <p className="mb-2 text-xs text-zinc-400">רוחב (ס&quot;מ)</p>
                 <div className="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-200">
-                  <span>300</span>
-                  <span className="text-zinc-500">▾</span>
+                  <span>300</span><span className="text-zinc-500">▾</span>
                 </div>
               </div>
               <div>
                 <p className="mb-2 text-xs text-zinc-400">גובה (ס&quot;מ)</p>
                 <div className="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-200">
-                  <span>300</span>
-                  <span className="text-zinc-500">▾</span>
+                  <span>300</span><span className="text-zinc-500">▾</span>
                 </div>
               </div>
             </div>
@@ -116,9 +123,7 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
                     key={c}
                     type="button"
                     aria-label={`צבע ${i + 1}`}
-                    className={`h-7 w-7 rounded-full border-2 transition-transform hover:scale-110 ${
-                      i === 3 ? "border-gold" : "border-white/20"
-                    }`}
+                    className={`h-7 w-7 rounded-full border-2 transition-transform hover:scale-110 ${i === 3 ? "border-gold" : "border-white/20"}`}
                     style={{ backgroundColor: c }}
                   />
                 ))}
@@ -132,17 +137,22 @@ export default function Hero({ imageUrl }: { imageUrl?: string }) {
               קבלי הצעת מחיר ראשונית
               <span aria-hidden>←</span>
             </a>
-          </div>
+          </motion.div>
         </div>
 
         {/* Hero image */}
-        <div className="order-1 lg:order-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+          className="order-1 lg:order-2"
+        >
           <PhotoPlaceholder
             label="וילה מודרנית עם פרגולת אלומיניום | ALUM DESIGN"
             imageUrl={imageUrl}
             className="aspect-[4/5] w-full rounded-3xl border border-white/10 shadow-2xl shadow-black/50 sm:aspect-[16/11] lg:aspect-[4/5]"
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   );
