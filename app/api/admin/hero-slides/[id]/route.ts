@@ -43,11 +43,13 @@ export async function PUT(
 
   let imageUrl = existing?.imageUrl;
   let resolvedMediaId = existing?.mediaId;
+  let resolvedMediaType = existing?.mediaType;
 
   if (typeof mediaId === "string") {
     if (mediaId === "") {
       imageUrl = undefined;
       resolvedMediaId = undefined;
+      resolvedMediaType = undefined;
     } else if (ObjectId.isValid(mediaId)) {
       const media = await db
         .collection<Media>(MEDIA_COLLECTION)
@@ -57,6 +59,7 @@ export async function PUT(
       }
       imageUrl = media.url;
       resolvedMediaId = mediaId;
+      resolvedMediaType = media.fileType ?? "image";
     }
   }
 
@@ -79,6 +82,7 @@ export async function PUT(
         : (existing?.duration ?? def.duration),
     imageUrl,
     mediaId: resolvedMediaId,
+    mediaType: resolvedMediaType,
     updatedAt: new Date(),
   };
 

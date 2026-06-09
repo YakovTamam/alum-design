@@ -42,7 +42,38 @@ export async function uploadImage(buffer: Buffer): Promise<UploadApiResponse> {
   });
 }
 
-export async function deleteImage(publicId: string): Promise<void> {
+export async function deleteMedia(
+  publicId: string,
+  fileType?: "image" | "video",
+): Promise<void> {
   ensureConfigured();
-  await cloudinary.uploader.destroy(publicId);
+  await cloudinary.uploader.destroy(publicId, {
+    resource_type: fileType === "video" ? "video" : "image",
+  });
+}
+
+export async function deleteImage(publicId: string): Promise<void> {
+  return deleteMedia(publicId, "image");
+}
+
+export function generateUploadSignature(): {
+  signature: string;
+  timestamp: number;
+  apiKey: string;
+  cloudName: string;
+  folder: string;
+} {
+  ensureConfigured();
+
+  const timestamp = Math.round(Date.now() / 1000);
+  const apiSecret = process.env.CLOUDINARY_API_SECRET!;
+  const apiKey = process.env.CLOUDINARY_API_KEY!;
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME!;
+
+  const signature = cloudinary.utils.api_sign_request(
+    { folder: FOLDER, timestamp },
+    apiSecret,
+  );
+
+  return { signature, timestamp, apiKey, cloudName, folder: FOLDER };
 }

@@ -10,6 +10,7 @@ export type HeroSlide = {
   ctaLink: string;
   imageUrl?: string;
   mediaId?: string;
+  mediaType?: "image" | "video";
   duration: number; // seconds
   updatedAt: Date;
 };
@@ -22,6 +23,7 @@ export type SerializedHeroSlide = {
   ctaLink: string;
   imageUrl?: string;
   mediaId?: string;
+  mediaType?: "image" | "video";
   duration: number;
   updatedAt: string;
 };
@@ -55,7 +57,7 @@ export const DEFAULT_SLIDES: Array<Omit<HeroSlide, "updatedAt">> = [
 
 export function serializeHeroSlide(slide: HeroSlide): SerializedHeroSlide {
   const { _id, updatedAt, ...rest } = slide;
-  return { ...rest, id: _id, updatedAt: updatedAt.toISOString() };
+  return { ...rest, id: _id, updatedAt: updatedAt.toISOString(), mediaType: slide.mediaType };
 }
 
 export async function getHeroSlides(): Promise<SerializedHeroSlide[]> {
