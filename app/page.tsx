@@ -3,7 +3,6 @@ import Hero from "./components/Hero";
 import TrustBar from "./components/TrustBar";
 import StatsSection from "./components/StatsSection";
 import ProjectCategories from "./components/ProjectCategories";
-import ClientLogos from "./components/ClientLogos";
 import SolutionsSystem from "./components/SolutionsSystem";
 import Configurator from "./components/Configurator";
 import ProcessSteps from "./components/ProcessSteps";
@@ -37,9 +36,6 @@ export default async function Home() {
         </div>
         <div data-reveal>
           <ProjectCategories images={images} />
-        </div>
-        <div data-reveal>
-          <ClientLogos />
         </div>
         <div data-reveal>
           <SolutionsSystem />
