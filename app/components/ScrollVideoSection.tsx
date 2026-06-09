@@ -116,32 +116,67 @@ export default function ScrollVideoSection({ section }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
+  const [ready, setReady] = useState(false);
 
+  // rAF-throttled scroll progress, robust against 0 / negative scroll range
   useEffect(() => {
-    function onScroll() {
+    let ticking = false;
+
+    function update() {
+      ticking = false;
       const el = sectionRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const p = clamp(
-        ((-rect.top) / (el.offsetHeight - window.innerHeight)) * 100,
-        0,
-        100
-      );
+      const range = el.offsetHeight - window.innerHeight;
+      const p = range > 0 ? clamp((-rect.top / range) * 100, 0, 100) : 0;
       setProgress(p);
     }
 
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    update();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Wait for the video to actually be ready before scrubbing it
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (video.readyState >= 1) {
-      video.currentTime = (progress / 100) * video.duration;
+
+    function markReady() {
+      if (!video) return;
+      setReady(true);
+      // iOS Safari only renders seeked frames after the video has played once
+      const playPromise = video.play();
+      if (playPromise) playPromise.then(() => video.pause()).catch(() => {});
     }
-  }, [progress]);
+
+    if (video.readyState >= 1) {
+      markReady();
+    } else {
+      video.addEventListener("loadedmetadata", markReady);
+      return () => video.removeEventListener("loadedmetadata", markReady);
+    }
+  }, []);
+
+  // Sync the video frame to scroll progress once it's ready
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !ready) return;
+    const duration = video.duration;
+    if (!isFinite(duration) || duration <= 0) return;
+
+    const target = (progress / 100) * duration;
+    if (Math.abs(video.currentTime - target) > 0.05) {
+      video.currentTime = target;
+    }
+  }, [progress, ready]);
 
   if (!section.videoUrl) return null;
 
@@ -160,6 +195,12 @@ export default function ScrollVideoSection({ section }: Props) {
           playsInline
           className="absolute inset-0 h-full w-full object-cover"
         />
+
+        {!ready && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#0b0a09]">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold/25 border-t-gold" />
+          </div>
+        )}
 
         {section.overlays.map((overlay) => {
           const { opacity, transform } = getOverlayValues(overlay, progress);
