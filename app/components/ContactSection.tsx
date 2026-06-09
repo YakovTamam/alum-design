@@ -37,17 +37,17 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="bg-[#0e0e11] py-20">
+    <section id="contact" className="bg-[#f0ece5] py-20">
       <div className="mx-auto grid max-w-5xl gap-10 px-6 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:px-10">
         <div>
-          <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+          <h2 className="text-2xl font-semibold text-zinc-900 sm:text-3xl">
             יש לכם <span className="text-gold">פרויקט בראש</span>?
           </h2>
-          <p className="mt-3 max-w-md text-sm leading-7 text-zinc-400">
+          <p className="mt-3 max-w-md text-sm leading-7 text-zinc-600">
             השאירו פרטים ונחזור אליכם תוך זמן קצר עם ייעוץ ראשוני ללא עלות —
             או חייגו אלינו ישירות.
           </p>
-          <div className="mt-6 flex flex-col gap-3 text-sm text-zinc-300">
+          <div className="mt-6 flex flex-col gap-3 text-sm text-zinc-600">
             <a href="tel:0729444444" className="flex items-center gap-2 hover:text-gold">
               <span aria-hidden>☎</span> 072-3944444
             </a>
@@ -59,21 +59,21 @@ export default function ContactSection() {
 
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-panel/60 p-6 shadow-xl shadow-black/30"
+          className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl shadow-zinc-200"
         >
           {status === "success" ? (
             <div className="flex flex-col items-center gap-2 py-8 text-center">
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-gold">
                 ✓
               </span>
-              <h3 className="text-base font-semibold text-white">הפנייה נשלחה!</h3>
-              <p className="text-sm text-zinc-400">נחזור אליכם בהקדם האפשרי.</p>
+              <h3 className="text-base font-semibold text-zinc-900">הפנייה נשלחה!</h3>
+              <p className="text-sm text-zinc-500">נחזור אליכם בהקדם האפשרי.</p>
             </div>
           ) : (
             <>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="contact-name" className="mb-1.5 block text-xs text-zinc-400">
+                  <label htmlFor="contact-name" className="mb-1.5 block text-xs text-zinc-500">
                     שם מלא
                   </label>
                   <input
@@ -81,11 +81,11 @@ export default function ContactSection() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
+                    className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
                   />
                 </div>
                 <div>
-                  <label htmlFor="contact-phone" className="mb-1.5 block text-xs text-zinc-400">
+                  <label htmlFor="contact-phone" className="mb-1.5 block text-xs text-zinc-500">
                     טלפון
                   </label>
                   <input
@@ -95,13 +95,13 @@ export default function ContactSection() {
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
+                    className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="contact-email" className="mb-1.5 block text-xs text-zinc-400">
+                <label htmlFor="contact-email" className="mb-1.5 block text-xs text-zinc-500">
                   אימייל (לא חובה)
                 </label>
                 <input
@@ -110,12 +110,12 @@ export default function ContactSection() {
                   dir="ltr"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
+                  className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-message" className="mb-1.5 block text-xs text-zinc-400">
+                <label htmlFor="contact-message" className="mb-1.5 block text-xs text-zinc-500">
                   ספרו לנו על הפרויקט (לא חובה)
                 </label>
                 <textarea
@@ -123,7 +123,7 @@ export default function ContactSection() {
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
+                  className="w-full resize-none rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none focus:border-gold/60"
                 />
               </div>
 

@@ -58,9 +58,9 @@ function SolutionIcon({ kind }: { kind: (typeof SOLUTIONS)[number]["icon"] }) {
 
 export default function SolutionsSystem() {
   return (
-    <section id="systems" className="border-y border-white/5 bg-panel/30">
+    <section id="systems" className="border-y border-zinc-100 bg-[#f0ece5]">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-20">
-        <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">
+        <h2 className="text-center text-3xl font-bold text-zinc-900 sm:text-4xl">
           מערכת פתרונות{" "}
           <span className="text-gold">אלומיניום</span> מתקדמים
         </h2>
@@ -73,11 +73,11 @@ export default function SolutionsSystem() {
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
             {SOLUTIONS.map((s) => (
               <div key={s.label} className="relative flex flex-col items-center text-center">
-                <span className="z-10 flex h-[72px] w-[72px] items-center justify-center rounded-2xl border border-white/10 bg-panel text-gold shadow-lg shadow-black/30">
+                <span className="z-10 flex h-[72px] w-[72px] items-center justify-center rounded-2xl border border-zinc-200 bg-white text-gold shadow-lg shadow-zinc-200">
                   <SolutionIcon kind={s.icon} />
                 </span>
-                <h3 className="mt-4 text-sm font-semibold text-white">{s.label}</h3>
-                <p className="mt-1 max-w-[11rem] text-xs leading-5 text-zinc-400">
+                <h3 className="mt-4 text-sm font-semibold text-zinc-900">{s.label}</h3>
+                <p className="mt-1 max-w-[11rem] text-xs leading-5 text-zinc-500">
                   {s.desc}
                 </p>
               </div>
@@ -85,7 +85,7 @@ export default function SolutionsSystem() {
           </div>
         </div>
 
-        <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-7 text-zinc-400 lg:mt-14">
+        <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-7 text-zinc-500 lg:mt-14">
           כל המערכות מתחברות לחוויה אחת מושלמת — מהבחירה הראשונית ועד ההתקנה
           הסופית, בליווי צמוד של צוות ALUM DESIGN.
         </p>

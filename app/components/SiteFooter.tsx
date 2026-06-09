@@ -15,7 +15,7 @@ const COLUMNS = [
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-white/5 bg-[#0b0b0d]">
+    <footer className="border-t border-zinc-800 bg-[#1a1614]">
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_repeat(3,1fr)]">
           <div>
@@ -47,7 +47,7 @@ export default function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 text-sm text-zinc-400 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-sm text-zinc-400 sm:flex-row">
           <p>© {new Date().getFullYear()} ALUM DESIGN. כל הזכויות שמורות.</p>
           <div className="flex items-center gap-6">
             <a href="tel:0729444444" className="flex items-center gap-2 transition-colors hover:text-gold">

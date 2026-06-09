@@ -41,7 +41,7 @@ function BadgeIcon({ kind }: { kind: (typeof BADGES)[number]["icon"] }) {
 
 export default function TrustBar() {
   return (
-    <section className="border-y border-white/10 bg-panel/70 backdrop-blur-sm">
+    <section className="border-y border-zinc-200 bg-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
@@ -53,14 +53,14 @@ export default function TrustBar() {
           </a>
           <a
             href="#projects"
-            className="flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm text-zinc-200 transition-colors hover:border-white/40 hover:text-white"
+            className="flex items-center justify-center gap-2 rounded-full border border-zinc-300 px-6 py-3 text-sm text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900"
           >
             <span aria-hidden>↻</span>
             צפה בתוכניות
           </a>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-sm text-zinc-200 sm:flex sm:flex-wrap sm:items-center sm:gap-8">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-sm text-zinc-700 sm:flex sm:flex-wrap sm:items-center sm:gap-8">
           {BADGES.map((b) => (
             <div key={b.label} className="flex items-center gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/[0.08] text-gold">

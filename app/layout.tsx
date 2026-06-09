@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#0b0b0d] text-zinc-100">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <SmoothScroll />
         {children}
       </body>

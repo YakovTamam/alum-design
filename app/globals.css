@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b0b0d;
-  --foreground: #f4f4f5;
+  --background: #f7f5f2;
+  --foreground: #1a1614;
   --gold: #cfa15c;
   --gold-light: #e8c896;
-  --panel: #16161a;
-  --panel-light: #1e1e24;
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  --panel: #ffffff;
+  --panel-light: #f0ece5;
+  --border-subtle: rgba(0, 0, 0, 0.08);
 }
 
 @theme inline {
@@ -37,7 +37,7 @@ body {
 
 /* Gold gradient text */
 .gradient-gold {
-  background: linear-gradient(135deg, #e8c896 0%, #cfa15c 55%, #a87a3a 100%);
+  background: linear-gradient(135deg, #b8882e 0%, #cfa15c 55%, #e8c896 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -56,12 +56,12 @@ body {
 }
 
 .btn-gold:hover {
-  filter: brightness(1.12);
+  filter: brightness(1.08);
 }
 
 /* Stat counters gradient */
 .stat-number {
-  background: linear-gradient(to bottom, #e8c896, #cfa15c);
+  background: linear-gradient(to bottom, #b8882e, #cfa15c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

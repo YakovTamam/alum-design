@@ -103,7 +103,7 @@ export default function CategoryCarousel({ images = {} }: Props) {
         <a
           key={i}
           href="#projects"
-          className="group snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-white/[0.14] bg-white/[0.07] shadow-xl shadow-black/40 backdrop-blur-md transition-colors hover:border-gold/50 hover:shadow-gold/5"
+          className="group snap-start shrink-0 w-[75vw] sm:w-[44vw] lg:w-72 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200/80 backdrop-blur-md transition-all hover:border-gold/50 hover:shadow-gold/10"
         >
           <PhotoPlaceholder
             label={c.title}
@@ -113,8 +113,8 @@ export default function CategoryCarousel({ images = {} }: Props) {
           />
           <div className="flex items-center justify-between gap-3 p-5">
             <div>
-              <h3 className="text-sm font-semibold text-white">{c.title}</h3>
-              <p className="mt-1 text-xs leading-5 text-zinc-400">{c.desc}</p>
+              <h3 className="text-sm font-semibold text-zinc-900">{c.title}</h3>
+              <p className="mt-1 text-xs leading-5 text-zinc-500">{c.desc}</p>
             </div>
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/40 text-gold transition-transform group-hover:-translate-x-1">
               ←
