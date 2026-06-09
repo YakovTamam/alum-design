@@ -12,7 +12,7 @@ const STATS = [
   { value: "200+", label: "קבלנים פעילים" },
 ];
 
-export default function Hero({ slides }: { slides: SerializedHeroSlide[] }) {
+export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroSlide[]; mobileHeight?: string }) {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -83,8 +83,8 @@ export default function Hero({ slides }: { slides: SerializedHeroSlide[] }) {
 
   return (
     <section
-      className="relative h-[85vh] min-h-[500px] select-none overflow-hidden cursor-grab active:cursor-grabbing lg:h-screen"
-      style={{ touchAction: "pan-y" }}
+      className="hero-section relative select-none overflow-hidden cursor-grab active:cursor-grabbing"
+      style={{ touchAction: "pan-y", "--hero-h-mobile": mobileHeight } as React.CSSProperties}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}

@@ -14,6 +14,7 @@ import StickyLeadButton from "./components/StickyLeadButton";
 import Reveal from "./components/Reveal";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides";
+import { getSetting } from "@/lib/settings";
 
 export const revalidate = 60;
 
@@ -27,6 +28,7 @@ export default async function Home() {
 
   // getHeroSlides never throws — returns defaults if MongoDB is unavailable
   const heroSlides = await getHeroSlides();
+  const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
 
   return (
     <div className="flex flex-1 flex-col">
@@ -34,7 +36,7 @@ export default async function Home() {
       <StickyLeadButton />
       <SiteHeader />
       <main className="flex flex-1 flex-col">
-        <Hero slides={heroSlides} />
+        <Hero slides={heroSlides} mobileHeight={heroMobileHeight} />
         <TrustBar />
         <Reveal>
           <StatsSection />

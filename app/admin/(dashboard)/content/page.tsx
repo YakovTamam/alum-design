@@ -6,8 +6,10 @@ import {
   type SiteContentEntry,
 } from "@/lib/content";
 import { getHeroSlides, type SerializedHeroSlide } from "@/lib/hero-slides";
+import { getSetting } from "@/lib/settings";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
+import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +35,7 @@ export default async function ContentSlotsPage() {
 
   // getHeroSlides handles its own errors and always returns data (defaults as fallback)
   heroSlides = await getHeroSlides();
+  const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
 
   return (
     <div className="flex flex-col gap-12">
@@ -56,6 +59,15 @@ export default async function ContentSlotsPage() {
           3 שקופיות מתחלפות — עדכנו כותרת, תת-כותרת, כפתור, תמונה ומשך לכל שקופית.
         </p>
         <HeroSlidesManager slides={heroSlides} media={media} />
+      </div>
+
+      {/* Hero mobile height */}
+      <div>
+        <h2 className="mb-1 text-sm font-semibold text-white">גובה הירו במובייל</h2>
+        <p className="mb-4 text-xs text-zinc-500">
+          בחרו ערך vh או px (למשל 75vh, 600px). בדסקטופ הגובה תמיד 100vh.
+        </p>
+        <HeroHeightSetting initialValue={heroMobileHeight} />
       </div>
 
       {/* Image Slots */}

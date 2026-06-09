@@ -77,3 +77,15 @@ body {
 .wa-pulse {
   animation: wa-pulse 2.2s ease infinite;
 }
+
+/* Hero section height — controlled via CSS variable set server-side */
+.hero-section {
+  height: var(--hero-h-mobile, 75vh);
+  min-height: 500px;
+}
+@media (min-width: 1024px) {
+  .hero-section {
+    height: 100vh;
+    min-height: 0;
+  }
+}
