@@ -23,6 +23,7 @@ export type Lead = {
   message?: string;
   configurator?: ConfiguratorSnapshot;
   status: LeadStatus;
+  notes?: string;
   createdAt: Date;
 };
 

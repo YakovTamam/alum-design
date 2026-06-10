@@ -26,21 +26,38 @@ export async function PATCH(
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { status } = body;
-  if (!STATUSES.includes(status as LeadStatus)) {
-    return NextResponse.json({ error: "סטטוס לא תקין" }, { status: 400 });
+  const { status, notes } = body;
+
+  const update: Partial<Pick<Lead, "status" | "notes">> = {};
+
+  if (status !== undefined) {
+    if (!STATUSES.includes(status as LeadStatus)) {
+      return NextResponse.json({ error: "סטטוס לא תקין" }, { status: 400 });
+    }
+    update.status = status as LeadStatus;
+  }
+
+  if (notes !== undefined) {
+    if (typeof notes !== "string") {
+      return NextResponse.json({ error: "הערות לא תקינות" }, { status: 400 });
+    }
+    update.notes = notes.trim().slice(0, 5000);
+  }
+
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json({ error: "לא נשלחו שדות לעדכון" }, { status: 400 });
   }
 
   const db = await getDb();
   const result = await db
     .collection<Lead>(LEADS_COLLECTION)
-    .updateOne({ _id: new ObjectId(id) }, { $set: { status: status as LeadStatus } });
+    .updateOne({ _id: new ObjectId(id) }, { $set: update });
 
   if (result.matchedCount === 0) {
     return NextResponse.json({ error: "ליד לא נמצא" }, { status: 404 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, ...update });
 }
 
 export async function DELETE(
