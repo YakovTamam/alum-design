@@ -17,6 +17,7 @@ const OVERLAY_DIRECTION_LABELS: Record<OverlayDirection, string> = {
 };
 import type { SerializedMedia } from "@/lib/media";
 import Accordion from "./Accordion";
+import { useSaveAll } from "./SaveAllContext";
 
 type Props = {
   slides: SerializedHeroSlide[];
@@ -24,9 +25,9 @@ type Props = {
 };
 
 export default function HeroSlidesManager({ slides: initialSlides, media }: Props) {
-  const [slides, setSlides] = useState<Record<number, SerializedHeroSlide>>(
-    Object.fromEntries(initialSlides.map((s) => [s.id, s]))
-  );
+  const initialMap = Object.fromEntries(initialSlides.map((s) => [s.id, s]));
+  const [slides, setSlides] = useState<Record<number, SerializedHeroSlide>>(initialMap);
+  const [persisted, setPersisted] = useState<Record<number, SerializedHeroSlide>>(initialMap);
   const [pickerFor, setPickerFor] = useState<number | null>(null);
   const [busy, setBusy] = useState<number | null>(null);
   const [saved, setSaved] = useState<number | null>(null);
@@ -38,32 +39,38 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
     setSlides((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
   }
 
+  async function persistSlide(id: number): Promise<void> {
+    const slide = slides[id];
+    const res = await fetch(`/api/admin/hero-slides/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: slide.title,
+        subtitle: slide.subtitle,
+        ctaText: slide.ctaText,
+        ctaLink: slide.ctaLink,
+        duration: slide.duration,
+        mediaId: slide.mediaId ?? "",
+        titleSize: slide.titleSize,
+        titleColor: slide.titleColor,
+        subtitleSize: slide.subtitleSize,
+        subtitleColor: slide.subtitleColor,
+        overlayDirection: slide.overlayDirection,
+        overlayIntensity: slide.overlayIntensity,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error ?? "השמירה נכשלה");
+    const merged = { ...slide, ...data.slide };
+    setSlides((prev) => ({ ...prev, [id]: merged }));
+    setPersisted((prev) => ({ ...prev, [id]: merged }));
+  }
+
   async function save(id: number) {
     setBusy(id);
     setError(null);
-    const slide = slides[id];
     try {
-      const res = await fetch(`/api/admin/hero-slides/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: slide.title,
-          subtitle: slide.subtitle,
-          ctaText: slide.ctaText,
-          ctaLink: slide.ctaLink,
-          duration: slide.duration,
-          mediaId: slide.mediaId ?? "",
-          titleSize: slide.titleSize,
-          titleColor: slide.titleColor,
-          subtitleSize: slide.subtitleSize,
-          subtitleColor: slide.subtitleColor,
-          overlayDirection: slide.overlayDirection,
-          overlayIntensity: slide.overlayIntensity,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error ?? "השמירה נכשלה");
-      setSlides((prev) => ({ ...prev, [id]: { ...prev[id], ...data.slide } }));
+      await persistSlide(id);
       setSaved(id);
       setTimeout(() => setSaved(null), 2500);
     } catch (err) {
@@ -72,6 +79,14 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
       setBusy(null);
     }
   }
+
+  const dirtyIds = [1, 2, 3].filter(
+    (id) => slides[id] && JSON.stringify(slides[id]) !== JSON.stringify(persisted[id]),
+  );
+
+  useSaveAll("hero-slides", dirtyIds.length > 0, async () => {
+    for (const id of dirtyIds) await persistSlide(id);
+  });
 
   function assignImage(slideId: number, mediaId: string) {
     const m = mediaById.get(mediaId);

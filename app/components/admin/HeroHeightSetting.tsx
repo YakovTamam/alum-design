@@ -1,22 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import { useSaveAll } from "./SaveAllContext";
 
 const PRESETS = ["60vh", "65vh", "70vh", "75vh", "80vh", "85vh", "90vh", "100vh"];
 
 export default function HeroHeightSetting({ initialValue }: { initialValue: string }) {
   const [value, setValue] = useState(initialValue);
+  const [persisted, setPersisted] = useState(initialValue);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  async function persist(): Promise<void> {
+    const res = await fetch("/api/admin/settings/hero-mobile-height", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value }),
+    });
+    if (!res.ok) throw new Error("שמירת גובה ההירו נכשלה");
+    setPersisted(value);
+  }
+
+  useSaveAll("hero-height", value.trim() !== persisted.trim(), persist);
 
   async function save() {
     setStatus("saving");
     try {
-      const res = await fetch("/api/admin/settings/hero-mobile-height", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value }),
-      });
-      if (!res.ok) throw new Error();
+      await persist();
       setStatus("saved");
       setTimeout(() => setStatus("idle"), 2500);
     } catch {

@@ -6,6 +6,7 @@ import type { SerializedScrollSection, TextOverlay } from "@/lib/scroll-sections
 import { ANIM_TYPES, FONT_SIZES, FONT_FAMILIES, FONT_FAMILY_LABELS } from "@/lib/scroll-sections";
 import type { SerializedMedia } from "@/lib/media";
 import Accordion from "./Accordion";
+import { useSaveAll } from "./SaveAllContext";
 
 type Props = {
   initialSection: SerializedScrollSection;
@@ -14,24 +15,32 @@ type Props = {
 
 export default function ScrollSectionManager({ initialSection, media }: Props) {
   const [section, setSection] = useState<SerializedScrollSection>(initialSection);
+  const [persisted, setPersisted] = useState<SerializedScrollSection>(initialSection);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  async function persist(): Promise<void> {
+    const res = await fetch("/api/admin/scroll-sections", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(section),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error ?? "השמירה נכשלה");
+    setSection(data.section);
+    setPersisted(data.section);
+  }
+
+  useSaveAll("scroll-section", JSON.stringify(section) !== JSON.stringify(persisted), persist);
 
   async function save() {
     setBusy(true);
     setSaved(false);
     setError(null);
     try {
-      const res = await fetch("/api/admin/scroll-sections", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(section),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error ?? "השמירה נכשלה");
-      setSection(data.section);
+      await persist();
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {

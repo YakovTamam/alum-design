@@ -14,6 +14,7 @@ import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
 import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";
 import ScrollSectionManager from "../../../components/admin/ScrollSectionManager";
+import { SaveAllProvider } from "../../../components/admin/SaveAllContext";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,7 @@ export default async function ContentSlotsPage() {
   );
 
   return (
+    <SaveAllProvider>
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-lg font-semibold text-white">ניהול תצוגות</h1>
@@ -135,5 +137,6 @@ export default async function ContentSlotsPage() {
         ]}
       />
     </div>
+    </SaveAllProvider>
   );
 }
