@@ -24,6 +24,8 @@ function getNavGroups(role: UserRole): NavGroup[] {
     title: "ניהול",
     items: [
       { href: "/admin/projects", label: "פרויקטים" },
+      { href: "/admin/portfolio", label: "גלריית פרויקטים" },
+      { href: "/admin/testimonials", label: "המלצות לקוחות" },
       { href: "/admin/users", label: "משתמשים" },
     ],
   });

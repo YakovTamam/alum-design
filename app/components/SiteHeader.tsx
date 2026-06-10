@@ -3,7 +3,7 @@ import Image from "next/image";
 const NAV_LINKS = [
   { label: "דף הבית", href: "#" },
   { label: "מערכות", href: "#systems" },
-  { label: "פרויקטים", href: "#projects" },
+  { label: "פרויקטים", href: "/projects" },
   { label: "לקוחותינו", href: "#categories" },
   { label: "אודות", href: "#" },
   { label: "צור קשר", href: "#contact" },

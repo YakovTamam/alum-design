@@ -16,11 +16,13 @@ import CookieBanner from "./components/CookieBanner";
 import Reveal from "./components/Reveal";
 import ScrollVideoSection from "./components/ScrollVideoSection";
 import TrackingScripts from "./components/TrackingScripts";
+import Testimonials from "./components/Testimonials";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getScrollSection } from "@/lib/scroll-sections-data";
 import { getStaffSession } from "@/lib/auth";
+import { getTestimonials } from "@/lib/testimonials-data";
 
 export const revalidate = 60;
 
@@ -37,6 +39,7 @@ export default async function Home() {
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
   const staffSession = await getStaffSession();
+  const testimonials = await getTestimonials();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -67,6 +70,9 @@ export default async function Home() {
         <FinalCta imageUrl={images["final-cta"]} />
         <Reveal>
           <StatsSection />
+        </Reveal>
+        <Reveal>
+          <Testimonials testimonials={testimonials} />
         </Reveal>
         <Reveal>
           <ContactSection />
