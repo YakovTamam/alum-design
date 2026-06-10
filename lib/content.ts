@@ -2,7 +2,6 @@ import { getDb } from "./mongodb";
 
 export const CONTENT_SLOTS = [
   { key: "site-logo", label: "לוגו האתר (כותרת ופוטר)" },
-  { key: "hero", label: "תמונה ראשית (Hero)" },
   { key: "final-cta", label: "באנר סיום (Final CTA)" },
   { key: "category-luxury-villas", label: "קטגוריה: וילות יוקרה" },
   { key: "category-residential", label: "קטגוריה: בנייני מגורים" },

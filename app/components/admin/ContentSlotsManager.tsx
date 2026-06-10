@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import type { CONTENT_SLOTS } from "@/lib/content";
 import type { SerializedMedia } from "@/lib/media";
 
 type ContentSlotsManagerProps = {
-  slots: typeof CONTENT_SLOTS;
+  slots: ReadonlyArray<{ key: string; label: string }>;
   media: SerializedMedia[];
   initialAssignments: Record<string, string>;
 };

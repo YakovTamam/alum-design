@@ -9,6 +9,7 @@ import type { SerializedHeroSlide } from "@/lib/hero-slides";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getScrollSection } from "@/lib/scroll-sections-data";
+import ContentAccordion from "../../../components/admin/ContentAccordion";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
 import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";
@@ -41,12 +42,20 @@ export default async function ContentSlotsPage() {
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
 
+  const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo");
+  const categorySlots = CONTENT_SLOTS.filter((slot) => slot.key.startsWith("category-"));
+  const finalCtaSlots = CONTENT_SLOTS.filter((slot) => slot.key === "final-cta");
+
+  const slotsUnavailable = (
+    <p className="text-sm text-zinc-500">תמונות לא זמינות ללא חיבור למסד הנתונים.</p>
+  );
+
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-lg font-semibold text-white">ניהול תצוגות</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          עריכת שקופיות ה-Hero ותמונות אזורי האתר.
+          הקטגוריות מסודרות לפי סדר הסקשנים בדף הבית — לחצו על קטגוריה כדי לערוך אותה.
         </p>
       </div>
 
@@ -56,47 +65,75 @@ export default async function ContentSlotsPage() {
         </div>
       )}
 
-      {/* Hero Slider */}
-      <div>
-        <h2 className="mb-1 text-sm font-semibold text-white">הירו סלידר</h2>
-        <p className="mb-5 text-xs text-zinc-500">
-          3 שקופיות מתחלפות — עדכנו כותרת, תת-כותרת, כפתור, תמונה ומשך לכל שקופית.
-        </p>
-        <HeroSlidesManager slides={heroSlides} media={media} />
-      </div>
-
-      {/* Hero mobile height */}
-      <div>
-        <h2 className="mb-1 text-sm font-semibold text-white">גובה הירו במובייל</h2>
-        <p className="mb-4 text-xs text-zinc-500">
-          בחרו ערך vh או px (למשל 75vh, 600px). בדסקטופ הגובה תמיד 100vh.
-        </p>
-        <HeroHeightSetting initialValue={heroMobileHeight} />
-      </div>
-
-      {/* Scroll Video Section */}
-      <div>
-        <h2 className="mb-1 text-sm font-semibold text-white">סקשן סקרול וידאו</h2>
-        <p className="mb-5 text-xs text-zinc-500">
-          וידאו המתקדם עם הגלילה עם שכבות טקסט מונפשות.
-        </p>
-        <ScrollSectionManager initialSection={scrollSection} media={media} />
-      </div>
-
-      {/* Image Slots */}
-      <div>
-        <h2 className="mb-1 text-sm font-semibold text-white">תמונות אזורים</h2>
-        <p className="mb-5 text-xs text-zinc-500">
-          בחרו תמונה מספריית התמונות עבור כל אזור באתר. אזור ללא תמונה ימשיך להציג עיצוב ברירת מחדל.
-        </p>
-        {!loadError && (
-          <ContentSlotsManager
-            slots={CONTENT_SLOTS}
-            media={media}
-            initialAssignments={assignments}
-          />
-        )}
-      </div>
+      <ContentAccordion
+        sections={[
+          {
+            id: "site-logo",
+            title: "לוגו האתר",
+            description: "החלפת הלוגו המוצג בכותרת העליונה ובפוטר",
+            content: loadError ? (
+              slotsUnavailable
+            ) : (
+              <ContentSlotsManager
+                slots={logoSlots}
+                media={media}
+                initialAssignments={assignments}
+              />
+            ),
+          },
+          {
+            id: "hero",
+            title: "הירו (סלידר ראשי)",
+            description: "3 שקופיות מתחלפות — כותרות, תמונות, משך וגובה במובייל",
+            content: (
+              <div className="flex flex-col gap-8">
+                <HeroSlidesManager slides={heroSlides} media={media} />
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-white">גובה הירו במובייל</h3>
+                  <p className="mb-4 text-xs text-zinc-500">
+                    בחרו ערך vh או px (למשל 75vh, 600px). בדסקטופ הגובה תמיד 100vh.
+                  </p>
+                  <HeroHeightSetting initialValue={heroMobileHeight} />
+                </div>
+              </div>
+            ),
+          },
+          {
+            id: "categories",
+            title: "קטגוריות פרויקטים",
+            description: "תמונות 4 קטגוריות הפרויקטים — וילות, מגורים, עסקים ומסחר",
+            content: loadError ? (
+              slotsUnavailable
+            ) : (
+              <ContentSlotsManager
+                slots={categorySlots}
+                media={media}
+                initialAssignments={assignments}
+              />
+            ),
+          },
+          {
+            id: "scroll-video",
+            title: "סקשן סקרול וידאו",
+            description: "וידאו המתקדם עם הגלילה עם שכבות טקסט מונפשות",
+            content: <ScrollSectionManager initialSection={scrollSection} media={media} />,
+          },
+          {
+            id: "final-cta",
+            title: "באנר סיום (Final CTA)",
+            description: "תמונת הבאנר הגדול שלפני אזור יצירת הקשר",
+            content: loadError ? (
+              slotsUnavailable
+            ) : (
+              <ContentSlotsManager
+                slots={finalCtaSlots}
+                media={media}
+                initialAssignments={assignments}
+              />
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }
