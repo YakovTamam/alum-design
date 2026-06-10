@@ -31,20 +31,22 @@ export default function SiteFooter() {
             </p>
           </div>
 
-          {COLUMNS.map((col) => (
-            <div key={col.title}>
-              <h3 className="text-sm font-semibold text-white">{col.title}</h3>
-              <ul className="mt-4 flex flex-col gap-3 text-sm text-zinc-400">
-                {col.links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="transition-colors hover:text-gold">
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="flex justify-between gap-2 sm:contents">
+            {COLUMNS.map((col) => (
+              <div key={col.title} className="w-[30%] sm:w-auto">
+                <h3 className="text-sm font-semibold text-white">{col.title}</h3>
+                <ul className="mt-4 flex flex-col gap-3 text-sm text-zinc-400">
+                  {col.links.map((link) => (
+                    <li key={link}>
+                      <a href="#" className="transition-colors hover:text-gold">
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-sm text-zinc-400 sm:flex-row">
