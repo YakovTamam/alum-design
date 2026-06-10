@@ -39,12 +39,13 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
 
   if (from && notifyTo) {
     try {
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from,
         to: notifyTo,
         subject: `ליד חדש מהאתר — ${lead.name}`,
         text: `התקבל ליד חדש דרך ${sourceLabel}:\n\n${details}`,
       });
+      if (error) console.error("Failed to send admin lead notification email", error);
     } catch (err) {
       console.error("Failed to send admin lead notification email", err);
     }
@@ -52,12 +53,13 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
 
   if (from && lead.email) {
     try {
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from,
         to: lead.email,
         subject: "תודה שפנית אלינו — ALUM DESIGN",
         text: `שלום ${lead.name},\n\nתודה שפנית ל-ALUM DESIGN. קיבלנו את פנייתך ונחזור אליך בהקדם האפשרי.\n\nבברכה,\nצוות ALUM DESIGN`,
       });
+      if (error) console.error("Failed to send lead auto-reply email", error);
     } catch (err) {
       console.error("Failed to send lead auto-reply email", err);
     }
@@ -82,12 +84,13 @@ export async function sendInvitationEmail(data: {
   const roleLabel = ROLE_LABELS[data.role];
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from,
       to: data.email,
       subject: "הזמנה למערכת הניהול — ALUM DESIGN",
       text: `שלום,\n\nהוזמנת להצטרף למערכת הניהול של ALUM DESIGN בתפקיד ${roleLabel}.\n\nלהשלמת ההרשמה, לחצו על הקישור הבא (תקף ל-7 ימים):\n${data.inviteUrl}\n\nבברכה,\nצוות ALUM DESIGN`,
     });
+    if (error) console.error("Failed to send invitation email", error);
   } catch (err) {
     console.error("Failed to send invitation email", err);
   }
