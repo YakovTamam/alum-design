@@ -15,6 +15,7 @@ import AccessibilityWidget from "./components/AccessibilityWidget";
 import CookieBanner from "./components/CookieBanner";
 import Reveal from "./components/Reveal";
 import ScrollVideoSection from "./components/ScrollVideoSection";
+import TrackingScripts from "./components/TrackingScripts";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
@@ -37,6 +38,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col">
+      <TrackingScripts />
       <FloatingWhatsApp />
       <AccessibilityWidget />
       <StickyLeadButton />

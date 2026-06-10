@@ -15,6 +15,7 @@ function getNavGroups(role: UserRole): NavGroup[] {
       items: [
         { href: "/admin/content", label: "ניהול תצוגות" },
         { href: "/admin/media", label: "ספריית התמונות" },
+        { href: "/admin/marketing", label: "שיווק ומעקב" },
       ],
     });
   }

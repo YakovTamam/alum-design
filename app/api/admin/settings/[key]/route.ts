@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { requireSuperAdmin } from "@/lib/auth";
 import { setSetting } from "@/lib/settings";
 
@@ -25,5 +26,6 @@ export async function PUT(
   }
 
   await setSetting(key, value);
+  revalidatePath("/");
   return NextResponse.json({ ok: true, key, value });
 }
