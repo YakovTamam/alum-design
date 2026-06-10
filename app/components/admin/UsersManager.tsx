@@ -27,9 +27,12 @@ export default function UsersManager({
   initialInvitations: SerializedInvitation[];
   canInviteAdmins: boolean;
 }) {
-  const [users] = useState(initialUsers);
+  const [users, setUsers] = useState(initialUsers);
   const [invitations, setInvitations] = useState(initialInvitations);
+  const [mode, setMode] = useState<"invite" | "direct">("invite");
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("client");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -45,16 +48,26 @@ export default function UsersManager({
       const res = await fetch("/api/admin/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, role }),
+        body: JSON.stringify(
+          mode === "direct" ? { email, role, name, password } : { email, role },
+        ),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data.error || "שליחת ההזמנה נכשלה");
+        setError(data.error || "הפעולה נכשלה");
         return;
       }
-      setInvitations((curr) => [data.invitation, ...curr]);
+
+      if (mode === "direct") {
+        setUsers((curr) => [data.user, ...curr]);
+        setName("");
+        setPassword("");
+        setSuccess("המשתמש נוצר בהצלחה");
+      } else {
+        setInvitations((curr) => [data.invitation, ...curr]);
+        setSuccess("ההזמנה נשלחה בהצלחה");
+      }
       setEmail("");
-      setSuccess("ההזמנה נשלחה בהצלחה");
     } catch {
       setError("שגיאת רשת, נסו שוב");
     } finally {
@@ -64,10 +77,49 @@ export default function UsersManager({
 
   return (
     <div className="flex flex-col gap-10">
-      {/* Invite form */}
+      {/* Invite / create form */}
       <div className="rounded-2xl border border-white/10 p-6">
-        <h2 className="mb-4 text-sm font-semibold text-white">הזמנת משתמש חדש</h2>
+        <h2 className="mb-4 text-sm font-semibold text-white">הוספת משתמש חדש</h2>
+
+        {/* Mode toggle */}
+        <div className="mb-4 inline-flex rounded-xl border border-white/10 p-1 text-sm">
+          <button
+            type="button"
+            onClick={() => setMode("invite")}
+            className={`rounded-lg px-3 py-1.5 transition-colors ${
+              mode === "invite" ? "bg-gold/15 text-gold" : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            הזמנה באימייל
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("direct")}
+            className={`rounded-lg px-3 py-1.5 transition-colors ${
+              mode === "direct" ? "bg-gold/15 text-gold" : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            יצירה ישירה עם סיסמה
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-3">
+          {mode === "direct" && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-zinc-400" htmlFor="invite-name">
+                שם
+              </label>
+              <input
+                id="invite-name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-40 rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
+              />
+            </div>
+          )}
+
           <div className="flex flex-col gap-1.5">
             <label className="text-xs text-zinc-400" htmlFor="invite-email">
               אימייל
@@ -82,6 +134,25 @@ export default function UsersManager({
               className="w-64 rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
             />
           </div>
+
+          {mode === "direct" && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-zinc-400" htmlFor="invite-password">
+                סיסמה
+              </label>
+              <input
+                id="invite-password"
+                type="text"
+                required
+                minLength={8}
+                dir="ltr"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="לפחות 8 תווים"
+                className="w-44 rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
+              />
+            </div>
+          )}
 
           {canInviteAdmins && (
             <div className="flex flex-col gap-1.5">
@@ -109,7 +180,7 @@ export default function UsersManager({
             disabled={submitting}
             className="rounded-xl bg-gold px-5 py-2.5 text-sm font-semibold text-[#1a1308] transition-colors hover:bg-gold-light disabled:opacity-60"
           >
-            {submitting ? "שולח…" : "שליחת הזמנה"}
+            {submitting ? "שולח…" : mode === "direct" ? "יצירת משתמש" : "שליחת הזמנה"}
           </button>
         </form>
 

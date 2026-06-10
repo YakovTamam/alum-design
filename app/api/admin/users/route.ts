@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireStaff } from "@/lib/auth";
 import { sendInvitationEmail } from "@/lib/email";
 import { createInvitation, listInvitations, serializeInvitation } from "@/lib/invitations";
-import { getUserByEmail, listUsers, serializeUser, type UserRole } from "@/lib/users";
+import { createUser, getUserByEmail, listUsers, serializeUser, type UserRole } from "@/lib/users";
 
 const INVITABLE_ROLES: UserRole[] = ["admin", "client"];
 
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { email, role } = body;
+  const { email, role, name, password } = body;
   if (typeof email !== "string" || !email.trim()) {
     return NextResponse.json({ error: "יש להזין אימייל" }, { status: 400 });
   }
@@ -54,6 +54,25 @@ export async function POST(request: Request) {
   const existingUser = await getUserByEmail(normalizedEmail);
   if (existingUser) {
     return NextResponse.json({ error: "כבר קיים משתמש עם אימייל זה" }, { status: 409 });
+  }
+
+  // Direct creation: admin sets the user's name and password themselves.
+  if (typeof password === "string" && password) {
+    if (typeof name !== "string" || !name.trim()) {
+      return NextResponse.json({ error: "יש להזין שם" }, { status: 400 });
+    }
+    if (password.length < 8) {
+      return NextResponse.json({ error: "הסיסמה חייבת להכיל לפחות 8 תווים" }, { status: 400 });
+    }
+
+    const user = await createUser({
+      email: normalizedEmail,
+      password,
+      name: name.trim(),
+      role: role as UserRole,
+    });
+
+    return NextResponse.json({ ok: true, user: serializeUser(user) });
   }
 
   const invitation = await createInvitation({

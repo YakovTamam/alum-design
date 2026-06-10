@@ -21,7 +21,17 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
             <span className="h-5 w-px bg-white/10" />
             <span className="text-sm font-semibold text-white">פאנל ניהול</span>
           </div>
-          <LogoutButton />
+          <div className="flex items-center gap-2">
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/15 px-4 py-2 text-sm text-zinc-300 transition-colors hover:border-white/35"
+            >
+              צפייה באתר
+            </a>
+            <LogoutButton />
+          </div>
         </div>
         {/* Mobile nav tabs */}
         <div className="flex overflow-x-auto border-t border-white/5 px-5 scrollbar-hide">
@@ -42,7 +52,15 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
 
         <AdminSideNav role={role} />
 
-        <div className="mt-auto px-2">
+        <div className="mt-auto flex flex-col gap-2 px-2">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-white/15 px-4 py-2 text-center text-sm text-zinc-300 transition-colors hover:border-white/35"
+          >
+            צפייה באתר
+          </a>
           <LogoutButton />
         </div>
       </aside>

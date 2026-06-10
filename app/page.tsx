@@ -20,6 +20,7 @@ import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getScrollSection } from "@/lib/scroll-sections-data";
+import { getStaffSession } from "@/lib/auth";
 
 export const revalidate = 60;
 
@@ -35,6 +36,7 @@ export default async function Home() {
   const heroSlides = await getHeroSlides();
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
+  const staffSession = await getStaffSession();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -43,7 +45,7 @@ export default async function Home() {
       <AccessibilityWidget />
       <StickyLeadButton />
       <CookieBanner />
-      <SiteHeader logoUrl={images["site-logo"]} />
+      <SiteHeader logoUrl={images["site-logo"]} isStaff={Boolean(staffSession)} />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} mobileHeight={heroMobileHeight} />
         <Reveal>
