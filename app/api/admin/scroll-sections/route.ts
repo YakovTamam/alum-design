@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/auth";
 import { getDb } from "@/lib/mongodb";
 import {
@@ -67,6 +68,8 @@ export async function PUT(request: Request) {
   await db
     .collection<ScrollSection>(SCROLL_SECTIONS_COLLECTION)
     .replaceOne({ _id: "main" } as never, updated, { upsert: true });
+
+  revalidatePath("/");
 
   return NextResponse.json({ ok: true, section: serializeScrollSection(updated) });
 }
