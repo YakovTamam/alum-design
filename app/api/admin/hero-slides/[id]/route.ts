@@ -42,6 +42,7 @@ export async function PUT(
     ctaText,
     ctaLink,
     mediaId,
+    desktopMediaId,
     duration,
     titleSize,
     titleColor,
@@ -79,6 +80,28 @@ export async function PUT(
     }
   }
 
+  let desktopImageUrl = existing?.desktopImageUrl;
+  let resolvedDesktopMediaId = existing?.desktopMediaId;
+  let resolvedDesktopMediaType = existing?.desktopMediaType;
+
+  if (typeof desktopMediaId === "string") {
+    if (desktopMediaId === "") {
+      desktopImageUrl = undefined;
+      resolvedDesktopMediaId = undefined;
+      resolvedDesktopMediaType = undefined;
+    } else if (ObjectId.isValid(desktopMediaId)) {
+      const media = await db
+        .collection<Media>(MEDIA_COLLECTION)
+        .findOne({ _id: new ObjectId(desktopMediaId) });
+      if (!media) {
+        return NextResponse.json({ error: "התמונה לא נמצאה" }, { status: 404 });
+      }
+      desktopImageUrl = media.url;
+      resolvedDesktopMediaId = desktopMediaId;
+      resolvedDesktopMediaType = media.fileType ?? "image";
+    }
+  }
+
   const updated: HeroSlide = {
     _id: slideId,
     title: typeof title === "string" && title.trim() ? title.trim() : (existing?.title ?? def.title),
@@ -99,6 +122,9 @@ export async function PUT(
     imageUrl,
     mediaId: resolvedMediaId,
     mediaType: resolvedMediaType,
+    desktopImageUrl,
+    desktopMediaId: resolvedDesktopMediaId,
+    desktopMediaType: resolvedDesktopMediaType,
     titleSize: TITLE_SIZES.includes(titleSize as never) ? (titleSize as HeroSlide["titleSize"]) : (existing?.titleSize),
     titleColor: typeof titleColor === "string" && /^#[0-9a-fA-F]{6}$/.test(titleColor) ? titleColor : existing?.titleColor,
     subtitleSize: SUBTITLE_SIZES.includes(subtitleSize as never) ? (subtitleSize as HeroSlide["subtitleSize"]) : (existing?.subtitleSize),

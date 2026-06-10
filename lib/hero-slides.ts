@@ -16,6 +16,9 @@ export type HeroSlide = {
   imageUrl?: string;
   mediaId?: string;
   mediaType?: "image" | "video";
+  desktopImageUrl?: string;
+  desktopMediaId?: string;
+  desktopMediaType?: "image" | "video";
   duration: number; // seconds
   titleSize?: TitleSize;
   titleColor?: string;
@@ -35,6 +38,9 @@ export type SerializedHeroSlide = {
   imageUrl?: string;
   mediaId?: string;
   mediaType?: "image" | "video";
+  desktopImageUrl?: string;
+  desktopMediaId?: string;
+  desktopMediaType?: "image" | "video";
   duration: number;
   titleSize?: TitleSize;
   titleColor?: string;

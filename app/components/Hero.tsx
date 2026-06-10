@@ -51,7 +51,8 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
   const [paused, setPaused] = useState(false);
   const pausedProgressRef = useRef(0);
   const swipeStartX = useRef<number | null>(null);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const mobileVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const desktopVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const duration = slides[current]?.duration ?? 6;
   const count = slides.length;
@@ -81,15 +82,17 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
 
   // Play/pause video slides based on current index
   useEffect(() => {
-    slides.forEach((_, i) => {
-      const video = videoRefs.current[i];
-      if (!video) return;
-      if (i === current) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
+    [mobileVideoRefs, desktopVideoRefs].forEach((refs) => {
+      slides.forEach((_, i) => {
+        const video = refs.current[i];
+        if (!video) return;
+        if (i === current) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
     });
   }, [current, slides]);
 
@@ -140,39 +143,75 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
     >
 
       {/* ── Slide backgrounds — all rendered, crossfade via CSS opacity ── */}
-      {slides.map((s, i) => (
-        <div
-          key={i}
-          className="absolute inset-0 transition-opacity duration-[900ms] ease-in-out"
-          style={{ opacity: i === current ? 1 : 0 }}
-          aria-hidden={i !== current}
-        >
-          {s.mediaType === "video" && s.imageUrl ? (
-            <video
-              ref={(el) => { videoRefs.current[i] = el; }}
-              src={s.imageUrl}
-              autoPlay={i === 0}
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : s.imageUrl ? (
-            <Image
-              src={s.imageUrl}
-              alt={s.title}
-              fill
-              priority={i === 0}
-              sizes="100vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0">
-              <PhotoPlaceholder label={s.title} className="h-full w-full" />
+      {slides.map((s, i) => {
+        const desktopUrl = s.desktopImageUrl ?? s.imageUrl;
+        const desktopType = s.desktopImageUrl ? (s.desktopMediaType ?? "image") : s.mediaType;
+
+        return (
+          <div
+            key={i}
+            className="absolute inset-0 transition-opacity duration-[900ms] ease-in-out"
+            style={{ opacity: i === current ? 1 : 0 }}
+            aria-hidden={i !== current}
+          >
+            {/* Mobile media */}
+            <div className="block h-full w-full lg:hidden">
+              {s.mediaType === "video" && s.imageUrl ? (
+                <video
+                  ref={(el) => { mobileVideoRefs.current[i] = el; }}
+                  src={s.imageUrl}
+                  autoPlay={i === 0}
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : s.imageUrl ? (
+                <Image
+                  src={s.imageUrl}
+                  alt={s.title}
+                  fill
+                  priority={i === 0}
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0">
+                  <PhotoPlaceholder label={s.title} className="h-full w-full" />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      ))}
+
+            {/* Desktop media */}
+            <div className="hidden h-full w-full lg:block">
+              {desktopType === "video" && desktopUrl ? (
+                <video
+                  ref={(el) => { desktopVideoRefs.current[i] = el; }}
+                  src={desktopUrl}
+                  autoPlay={i === 0}
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : desktopUrl ? (
+                <Image
+                  src={desktopUrl}
+                  alt={s.title}
+                  fill
+                  priority={i === 0}
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0">
+                  <PhotoPlaceholder label={s.title} className="h-full w-full" />
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
 
       {/* Per-slide overlay */}
       {(() => {

@@ -28,7 +28,9 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
   const initialMap = Object.fromEntries(initialSlides.map((s) => [s.id, s]));
   const [slides, setSlides] = useState<Record<number, SerializedHeroSlide>>(initialMap);
   const [persisted, setPersisted] = useState<Record<number, SerializedHeroSlide>>(initialMap);
-  const [pickerFor, setPickerFor] = useState<number | null>(null);
+  const [pickerFor, setPickerFor] = useState<{ id: number; target: "mobile" | "desktop" } | null>(
+    null,
+  );
   const [busy, setBusy] = useState<number | null>(null);
   const [saved, setSaved] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +53,7 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
         ctaLink: slide.ctaLink,
         duration: slide.duration,
         mediaId: slide.mediaId ?? "",
+        desktopMediaId: slide.desktopMediaId ?? "",
         titleSize: slide.titleSize,
         titleColor: slide.titleColor,
         subtitleSize: slide.subtitleSize,
@@ -88,19 +91,31 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
     for (const id of dirtyIds) await persistSlide(id);
   });
 
-  function assignImage(slideId: number, mediaId: string) {
+  function assignImage(slideId: number, target: "mobile" | "desktop", mediaId: string) {
     const m = mediaById.get(mediaId);
     if (!m) return;
-    update(slideId, {
-      imageUrl: m.url,
-      mediaId,
-      mediaType: m.fileType === "video" ? "video" : "image",
-    });
+    if (target === "desktop") {
+      update(slideId, {
+        desktopImageUrl: m.url,
+        desktopMediaId: mediaId,
+        desktopMediaType: m.fileType === "video" ? "video" : "image",
+      });
+    } else {
+      update(slideId, {
+        imageUrl: m.url,
+        mediaId,
+        mediaType: m.fileType === "video" ? "video" : "image",
+      });
+    }
     setPickerFor(null);
   }
 
-  function clearImage(slideId: number) {
-    update(slideId, { imageUrl: undefined, mediaId: undefined });
+  function clearImage(slideId: number, target: "mobile" | "desktop") {
+    if (target === "desktop") {
+      update(slideId, { desktopImageUrl: undefined, desktopMediaId: undefined, desktopMediaType: undefined });
+    } else {
+      update(slideId, { imageUrl: undefined, mediaId: undefined, mediaType: undefined });
+    }
   }
 
   return (
@@ -124,51 +139,100 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
               title={`שקופית ${id} — ${slide.title}`}
               subtitle={slide.subtitle.slice(0, 60)}
             >
-              {/* Image/video preview */}
-              <div className="relative aspect-video bg-black/30">
-                {slide.imageUrl && slide.mediaType === "video" ? (
-                  <video
-                    src={slide.imageUrl + "#t=0.001"}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    preload="metadata"
-                    muted
-                  />
-                ) : slide.imageUrl ? (
-                  <Image
-                    src={slide.imageUrl}
-                    alt={slide.title}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, 100vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-xs text-zinc-500">
-                    אין תמונה
+              {/* Image/video previews — mobile + desktop */}
+              <div className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2">
+                <div>
+                  <p className="mb-1.5 text-[11px] text-zinc-500">תמונה למובייל</p>
+                  <div className="relative aspect-video overflow-hidden rounded-lg bg-black/30">
+                    {slide.imageUrl && slide.mediaType === "video" ? (
+                      <video
+                        src={slide.imageUrl + "#t=0.001"}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        preload="metadata"
+                        muted
+                      />
+                    ) : slide.imageUrl ? (
+                      <Image
+                        src={slide.imageUrl}
+                        alt={slide.title}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, 100vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-xs text-zinc-500">
+                        אין תמונה
+                      </div>
+                    )}
+                    <div className="absolute bottom-2 right-2 flex gap-1.5">
+                      {slide.imageUrl && (
+                        <button
+                          type="button"
+                          onClick={() => clearImage(id, "mobile")}
+                          className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-zinc-300 backdrop-blur-sm hover:bg-black/90"
+                        >
+                          הסר
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setPickerFor({ id, target: "mobile" })}
+                        className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-gold backdrop-blur-sm hover:bg-black/90"
+                      >
+                        בחר תמונה
+                      </button>
+                    </div>
+                    <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-xs font-bold text-white backdrop-blur-sm">
+                      {id}
+                    </span>
                   </div>
-                )}
-                {/* Overlay buttons */}
-                <div className="absolute bottom-2 right-2 flex gap-1.5">
-                  {slide.imageUrl && (
-                    <button
-                      type="button"
-                      onClick={() => clearImage(id)}
-                      className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-zinc-300 backdrop-blur-sm hover:bg-black/90"
-                    >
-                      הסר
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setPickerFor(id)}
-                    className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-gold backdrop-blur-sm hover:bg-black/90"
-                  >
-                    בחר תמונה
-                  </button>
                 </div>
-                {/* Slide number badge */}
-                <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-xs font-bold text-white backdrop-blur-sm">
-                  {id}
-                </span>
+
+                <div>
+                  <p className="mb-1.5 text-[11px] text-zinc-500">
+                    תמונה למחשב (אופציונלי — אם ריק, תוצג תמונת המובייל)
+                  </p>
+                  <div className="relative aspect-video overflow-hidden rounded-lg bg-black/30">
+                    {slide.desktopImageUrl && slide.desktopMediaType === "video" ? (
+                      <video
+                        src={slide.desktopImageUrl + "#t=0.001"}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        preload="metadata"
+                        muted
+                      />
+                    ) : slide.desktopImageUrl ? (
+                      <Image
+                        src={slide.desktopImageUrl}
+                        alt={slide.title}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, 100vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-xs text-zinc-500">
+                        אין תמונה — נעשה שימוש בתמונת המובייל
+                      </div>
+                    )}
+                    <div className="absolute bottom-2 right-2 flex gap-1.5">
+                      {slide.desktopImageUrl && (
+                        <button
+                          type="button"
+                          onClick={() => clearImage(id, "desktop")}
+                          className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-zinc-300 backdrop-blur-sm hover:bg-black/90"
+                        >
+                          הסר
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setPickerFor({ id, target: "desktop" })}
+                        className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] text-gold backdrop-blur-sm hover:bg-black/90"
+                      >
+                        בחר תמונה
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Form fields */}
@@ -331,7 +395,7 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
           >
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold text-white">
-                בחירת תמונה לשקופית {pickerFor}
+                {pickerFor.target === "desktop" ? "בחירת תמונה למחשב" : "בחירת תמונה למובייל"} — שקופית {pickerFor.id}
               </h2>
               <button
                 type="button"
@@ -353,7 +417,7 @@ export default function HeroSlidesManager({ slides: initialSlides, media }: Prop
                   <button
                     key={item._id}
                     type="button"
-                    onClick={() => assignImage(pickerFor, item._id)}
+                    onClick={() => assignImage(pickerFor.id, pickerFor.target, item._id)}
                     className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 transition-colors hover:border-gold/60"
                   >
                     {item.fileType === "video" ? (
