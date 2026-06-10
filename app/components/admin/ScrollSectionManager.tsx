@@ -58,6 +58,12 @@ export default function ScrollSectionManager({ initialSection, media }: Props) {
       color: "#ffffff",
       fontWeight: "normal",
       align: "center",
+      maxWidth: 85,
+      textShadow: false,
+      textShadowColor: "#000000",
+      textShadowBlur: 8,
+      textShadowOffsetX: 0,
+      textShadowOffsetY: 2,
     };
     setSection((s) => ({ ...s, overlays: [...s.overlays, newOverlay] }));
   }
@@ -386,6 +392,111 @@ export default function ScrollSectionManager({ initialSection, media }: Props) {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                {/* Max width */}
+                <div>
+                  <label className="mb-1 block text-[11px] text-zinc-400">
+                    רוחב מקסימלי (% מרוחב המסך)
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="range"
+                      min={10}
+                      max={100}
+                      value={overlay.maxWidth}
+                      onChange={(e) =>
+                        updateOverlay(overlay.id, { maxWidth: Number(e.target.value) })
+                      }
+                      className="flex-1 accent-gold"
+                    />
+                    <span className="w-10 text-xs text-zinc-400">{overlay.maxWidth}%</span>
+                  </div>
+                </div>
+
+                {/* Text shadow */}
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <label className="text-[11px] text-zinc-400">צל טקסט</label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateOverlay(overlay.id, { textShadow: !overlay.textShadow })
+                      }
+                      className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
+                        overlay.textShadow
+                          ? "bg-gold/20 text-gold"
+                          : "border border-white/10 text-zinc-500 hover:text-zinc-300"
+                      }`}
+                    >
+                      {overlay.textShadow ? "מופעל" : "כבוי"}
+                    </button>
+                  </div>
+                  {overlay.textShadow && (
+                    <div className="flex flex-col gap-3 rounded-lg border border-white/10 p-3">
+                      <div className="flex items-center gap-2">
+                        <label className="text-[11px] text-zinc-400">צבע צל</label>
+                        <input
+                          type="color"
+                          value={overlay.textShadowColor}
+                          onChange={(e) =>
+                            updateOverlay(overlay.id, { textShadowColor: e.target.value })
+                          }
+                          className="h-7 w-10 cursor-pointer rounded border border-white/10 bg-transparent p-0.5"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-[11px] text-zinc-400">טשטוש (px)</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="range"
+                            min={0}
+                            max={50}
+                            value={overlay.textShadowBlur}
+                            onChange={(e) =>
+                              updateOverlay(overlay.id, { textShadowBlur: Number(e.target.value) })
+                            }
+                            className="flex-1 accent-gold"
+                          />
+                          <span className="w-10 text-xs text-zinc-400">{overlay.textShadowBlur}px</span>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="mb-1 block text-[11px] text-zinc-400">היסט אופקי (px)</label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min={-50}
+                              max={50}
+                              value={overlay.textShadowOffsetX}
+                              onChange={(e) =>
+                                updateOverlay(overlay.id, { textShadowOffsetX: Number(e.target.value) })
+                              }
+                              className="flex-1 accent-gold"
+                            />
+                            <span className="w-10 text-xs text-zinc-400">{overlay.textShadowOffsetX}px</span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-[11px] text-zinc-400">היסט אנכי (px)</label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min={-50}
+                              max={50}
+                              value={overlay.textShadowOffsetY}
+                              onChange={(e) =>
+                                updateOverlay(overlay.id, { textShadowOffsetY: Number(e.target.value) })
+                              }
+                              className="flex-1 accent-gold"
+                            />
+                            <span className="w-10 text-xs text-zinc-400">{overlay.textShadowOffsetY}px</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Color + weight + delete */}

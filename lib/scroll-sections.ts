@@ -39,6 +39,12 @@ export type TextOverlay = {
   color: string;     // hex
   fontWeight: "normal" | "bold";
   align: "start" | "center" | "end";
+  maxWidth: number;  // 0–100 (% of viewport width)
+  textShadow: boolean;
+  textShadowColor: string; // hex
+  textShadowBlur: number;   // px
+  textShadowOffsetX: number; // px
+  textShadowOffsetY: number; // px
 };
 
 export type ScrollSection = {
@@ -65,7 +71,16 @@ export function serializeScrollSection(s: ScrollSection): SerializedScrollSectio
   const { _id, ...rest } = s;
   return {
     ...rest,
-    overlays: rest.overlays.map((o) => ({ ...o, fontFamily: o.fontFamily ?? "heebo" })),
+    overlays: rest.overlays.map((o) => ({
+      ...o,
+      fontFamily: o.fontFamily ?? "heebo",
+      maxWidth: o.maxWidth ?? 85,
+      textShadow: o.textShadow ?? false,
+      textShadowColor: o.textShadowColor ?? "#000000",
+      textShadowBlur: o.textShadowBlur ?? 8,
+      textShadowOffsetX: o.textShadowOffsetX ?? 0,
+      textShadowOffsetY: o.textShadowOffsetY ?? 2,
+    })),
     updatedAt: s.updatedAt.toISOString(),
   };
 }

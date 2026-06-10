@@ -252,7 +252,7 @@ export default function ScrollVideoSection({ section }: Props) {
               }}
             >
               <div
-                className={`${FS[overlay.fontSize]} max-w-[70vw]`}
+                className={FS[overlay.fontSize]}
                 style={{
                   transform: `translate(-50%, -50%) ${transform}`,
                   opacity,
@@ -265,6 +265,12 @@ export default function ScrollVideoSection({ section }: Props) {
                       : overlay.align === "end"
                       ? "left"
                       : "center",
+                  maxWidth: `${overlay.maxWidth ?? 85}vw`,
+                  textShadow: overlay.textShadow
+                    ? `${overlay.textShadowOffsetX ?? 0}px ${overlay.textShadowOffsetY ?? 2}px ${
+                        overlay.textShadowBlur ?? 8
+                      }px ${overlay.textShadowColor ?? "#000000"}`
+                    : "none",
                   willChange: "opacity, transform",
                 }}
               >

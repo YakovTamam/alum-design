@@ -52,6 +52,15 @@ export async function PUT(request: Request) {
         color: typeof o.color === "string" && /^#[0-9a-fA-F]{6}$/.test(o.color) ? o.color : "#ffffff",
         fontWeight: o.fontWeight === "bold" ? "bold" : "normal",
         align: ["start", "center", "end"].includes(o.align) ? o.align : "start",
+        maxWidth: clamp(typeof o.maxWidth === "number" ? o.maxWidth : 85, 10, 100),
+        textShadow: o.textShadow === true,
+        textShadowColor:
+          typeof o.textShadowColor === "string" && /^#[0-9a-fA-F]{6}$/.test(o.textShadowColor)
+            ? o.textShadowColor
+            : "#000000",
+        textShadowBlur: clamp(typeof o.textShadowBlur === "number" ? o.textShadowBlur : 8, 0, 50),
+        textShadowOffsetX: clamp(typeof o.textShadowOffsetX === "number" ? o.textShadowOffsetX : 0, -50, 50),
+        textShadowOffsetY: clamp(typeof o.textShadowOffsetY === "number" ? o.textShadowOffsetY : 2, -50, 50),
       }))
     : [];
 
