@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type LeadSource } from "@/lib/leads";
 import { sendLeadEmails } from "@/lib/email";
@@ -69,7 +69,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "שמירת הפנייה נכשלה, נסו שוב מאוחר יותר" }, { status: 500 });
   }
 
-  void sendLeadEmails(lead);
+  // On serverless, a fire-and-forget promise is killed when the response
+  // returns; after() keeps the invocation alive until the emails are sent.
+  after(() => sendLeadEmails(lead));
 
   return NextResponse.json({ ok: true });
 }
