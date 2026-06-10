@@ -1,6 +1,6 @@
 export const SCROLL_SECTIONS_COLLECTION = "scroll_sections";
 
-export const ANIM_TYPES = ["fade", "slide-up", "slide-down", "slide-left", "slide-right", "zoom"] as const;
+export const ANIM_TYPES = ["fade", "slide-up", "slide-down", "slide-left", "slide-right", "zoom", "blur"] as const;
 export type AnimationType = (typeof ANIM_TYPES)[number];
 
 export const FONT_SIZES = ["sm", "md", "lg", "xl", "2xl"] as const;

@@ -16,10 +16,12 @@ const FS: Record<FontSize, string> = {
   "2xl": "text-4xl",
 };
 
+const MAX_BLUR = 16;
+
 function getOverlayValues(
   o: TextOverlay,
   p: number
-): { opacity: number; transform: string } {
+): { opacity: number; transform: string; filter: string } {
   let opacity = 0;
   let t = 0;
   let phase: "pre" | "enter" | "visible" | "exit" | "post" = "pre";
@@ -106,7 +108,22 @@ function getOverlayValues(
     transform = `scale(${s})`;
   }
 
-  return { opacity, transform };
+  let filter = "none";
+  if (anim === "blur") {
+    const blurAmount =
+      phase === "pre"
+        ? MAX_BLUR
+        : phase === "enter"
+        ? MAX_BLUR * (1 - animT)
+        : phase === "exit"
+        ? MAX_BLUR * animT
+        : phase === "post"
+        ? MAX_BLUR
+        : 0;
+    filter = `blur(${blurAmount}px)`;
+  }
+
+  return { opacity, transform, filter };
 }
 
 type Props = {
@@ -240,7 +257,7 @@ export default function ScrollVideoSection({ section }: Props) {
         )}
 
         {section.overlays.map((overlay) => {
-          const { opacity, transform } = getOverlayValues(overlay, progress);
+          const { opacity, transform, filter } = getOverlayValues(overlay, progress);
           return (
             <div
               key={overlay.id}
@@ -256,6 +273,7 @@ export default function ScrollVideoSection({ section }: Props) {
                 style={{
                   transform: `translate(-50%, -50%) ${transform}`,
                   opacity,
+                  filter,
                   color: overlay.color,
                   fontFamily: FONT_FAMILY_CSS[overlay.fontFamily ?? ("heebo" as FontFamily)],
                   fontWeight: overlay.fontWeight,
@@ -271,7 +289,7 @@ export default function ScrollVideoSection({ section }: Props) {
                         overlay.textShadowBlur ?? 8
                       }px ${overlay.textShadowColor ?? "#000000"}`
                     : "none",
-                  willChange: "opacity, transform",
+                  willChange: "opacity, transform, filter",
                 }}
               >
                 {overlay.text}
