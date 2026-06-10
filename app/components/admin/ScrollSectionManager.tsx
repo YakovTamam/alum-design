@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { SerializedScrollSection, TextOverlay } from "@/lib/scroll-sections";
-import { ANIM_TYPES, FONT_SIZES } from "@/lib/scroll-sections";
+import { ANIM_TYPES, FONT_SIZES, FONT_FAMILIES, FONT_FAMILY_LABELS } from "@/lib/scroll-sections";
 import type { SerializedMedia } from "@/lib/media";
 import Accordion from "./Accordion";
 
@@ -54,6 +54,7 @@ export default function ScrollSectionManager({ initialSection, media }: Props) {
       enterAnim: "fade",
       exitAnim: "fade",
       fontSize: "lg",
+      fontFamily: "heebo",
       color: "#ffffff",
       fontWeight: "normal",
       align: "center",
@@ -363,6 +364,27 @@ export default function ScrollSectionManager({ initialSection, media }: Props) {
                         </button>
                       ))}
                     </div>
+                  </div>
+                </div>
+
+                {/* Font family */}
+                <div>
+                  <label className="mb-1.5 block text-[11px] text-zinc-400">גופן</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {FONT_FAMILIES.map((ff) => (
+                      <button
+                        key={ff}
+                        type="button"
+                        onClick={() => updateOverlay(overlay.id, { fontFamily: ff })}
+                        className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+                          overlay.fontFamily === ff
+                            ? "bg-gold/20 text-gold"
+                            : "border border-white/10 text-zinc-500 hover:text-zinc-300"
+                        }`}
+                      >
+                        {FONT_FAMILY_LABELS[ff]}
+                      </button>
+                    ))}
                   </div>
                 </div>
 

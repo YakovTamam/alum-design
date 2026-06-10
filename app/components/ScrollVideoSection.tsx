@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import type { SerializedScrollSection, TextOverlay, FontSize } from "@/lib/scroll-sections";
+import type { SerializedScrollSection, TextOverlay, FontSize, FontFamily } from "@/lib/scroll-sections";
+import { FONT_FAMILY_CSS } from "@/lib/scroll-sections";
 
 function clamp(val: number, min: number, max: number) {
   return Math.max(min, Math.min(max, val));
@@ -118,6 +119,7 @@ export default function ScrollVideoSection({ section }: Props) {
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
 
   // Track the sticky site header's height so the video can fill the
   // remaining viewport below it instead of being covered by it
@@ -129,6 +131,20 @@ export default function ScrollVideoSection({ section }: Props) {
     const ro = new ResizeObserver(update);
     ro.observe(header);
     return () => ro.disconnect();
+  }, []);
+
+  // Track the real visible viewport height in JS — `100svh`/`100dvh` can
+  // mismatch the actual viewport on mobile as the browser chrome
+  // collapses/expands, leaving a gap below the sticky panel
+  useEffect(() => {
+    const update = () => setViewportHeight(window.visualViewport?.height ?? window.innerHeight);
+    update();
+    window.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("resize", update);
+    };
   }, []);
 
   // rAF-throttled scroll progress, robust against 0 / negative scroll range
@@ -201,7 +217,12 @@ export default function ScrollVideoSection({ section }: Props) {
     >
       <div
         className="sticky overflow-hidden"
-        style={{ top: headerHeight, height: `calc(100svh - ${headerHeight}px)` }}
+        style={{
+          top: headerHeight,
+          height: viewportHeight
+            ? `${viewportHeight - headerHeight}px`
+            : `calc(100svh - ${headerHeight}px)`,
+        }}
       >
         <video
           ref={videoRef}
@@ -236,6 +257,7 @@ export default function ScrollVideoSection({ section }: Props) {
                   transform: `translate(-50%, -50%) ${transform}`,
                   opacity,
                   color: overlay.color,
+                  fontFamily: FONT_FAMILY_CSS[overlay.fontFamily ?? ("heebo" as FontFamily)],
                   fontWeight: overlay.fontWeight,
                   textAlign:
                     overlay.align === "start"
