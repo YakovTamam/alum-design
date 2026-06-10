@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type LeadStatus } from "@/lib/leads";
-import { requireStaff } from "@/lib/auth";
+import { requireStaff, requireSuperAdmin } from "@/lib/auth";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "closed"];
 
@@ -37,6 +37,29 @@ export async function PATCH(
     .updateOne({ _id: new ObjectId(id) }, { $set: { status: status as LeadStatus } });
 
   if (result.matchedCount === 0) {
+    return NextResponse.json({ error: "ליד לא נמצא" }, { status: 404 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  if (!(await requireSuperAdmin())) {
+    return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  if (!ObjectId.isValid(id)) {
+    return NextResponse.json({ error: "מזהה לא תקין" }, { status: 400 });
+  }
+
+  const db = await getDb();
+  const result = await db.collection<Lead>(LEADS_COLLECTION).deleteOne({ _id: new ObjectId(id) });
+
+  if (result.deletedCount === 0) {
     return NextResponse.json({ error: "ליד לא נמצא" }, { status: 404 });
   }
 

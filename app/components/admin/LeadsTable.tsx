@@ -27,9 +27,16 @@ function formatPrice(value: number) {
   return new Intl.NumberFormat("he-IL").format(value);
 }
 
-export default function LeadsTable({ leads }: { leads: SerializedLead[] }) {
+export default function LeadsTable({
+  leads,
+  canDelete = false,
+}: {
+  leads: SerializedLead[];
+  canDelete?: boolean;
+}) {
   const [items, setItems] = useState(leads);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function updateStatus(id: string, status: LeadStatus) {
     setUpdatingId(id);
@@ -47,6 +54,23 @@ export default function LeadsTable({ leads }: { leads: SerializedLead[] }) {
       setItems(previous);
     } finally {
       setUpdatingId(null);
+    }
+  }
+
+  async function deleteLead(id: string) {
+    if (!confirm("למחוק את הליד הזה לצמיתות?")) return;
+
+    setDeletingId(id);
+    const previous = items;
+    setItems((curr) => curr.filter((lead) => lead._id !== id));
+
+    try {
+      const res = await fetch(`/api/admin/leads/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("delete failed");
+    } catch {
+      setItems(previous);
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -72,6 +96,7 @@ export default function LeadsTable({ leads }: { leads: SerializedLead[] }) {
             <th className="px-4 py-3 font-medium">מקור</th>
             <th className="px-4 py-3 font-medium">פרטי פנייה</th>
             <th className="px-4 py-3 font-medium">סטטוס</th>
+            {canDelete && <th className="px-4 py-3 font-medium"></th>}
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
@@ -142,6 +167,18 @@ export default function LeadsTable({ leads }: { leads: SerializedLead[] }) {
                   ))}
                 </select>
               </td>
+              {canDelete && (
+                <td className="whitespace-nowrap px-4 py-3">
+                  <button
+                    type="button"
+                    onClick={() => deleteLead(lead._id)}
+                    disabled={deletingId === lead._id}
+                    className="rounded-full border border-red-500/30 px-3 py-1.5 text-xs text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-50"
+                  >
+                    {deletingId === lead._id ? "מוחק…" : "מחק"}
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

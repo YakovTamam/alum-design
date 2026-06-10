@@ -1,5 +1,6 @@
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type SerializedLead } from "@/lib/leads";
+import { getStaffSession } from "@/lib/auth";
 import LeadsTable from "../../components/admin/LeadsTable";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,9 @@ export default async function AdminLeadsPage() {
     loadError = "טעינת הלידים נכשלה. ודאו שמחרוזת ה-MongoDB מוגדרת כראוי.";
   }
 
+  const session = await getStaffSession();
+  const isSuperAdmin = session?.role === "super-admin";
+
   const newCount = leads.filter((lead) => lead.status === "new").length;
 
   return (
@@ -49,7 +53,7 @@ export default async function AdminLeadsPage() {
             {loadError}
           </div>
         ) : (
-          <LeadsTable leads={leads} />
+          <LeadsTable leads={leads} canDelete={isSuperAdmin} />
         )}
       </div>
     </div>
