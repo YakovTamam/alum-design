@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const COLUMNS = [
   {
     title: "ניווט",
@@ -13,18 +15,24 @@ const COLUMNS = [
   },
 ];
 
-export default function SiteFooter() {
+export default function SiteFooter({ logoUrl }: { logoUrl?: string }) {
   return (
     <footer className="border-t border-zinc-800 bg-[#1a1614]">
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_repeat(3,1fr)]">
           <div>
-            <div className="flex flex-col items-start leading-none">
-              <span className="text-xl font-semibold tracking-[0.2em] text-white">
-                ALUM
-              </span>
-              <span className="text-[10px] tracking-[0.4em] text-gold">DESIGN</span>
-            </div>
+            {logoUrl ? (
+              <div className="relative h-12 w-40">
+                <Image src={logoUrl} alt="ALUM DESIGN" fill sizes="160px" className="object-contain object-right" />
+              </div>
+            ) : (
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-xl font-semibold tracking-[0.2em] text-white">
+                  ALUM
+                </span>
+                <span className="text-[10px] tracking-[0.4em] text-gold">DESIGN</span>
+              </div>
+            )}
             <p className="mt-4 max-w-xs text-sm leading-7 text-zinc-400">
               פתרונות אלומיניום חכמים לפרויקטים מודרניים — תכנון, ייצור והתקנה
               במקום אחד.

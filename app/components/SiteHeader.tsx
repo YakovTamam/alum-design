@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const NAV_LINKS = [
   { label: "דף הבית", href: "#" },
   { label: "מערכות", href: "#systems" },
@@ -22,20 +24,28 @@ function AlumLogo() {
   );
 }
 
-export default function SiteHeader() {
+export default function SiteHeader({ logoUrl }: { logoUrl?: string }) {
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-10">
         <a href="#" className="flex items-center gap-3">
-          <AlumLogo />
-          <div className="flex flex-col items-start leading-none">
-            <span className="text-base font-black tracking-[0.22em] text-zinc-900">
-              ALUM
-            </span>
-            <span className="text-[10px] font-light tracking-[0.45em] text-gold">
-              DESIGN
-            </span>
-          </div>
+          {logoUrl ? (
+            <div className="relative h-10 w-32 shrink-0">
+              <Image src={logoUrl} alt="ALUM DESIGN" fill sizes="128px" className="object-contain object-right" />
+            </div>
+          ) : (
+            <>
+              <AlumLogo />
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-base font-black tracking-[0.22em] text-zinc-900">
+                  ALUM
+                </span>
+                <span className="text-[10px] font-light tracking-[0.45em] text-gold">
+                  DESIGN
+                </span>
+              </div>
+            </>
+          )}
         </a>
 
         <nav className="hidden items-center gap-8 text-sm text-zinc-500 lg:flex">

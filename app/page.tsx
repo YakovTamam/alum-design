@@ -41,7 +41,7 @@ export default async function Home() {
       <AccessibilityWidget />
       <StickyLeadButton />
       <CookieBanner />
-      <SiteHeader />
+      <SiteHeader logoUrl={images["site-logo"]} />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} mobileHeight={heroMobileHeight} />
         <Reveal>
@@ -68,7 +68,7 @@ export default async function Home() {
           <ContactSection />
         </Reveal>
       </main>
-      <SiteFooter />
+      <SiteFooter logoUrl={images["site-logo"]} />
     </div>
   );
 }
