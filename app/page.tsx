@@ -11,6 +11,8 @@ import ContactSection from "./components/ContactSection";
 import SiteFooter from "./components/SiteFooter";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import StickyLeadButton from "./components/StickyLeadButton";
+import AccessibilityWidget from "./components/AccessibilityWidget";
+import CookieBanner from "./components/CookieBanner";
 import Reveal from "./components/Reveal";
 import ScrollVideoSection from "./components/ScrollVideoSection";
 import { getSiteContentMap } from "@/lib/content";
@@ -36,7 +38,9 @@ export default async function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <FloatingWhatsApp />
+      <AccessibilityWidget />
       <StickyLeadButton />
+      <CookieBanner />
       <SiteHeader />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} mobileHeight={heroMobileHeight} />

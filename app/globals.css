@@ -78,6 +78,38 @@ body {
   animation: wa-pulse 2.2s ease infinite;
 }
 
+/* Accessibility widget modes */
+html.a11y-grayscale {
+  filter: grayscale(1);
+}
+
+html.a11y-underline-links a {
+  text-decoration: underline !important;
+}
+
+html.a11y-pause-anim *,
+html.a11y-pause-anim *::before,
+html.a11y-pause-anim *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+html.a11y-contrast body {
+  background: #000 !important;
+  color: #ffe600 !important;
+}
+
+html.a11y-contrast body * {
+  background-color: #000 !important;
+  color: #ffe600 !important;
+  border-color: #ffe600 !important;
+}
+
+html.a11y-contrast img,
+html.a11y-contrast video {
+  filter: grayscale(1) contrast(1.2);
+}
+
 /* Hero section height — controlled via CSS variable set server-side */
 .hero-section {
   height: var(--hero-h-mobile, 75vh);
