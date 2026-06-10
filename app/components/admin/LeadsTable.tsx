@@ -16,6 +16,8 @@ const STATUS_STYLES: Record<LeadStatus, string> = {
   closed: "border-zinc-500/40 bg-zinc-500/10 text-zinc-400",
 };
 
+const FOLLOW_UP_HOURS = 24;
+
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("he-IL", {
     dateStyle: "short",
@@ -25,6 +27,12 @@ function formatDate(value: string) {
 
 function formatPrice(value: number) {
   return new Intl.NumberFormat("he-IL").format(value);
+}
+
+function needsFollowUp(lead: SerializedLead): boolean {
+  if (lead.status !== "new") return false;
+  const ageMs = Date.now() - new Date(lead.createdAt).getTime();
+  return ageMs > FOLLOW_UP_HOURS * 60 * 60 * 1000;
 }
 
 export default function LeadsTable({
@@ -37,7 +45,7 @@ export default function LeadsTable({
   const [items, setItems] = useState(leads);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<LeadStatus | "all">("all");
+  const [filter, setFilter] = useState<LeadStatus | "all" | "followup">("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notesDraft, setNotesDraft] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
@@ -124,22 +132,31 @@ export default function LeadsTable({
     );
   }
 
-  const counts: Record<LeadStatus | "all", number> = {
+  const counts: Record<LeadStatus | "all" | "followup", number> = {
     all: items.length,
     new: 0,
     contacted: 0,
     closed: 0,
+    followup: 0,
   };
-  for (const lead of items) counts[lead.status]++;
+  for (const lead of items) {
+    counts[lead.status]++;
+    if (needsFollowUp(lead)) counts.followup++;
+  }
 
-  const filteredItems = filter === "all" ? items : items.filter((lead) => lead.status === filter);
+  const filteredItems =
+    filter === "all"
+      ? items
+      : filter === "followup"
+        ? items.filter(needsFollowUp)
+        : items.filter((lead) => lead.status === filter);
   const selectedLead = items.find((lead) => lead._id === selectedId) ?? null;
 
   return (
     <div className="flex flex-col gap-4">
       {/* Status filter tabs */}
       <div className="flex flex-wrap gap-2">
-        {(["all", ...STATUS_OPTIONS] as const).map((key) => (
+        {(["all", ...STATUS_OPTIONS, "followup"] as const).map((key) => (
           <button
             key={key}
             type="button"
@@ -148,11 +165,15 @@ export default function LeadsTable({
               filter === key
                 ? key === "all"
                   ? "border-white/30 bg-white/10 text-white"
-                  : STATUS_STYLES[key]
-                : "border-white/10 text-zinc-400 hover:text-white"
+                  : key === "followup"
+                    ? "border-red-500/40 bg-red-500/10 text-red-300"
+                    : STATUS_STYLES[key]
+                : key === "followup" && counts.followup > 0
+                  ? "border-red-500/30 text-red-300 hover:text-red-200"
+                  : "border-white/10 text-zinc-400 hover:text-white"
             }`}
           >
-            {key === "all" ? "הכל" : STATUS_LABELS[key]} · {counts[key]}
+            {key === "all" ? "הכל" : key === "followup" ? "דורש מעקב" : STATUS_LABELS[key]} · {counts[key]}
           </button>
         ))}
       </div>
@@ -188,7 +209,17 @@ export default function LeadsTable({
                   <td className="whitespace-nowrap px-4 py-3 text-xs text-zinc-400">
                     {formatDate(lead.createdAt)}
                   </td>
-                  <td className="px-4 py-3 font-medium text-white">{lead.name}</td>
+                  <td className="px-4 py-3 font-medium text-white">
+                    <span className="flex items-center gap-2">
+                      {needsFollowUp(lead) && (
+                        <span
+                          className="h-2 w-2 shrink-0 rounded-full bg-red-500"
+                          title="דורש מעקב — ליד חדש שטרם טופל מעל 24 שעות"
+                        />
+                      )}
+                      {lead.name}
+                    </span>
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3" dir="ltr">
                     <a
                       href={`tel:${lead.phone}`}
@@ -310,6 +341,12 @@ export default function LeadsTable({
                 ✕
               </button>
             </div>
+
+            {needsFollowUp(selectedLead) && (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm text-red-300">
+                ליד זה ממתין למעקב — נוצר לפני יותר מ-24 שעות וטרם טופל.
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
