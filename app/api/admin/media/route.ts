@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { requireAdminSession } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth";
 import { getDb } from "@/lib/mongodb";
 import { MEDIA_COLLECTION, serializeMedia, type Media } from "@/lib/media";
 
 export async function GET() {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 
@@ -20,7 +20,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

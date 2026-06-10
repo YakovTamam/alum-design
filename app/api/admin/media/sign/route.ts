@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { requireAdminSession } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth";
 import { generateUploadSignature } from "@/lib/cloudinary";
 
 export async function POST() {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

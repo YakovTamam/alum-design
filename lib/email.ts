@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { SOURCE_LABELS, type Lead } from "./leads";
+import { ROLE_LABELS, type UserRole } from "./user-roles";
 
 let client: Resend | null = null;
 
@@ -60,5 +61,34 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
     } catch (err) {
       console.error("Failed to send lead auto-reply email", err);
     }
+  }
+}
+
+/**
+ * Best-effort: a missing/invalid Resend setup must never block invitation
+ * creation, so failures are swallowed and logged.
+ */
+export async function sendInvitationEmail(data: {
+  email: string;
+  role: UserRole;
+  inviteUrl: string;
+}): Promise<void> {
+  const resend = getClient();
+  if (!resend) return;
+
+  const from = process.env.RESEND_FROM_EMAIL;
+  if (!from) return;
+
+  const roleLabel = ROLE_LABELS[data.role];
+
+  try {
+    await resend.emails.send({
+      from,
+      to: data.email,
+      subject: "הזמנה למערכת הניהול — ALUM DESIGN",
+      text: `שלום,\n\nהוזמנת להצטרף למערכת הניהול של ALUM DESIGN בתפקיד ${roleLabel}.\n\nלהשלמת ההרשמה, לחצו על הקישור הבא (תקף ל-7 ימים):\n${data.inviteUrl}\n\nבברכה,\nצוות ALUM DESIGN`,
+    });
+  } catch (err) {
+    console.error("Failed to send invitation email", err);
   }
 }

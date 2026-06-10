@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead } from "@/lib/leads";
-import { requireAdminSession } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 
 export async function GET() {
-  if (!(await requireAdminSession())) {
+  if (!(await requireStaff())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

@@ -1,8 +1,12 @@
 import type { ReactNode } from "react";
+import { getStaffSession } from "@/lib/auth";
 import LogoutButton from "../../components/admin/LogoutButton";
 import AdminSideNav from "../../components/admin/AdminSideNav";
 
-export default function AdminDashboardLayout({ children }: { children: ReactNode }) {
+export default async function AdminDashboardLayout({ children }: { children: ReactNode }) {
+  const session = await getStaffSession();
+  const role = session?.role ?? "admin";
+
   return (
     <div className="min-h-screen bg-[#0b0b0d] text-zinc-100 lg:flex lg:flex-row-reverse">
 
@@ -21,7 +25,7 @@ export default function AdminDashboardLayout({ children }: { children: ReactNode
         </div>
         {/* Mobile nav tabs */}
         <div className="flex overflow-x-auto border-t border-white/5 px-5 scrollbar-hide">
-          <AdminSideNav mobile />
+          <AdminSideNav role={role} mobile />
         </div>
       </div>
 
@@ -36,7 +40,7 @@ export default function AdminDashboardLayout({ children }: { children: ReactNode
           <span className="text-sm font-semibold text-white">פאנל ניהול</span>
         </div>
 
-        <AdminSideNav />
+        <AdminSideNav role={role} />
 
         <div className="mt-auto px-2">
           <LogoutButton />

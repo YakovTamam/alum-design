@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { requireAdminSession } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth";
 import { getDb } from "@/lib/mongodb";
 import {
   SCROLL_SECTIONS_COLLECTION,
@@ -14,7 +14,7 @@ import {
 import { getScrollSection } from "@/lib/scroll-sections-data";
 
 export async function GET() {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
   const section = await getScrollSection();
@@ -22,7 +22,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

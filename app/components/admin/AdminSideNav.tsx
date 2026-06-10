@@ -2,30 +2,43 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { UserRole } from "@/lib/user-roles";
 
-const NAV_GROUPS = [
-  {
-    title: null,
-    items: [{ href: "/admin", label: "לידים" }],
-  },
-  {
-    title: "תוכן אתר",
+type NavGroup = { title: string | null; items: { href: string; label: string }[] };
+
+function getNavGroups(role: UserRole): NavGroup[] {
+  const groups: NavGroup[] = [{ title: null, items: [{ href: "/admin", label: "לידים" }] }];
+
+  if (role === "super-admin") {
+    groups.push({
+      title: "תוכן אתר",
+      items: [
+        { href: "/admin/content", label: "ניהול תצוגות" },
+        { href: "/admin/media", label: "ספריית התמונות" },
+      ],
+    });
+  }
+
+  groups.push({
+    title: "ניהול",
     items: [
-      { href: "/admin/content", label: "ניהול תצוגות" },
-      { href: "/admin/media", label: "ספריית התמונות" },
+      { href: "/admin/projects", label: "פרויקטים" },
+      { href: "/admin/users", label: "משתמשים" },
     ],
-  },
-];
+  });
 
-const ALL_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
+  return groups;
+}
 
-export default function AdminSideNav({ mobile = false }: { mobile?: boolean }) {
+export default function AdminSideNav({ role, mobile = false }: { role: UserRole; mobile?: boolean }) {
   const pathname = usePathname();
+  const groups = getNavGroups(role);
+  const allItems = groups.flatMap((g) => g.items);
 
   if (mobile) {
     return (
       <nav className="flex gap-1 py-2">
-        {ALL_ITEMS.map((item) => {
+        {allItems.map((item) => {
           const active = pathname === item.href;
           return (
             <Link
@@ -47,7 +60,7 @@ export default function AdminSideNav({ mobile = false }: { mobile?: boolean }) {
 
   return (
     <nav className="flex flex-col gap-6 text-sm">
-      {NAV_GROUPS.map((group, i) => (
+      {groups.map((group, i) => (
         <div key={i} className="flex flex-col gap-2">
           {group.title && (
             <p className="px-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">

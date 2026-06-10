@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { requireAdminSession } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth";
 import { getDb } from "@/lib/mongodb";
 import { MEDIA_COLLECTION, type Media } from "@/lib/media";
 import {
@@ -19,7 +19,7 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

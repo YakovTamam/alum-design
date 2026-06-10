@@ -3,15 +3,21 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function LogoutButton() {
+export default function LogoutButton({
+  logoutUrl = "/api/admin/logout",
+  redirectUrl = "/admin/login",
+}: {
+  logoutUrl?: string;
+  redirectUrl?: string;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleLogout() {
     setLoading(true);
     try {
-      await fetch("/api/admin/logout", { method: "POST" });
-      router.replace("/admin/login");
+      await fetch(logoutUrl, { method: "POST" });
+      router.replace(redirectUrl);
       router.refresh();
     } finally {
       setLoading(false);

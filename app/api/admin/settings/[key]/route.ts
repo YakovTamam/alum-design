@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { requireAdminSession } from "@/lib/auth";
+import { requireSuperAdmin } from "@/lib/auth";
 import { setSetting } from "@/lib/settings";
 
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ key: string }> },
 ) {
-  if (!(await requireAdminSession())) {
+  if (!(await requireSuperAdmin())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 

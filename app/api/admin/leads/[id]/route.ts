@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { LEADS_COLLECTION, type Lead, type LeadStatus } from "@/lib/leads";
-import { requireAdminSession } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "closed"];
 
@@ -10,7 +10,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await requireAdminSession())) {
+  if (!(await requireStaff())) {
     return NextResponse.json({ error: "אין הרשאה" }, { status: 401 });
   }
 
