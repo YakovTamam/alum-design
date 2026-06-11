@@ -7,7 +7,15 @@ import type { UserRole } from "@/lib/user-roles";
 type NavGroup = { title: string | null; items: { href: string; label: string }[] };
 
 function getNavGroups(role: UserRole): NavGroup[] {
-  const groups: NavGroup[] = [{ title: null, items: [{ href: "/admin", label: "לידים" }] }];
+  const groups: NavGroup[] = [
+    {
+      title: null,
+      items: [
+        { href: "/admin", label: "לידים" },
+        { href: "/admin/analytics", label: "אנליטיקס" },
+      ],
+    },
+  ];
 
   if (role === "super-admin") {
     groups.push({

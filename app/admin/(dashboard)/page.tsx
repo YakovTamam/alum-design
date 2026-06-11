@@ -1,5 +1,5 @@
 import { getDb } from "@/lib/mongodb";
-import { LEADS_COLLECTION, type Lead, type SerializedLead } from "@/lib/leads";
+import { LEADS_COLLECTION, normalizeLeadStatus, type Lead, type SerializedLead } from "@/lib/leads";
 import { getStaffSession } from "@/lib/auth";
 import LeadsTable from "../../components/admin/LeadsTable";
 
@@ -18,6 +18,7 @@ async function fetchLeads(): Promise<SerializedLead[]> {
     ...lead,
     _id: lead._id?.toString() ?? "",
     createdAt: lead.createdAt.toISOString(),
+    status: normalizeLeadStatus(lead.status),
   }));
 }
 

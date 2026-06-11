@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
-import { LEADS_COLLECTION, type Lead, type LeadStatus } from "@/lib/leads";
+import { LEAD_STATUSES, LEADS_COLLECTION, type Lead, type LeadStatus } from "@/lib/leads";
 import { requireStaff, requireSuperAdmin } from "@/lib/auth";
-
-const STATUSES: LeadStatus[] = ["new", "contacted", "closed"];
 
 export async function PATCH(
   request: Request,
@@ -31,7 +29,7 @@ export async function PATCH(
   const update: Partial<Pick<Lead, "status" | "notes">> = {};
 
   if (status !== undefined) {
-    if (!STATUSES.includes(status as LeadStatus)) {
+    if (!LEAD_STATUSES.includes(status as LeadStatus)) {
       return NextResponse.json({ error: "סטטוס לא תקין" }, { status: 400 });
     }
     update.status = status as LeadStatus;

@@ -2,18 +2,51 @@
 
 import { useState } from "react";
 import {
+  LEAD_STATUSES,
   SOURCE_LABELS,
   STATUS_LABELS,
   type LeadStatus,
   type SerializedLead,
 } from "@/lib/leads";
 
-const STATUS_OPTIONS: LeadStatus[] = ["new", "contacted", "closed"];
+const STATUS_OPTIONS: LeadStatus[] = LEAD_STATUSES;
 
 const STATUS_STYLES: Record<LeadStatus, string> = {
   new: "border-gold/50 bg-gold/10 text-gold",
+  "no-answer-1": "border-amber-400/40 bg-amber-400/10 text-amber-300",
+  "no-answer-2": "border-orange-400/40 bg-orange-400/10 text-orange-300",
+  "no-answer-3": "border-orange-500/40 bg-orange-500/10 text-orange-400",
+  "no-answer-4": "border-rose-400/40 bg-rose-400/10 text-rose-300",
   contacted: "border-sky-400/40 bg-sky-400/10 text-sky-300",
-  closed: "border-zinc-500/40 bg-zinc-500/10 text-zinc-400",
+  "not-relevant": "border-zinc-500/40 bg-zinc-500/10 text-zinc-400",
+  "closed-won": "border-emerald-400/40 bg-emerald-400/10 text-emerald-300",
+  "closed-lost": "border-red-500/40 bg-red-500/10 text-red-300",
+};
+
+const NO_ANSWER_STATUSES: LeadStatus[] = ["no-answer-1", "no-answer-2", "no-answer-3", "no-answer-4"];
+
+type FilterKey = "all" | "followup" | "new" | "no-answer" | "contacted" | "not-relevant" | "closed-won" | "closed-lost";
+
+const FILTER_TABS: { key: FilterKey; label: string; statuses?: LeadStatus[] }[] = [
+  { key: "all", label: "הכל" },
+  { key: "followup", label: "דורש מעקב" },
+  { key: "new", label: STATUS_LABELS.new, statuses: ["new"] },
+  { key: "no-answer", label: "אין מענה", statuses: NO_ANSWER_STATUSES },
+  { key: "contacted", label: STATUS_LABELS.contacted, statuses: ["contacted"] },
+  { key: "not-relevant", label: STATUS_LABELS["not-relevant"], statuses: ["not-relevant"] },
+  { key: "closed-won", label: STATUS_LABELS["closed-won"], statuses: ["closed-won"] },
+  { key: "closed-lost", label: STATUS_LABELS["closed-lost"], statuses: ["closed-lost"] },
+];
+
+const FILTER_STYLES: Record<FilterKey, string> = {
+  all: "border-white/30 bg-white/10 text-white",
+  followup: "border-red-500/40 bg-red-500/10 text-red-300",
+  new: STATUS_STYLES.new,
+  "no-answer": STATUS_STYLES["no-answer-1"],
+  contacted: STATUS_STYLES.contacted,
+  "not-relevant": STATUS_STYLES["not-relevant"],
+  "closed-won": STATUS_STYLES["closed-won"],
+  "closed-lost": STATUS_STYLES["closed-lost"],
 };
 
 const FOLLOW_UP_HOURS = 24;
@@ -45,7 +78,7 @@ export default function LeadsTable({
   const [items, setItems] = useState(leads);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<LeadStatus | "all" | "followup">("all");
+  const [filter, setFilter] = useState<FilterKey>("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notesDraft, setNotesDraft] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
@@ -132,48 +165,53 @@ export default function LeadsTable({
     );
   }
 
-  const counts: Record<LeadStatus | "all" | "followup", number> = {
+  const counts: Record<FilterKey, number> = {
     all: items.length,
-    new: 0,
-    contacted: 0,
-    closed: 0,
     followup: 0,
+    new: 0,
+    "no-answer": 0,
+    contacted: 0,
+    "not-relevant": 0,
+    "closed-won": 0,
+    "closed-lost": 0,
   };
   for (const lead of items) {
-    counts[lead.status]++;
     if (needsFollowUp(lead)) counts.followup++;
+    if (lead.status === "new") counts.new++;
+    else if (NO_ANSWER_STATUSES.includes(lead.status)) counts["no-answer"]++;
+    else if (lead.status === "contacted") counts.contacted++;
+    else if (lead.status === "not-relevant") counts["not-relevant"]++;
+    else if (lead.status === "closed-won") counts["closed-won"]++;
+    else if (lead.status === "closed-lost") counts["closed-lost"]++;
   }
 
+  const activeFilterTab = FILTER_TABS.find((tab) => tab.key === filter);
   const filteredItems =
     filter === "all"
       ? items
       : filter === "followup"
         ? items.filter(needsFollowUp)
-        : items.filter((lead) => lead.status === filter);
+        : items.filter((lead) => activeFilterTab?.statuses?.includes(lead.status));
   const selectedLead = items.find((lead) => lead._id === selectedId) ?? null;
 
   return (
     <div className="flex flex-col gap-4">
       {/* Status filter tabs */}
       <div className="flex flex-wrap gap-2">
-        {(["all", ...STATUS_OPTIONS, "followup"] as const).map((key) => (
+        {FILTER_TABS.map(({ key, label }) => (
           <button
             key={key}
             type="button"
             onClick={() => setFilter(key)}
             className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
               filter === key
-                ? key === "all"
-                  ? "border-white/30 bg-white/10 text-white"
-                  : key === "followup"
-                    ? "border-red-500/40 bg-red-500/10 text-red-300"
-                    : STATUS_STYLES[key]
+                ? FILTER_STYLES[key]
                 : key === "followup" && counts.followup > 0
                   ? "border-red-500/30 text-red-300 hover:text-red-200"
                   : "border-white/10 text-zinc-400 hover:text-white"
             }`}
           >
-            {key === "all" ? "הכל" : key === "followup" ? "דורש מעקב" : STATUS_LABELS[key]} · {counts[key]}
+            {label} · {counts[key]}
           </button>
         ))}
       </div>
