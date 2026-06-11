@@ -251,7 +251,7 @@ export default function ContractorLeads() {
 
                 <p className="text-center text-xs text-zinc-400">
                   או התקשר עכשיו:{" "}
-                  <a href="tel:0729444444" className="font-medium text-gold hover:underline">072-3944444</a>
+                  <a href="tel:0587886764" className="font-medium text-gold hover:underline">058-7886764</a>
                 </p>
               </form>
             )}

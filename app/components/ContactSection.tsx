@@ -51,11 +51,11 @@ export default function ContactSection() {
             או חייגו אלינו ישירות.
           </p>
           <div className="mt-6 flex flex-col gap-3 text-sm text-zinc-600">
-            <a href="tel:0729444444" className="flex items-center gap-2 hover:text-gold">
-              <span aria-hidden>☎</span> 072-3944444
+            <a href="tel:0587886764" className="flex items-center gap-2 hover:text-gold">
+              <span aria-hidden>☎</span> 058-7886764
             </a>
-            <a href="mailto:info@alum-design.co.il" className="flex items-center gap-2 hover:text-gold">
-              <span aria-hidden>✉</span> info@alum-design.co.il
+            <a href="mailto:Contact@alum-design.co.il" className="flex items-center gap-2 hover:text-gold">
+              <span aria-hidden>✉</span> Contact@alum-design.co.il
             </a>
           </div>
         </div>

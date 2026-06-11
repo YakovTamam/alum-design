@@ -60,11 +60,11 @@ export default function SiteFooter({ logoUrl }: { logoUrl?: string }) {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-sm text-zinc-400 sm:flex-row">
           <p>© {new Date().getFullYear()} ALUM DESIGN. כל הזכויות שמורות.</p>
           <div className="flex items-center gap-6">
-            <a href="tel:0729444444" className="flex items-center gap-2 transition-colors hover:text-gold">
-              <span aria-hidden>☎</span> 072-3944444
+            <a href="tel:0587886764" className="flex items-center gap-2 transition-colors hover:text-gold">
+              <span aria-hidden>☎</span> 058-7886764
             </a>
-            <a href="mailto:info@alum-design.co.il" className="flex items-center gap-2 transition-colors hover:text-gold">
-              <span aria-hidden>✉</span> info@alum-design.co.il
+            <a href="mailto:Contact@alum-design.co.il" className="flex items-center gap-2 transition-colors hover:text-gold">
+              <span aria-hidden>✉</span> Contact@alum-design.co.il
             </a>
           </div>
         </div>
