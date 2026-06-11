@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { phoneToTelHref } from "@/lib/contact";
 
 const PROJECT_TYPES = [
   "פרגולות אלומיניום",
@@ -11,7 +12,7 @@ const PROJECT_TYPES = [
   "אחר",
 ];
 
-export default function StickyLeadButton() {
+export default function StickyLeadButton({ phone: contactPhone }: { phone: string }) {
   const [visible, setVisible] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -231,7 +232,7 @@ export default function StickyLeadButton() {
 
                   <p className="text-center text-xs text-zinc-400">
                     או חייגו:{" "}
-                    <a href="tel:0587886764" className="font-medium text-gold hover:underline">058-7886764</a>
+                    <a href={phoneToTelHref(contactPhone)} className="font-medium text-gold hover:underline">{contactPhone}</a>
                   </p>
                 </form>
               )}

@@ -20,6 +20,7 @@ import Testimonials from "./components/Testimonials";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
+import { getContactInfo } from "@/lib/contact-data";
 import { getScrollSection } from "@/lib/scroll-sections-data";
 import { getStaffSession } from "@/lib/auth";
 import { getTestimonials } from "@/lib/testimonials-data";
@@ -40,17 +41,18 @@ export default async function Home() {
   const scrollSection = await getScrollSection();
   const staffSession = await getStaffSession();
   const testimonials = await getTestimonials();
+  const { phone, email } = await getContactInfo();
 
   return (
     <div className="flex flex-1 flex-col">
       <TrackingScripts />
-      <FloatingWhatsApp />
+      <FloatingWhatsApp phone={phone} />
       <AccessibilityWidget />
-      <StickyLeadButton />
+      <StickyLeadButton phone={phone} />
       <CookieBanner />
       <SiteHeader logoUrl={images["site-logo"]} isStaff={Boolean(staffSession)} />
       <main className="flex flex-1 flex-col">
-        <Hero slides={heroSlides} mobileHeight={heroMobileHeight} />
+        <Hero slides={heroSlides} mobileHeight={heroMobileHeight} phone={phone} />
         <Reveal>
           <ProjectCategories images={images} />
         </Reveal>
@@ -61,7 +63,7 @@ export default async function Home() {
           <SolutionsSystem />
         </Reveal>
         <Reveal>
-          <ContractorLeads />
+          <ContractorLeads phone={phone} />
         </Reveal>
         <TrustBar />
         <Reveal>
@@ -75,10 +77,10 @@ export default async function Home() {
           <Testimonials testimonials={testimonials} />
         </Reveal>
         <Reveal>
-          <ContactSection />
+          <ContactSection phone={phone} email={email} />
         </Reveal>
       </main>
-      <SiteFooter logoUrl={images["site-logo"]} />
+      <SiteFooter logoUrl={images["site-logo"]} phone={phone} email={email} />
     </div>
   );
 }

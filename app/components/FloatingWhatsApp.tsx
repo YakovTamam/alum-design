@@ -1,9 +1,11 @@
 "use client";
 
-export default function FloatingWhatsApp() {
+import { phoneToInternational } from "@/lib/contact";
+
+export default function FloatingWhatsApp({ phone }: { phone: string }) {
   return (
     <a
-      href="https://wa.me/972587886764"
+      href={`https://wa.me/${phoneToInternational(phone)}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="פנה אלינו בוואטסאפ"

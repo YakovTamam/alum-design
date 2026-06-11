@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import PhotoPlaceholder from "./PhotoPlaceholder";
 import type { SerializedHeroSlide, TitleSize, SubtitleSize, OverlayDirection } from "@/lib/hero-slides";
+import { phoneToTelHref } from "@/lib/contact";
 
 const TITLE_SIZE_CLASS: Record<TitleSize, string> = {
   sm: "text-2xl sm:text-3xl lg:text-[2.5rem]",
@@ -45,7 +46,7 @@ const STATS = [
   { value: "200+", label: "קבלנים פעילים" },
 ];
 
-export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroSlide[]; mobileHeight?: string }) {
+export default function Hero({ slides, mobileHeight, phone }: { slides: SerializedHeroSlide[]; mobileHeight?: string; phone: string }) {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -251,13 +252,13 @@ export default function Hero({ slides, mobileHeight }: { slides: SerializedHeroS
                 {slide?.ctaText} <span aria-hidden>←</span>
               </a>
               <a
-                href="tel:0587886764"
+                href={phoneToTelHref(phone)}
                 className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6l.85-.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 16z" />
                 </svg>
-                058-7886764
+                {phone}
               </a>
             </div>
           </motion.div>

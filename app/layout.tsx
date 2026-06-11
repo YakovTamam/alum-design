@@ -3,8 +3,10 @@ import { Heebo, Rubik, Frank_Ruhl_Libre, Suez_One } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
-import { SITE_URL, SITE_NAME, SITE_PHONE, SITE_EMAIL } from "@/lib/site";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { getSiteContentMap } from "@/lib/content";
+import { phoneToInternational } from "@/lib/contact";
+import { getContactInfo } from "@/lib/contact-data";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -75,32 +77,34 @@ export const viewport: Viewport = {
   themeColor: "#cfa15c",
 };
 
-const LOCAL_BUSINESS_JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "HomeAndConstructionBusiness",
-  name: SITE_NAME,
-  url: SITE_URL,
-  telephone: SITE_PHONE,
-  email: SITE_EMAIL,
-  image: `${SITE_URL}/opengraph-image`,
-  areaServed: "IL",
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "IL",
-  },
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { phone, email } = await getContactInfo();
+
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    name: SITE_NAME,
+    url: SITE_URL,
+    telephone: `+${phoneToInternational(phone)}`,
+    email,
+    image: `${SITE_URL}/opengraph-image`,
+    areaServed: "IL",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IL",
+    },
+  };
+
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} ${rubik.variable} ${frankRuhlLibre.variable} ${suezOne.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(LOCAL_BUSINESS_JSON_LD) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
         />
         <noscript>
           <style>{`#loading-screen{display:none!important}`}</style>

@@ -1,8 +1,8 @@
 import { Resend } from "resend";
 import { SOURCE_LABELS, type Lead } from "./leads";
 import { ROLE_LABELS, type UserRole } from "./user-roles";
+import { getContactInfo } from "./contact-data";
 import {
-  COMPANY_WHATSAPP,
   detailRow,
   emailButtonRow,
   escapeHtml,
@@ -29,6 +29,7 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
 
   const from = process.env.RESEND_FROM_EMAIL;
   const notifyTo = process.env.RESEND_NOTIFY_TO;
+  const { phone: companyPhone } = await getContactInfo();
 
   const sourceLabel = SOURCE_LABELS[lead.source];
   const details = [
@@ -101,7 +102,7 @@ export async function sendLeadEmails(lead: Lead): Promise<void> {
       <p style="margin:0;font-size:14px;line-height:1.7;color:#4a443c;">לפנייה מהירה יותר אפשר גם ליצור איתנו קשר ישירות בוואטסאפ.</p>
       ${emailButtonRow([
         {
-          href: whatsAppLink(COMPANY_WHATSAPP, `שלום, פניתי דרך האתר ושמי ${lead.name}.`),
+          href: whatsAppLink(companyPhone, `שלום, פניתי דרך האתר ושמי ${lead.name}.`),
           label: "פתיחת וואטסאפ",
           color: "#25d366",
           textColor: "#ffffff",

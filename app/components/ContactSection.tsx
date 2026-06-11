@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { phoneToTelHref } from "@/lib/contact";
 
-export default function ContactSection() {
+export default function ContactSection({ phone: contactPhone, email: contactEmail }: { phone: string; email: string }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
@@ -51,11 +52,11 @@ export default function ContactSection() {
             או חייגו אלינו ישירות.
           </p>
           <div className="mt-6 flex flex-col gap-3 text-sm text-zinc-600">
-            <a href="tel:0587886764" className="flex items-center gap-2 hover:text-gold">
-              <span aria-hidden>☎</span> 058-7886764
+            <a href={phoneToTelHref(contactPhone)} className="flex items-center gap-2 hover:text-gold">
+              <span aria-hidden>☎</span> {contactPhone}
             </a>
-            <a href="mailto:Contact@alum-design.co.il" className="flex items-center gap-2 hover:text-gold">
-              <span aria-hidden>✉</span> Contact@alum-design.co.il
+            <a href={`mailto:${contactEmail}`} className="flex items-center gap-2 hover:text-gold">
+              <span aria-hidden>✉</span> {contactEmail}
             </a>
           </div>
         </div>

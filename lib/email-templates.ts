@@ -1,7 +1,5 @@
 const BRAND_GRADIENT = "linear-gradient(135deg, #b8882e 0%, #cfa15c 55%, #e8c896 100%)";
 
-export const COMPANY_WHATSAPP = "972587886764";
-
 export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")

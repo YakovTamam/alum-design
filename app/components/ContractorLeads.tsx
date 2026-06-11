@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { phoneToTelHref } from "@/lib/contact";
 
 const PROJECT_TYPES = [
   "פרגולות אלומיניום",
@@ -58,7 +59,7 @@ const BENEFITS = [
   },
 ];
 
-export default function ContractorLeads() {
+export default function ContractorLeads({ phone: contactPhone }: { phone: string }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
@@ -251,7 +252,7 @@ export default function ContractorLeads() {
 
                 <p className="text-center text-xs text-zinc-400">
                   או התקשר עכשיו:{" "}
-                  <a href="tel:0587886764" className="font-medium text-gold hover:underline">058-7886764</a>
+                  <a href={phoneToTelHref(contactPhone)} className="font-medium text-gold hover:underline">{contactPhone}</a>
                 </p>
               </form>
             )}

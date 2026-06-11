@@ -26,6 +26,6 @@ export async function PUT(
   }
 
   await setSetting(key, value);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return NextResponse.json({ ok: true, key, value });
 }

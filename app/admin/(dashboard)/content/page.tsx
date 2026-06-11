@@ -9,11 +9,13 @@ import type { SerializedHeroSlide } from "@/lib/hero-slides";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getScrollSection } from "@/lib/scroll-sections-data";
+import { getContactInfo } from "@/lib/contact-data";
 import ContentAccordion from "../../../components/admin/ContentAccordion";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
 import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";
 import ScrollSectionManager from "../../../components/admin/ScrollSectionManager";
+import ContactInfoSettings from "../../../components/admin/ContactInfoSettings";
 import { SaveAllProvider } from "../../../components/admin/SaveAllContext";
 
 export const dynamic = "force-dynamic";
@@ -42,6 +44,7 @@ export default async function ContentSlotsPage() {
   heroSlides = await getHeroSlides();
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
+  const contactInfo = await getContactInfo();
 
   const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
   const categorySlots = CONTENT_SLOTS.filter((slot) => slot.key.startsWith("category-"));
@@ -69,6 +72,14 @@ export default async function ContentSlotsPage() {
 
       <ContentAccordion
         sections={[
+          {
+            id: "contact-info",
+            title: "פרטי יצירת קשר",
+            description: "מספר הטלפון והאימייל המוצגים באתר ובהתראות מיילים",
+            content: (
+              <ContactInfoSettings initialPhone={contactInfo.phone} initialEmail={contactInfo.email} />
+            ),
+          },
           {
             id: "site-logo",
             title: "לוגו האתר",

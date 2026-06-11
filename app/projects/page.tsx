@@ -9,6 +9,7 @@ import ProjectsGallery from "../components/ProjectsGallery";
 import { getSiteContentMap } from "@/lib/content";
 import { getStaffSession } from "@/lib/auth";
 import { getPortfolioItems } from "@/lib/portfolio-data";
+import { getContactInfo } from "@/lib/contact-data";
 
 export const revalidate = 60;
 
@@ -27,12 +28,13 @@ export default async function ProjectsPage() {
 
   const staffSession = await getStaffSession();
   const items = await getPortfolioItems();
+  const { phone, email } = await getContactInfo();
 
   return (
     <div className="flex flex-1 flex-col">
-      <FloatingWhatsApp />
+      <FloatingWhatsApp phone={phone} />
       <AccessibilityWidget />
-      <StickyLeadButton />
+      <StickyLeadButton phone={phone} />
       <CookieBanner />
       <SiteHeader logoUrl={images["site-logo"]} isStaff={Boolean(staffSession)} />
       <main className="flex flex-1 flex-col">
@@ -51,7 +53,7 @@ export default async function ProjectsPage() {
           </div>
         </section>
       </main>
-      <SiteFooter logoUrl={images["site-logo"]} />
+      <SiteFooter logoUrl={images["site-logo"]} phone={phone} email={email} />
     </div>
   );
 }
