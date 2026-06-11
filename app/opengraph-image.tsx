@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
-export const alt = "ALUM DESIGN - פתרונות אלומיניום חכמים";
+export const alt = `${SITE_NAME} - ${SITE_TAGLINE}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -41,7 +41,7 @@ export default function Image() {
             color: "transparent",
           }}
         >
-          פתרונות אלומיניום חכמים
+          {SITE_TAGLINE}
         </div>
       </div>
     ),

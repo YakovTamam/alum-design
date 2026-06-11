@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
 
 function AlumMark() {
   return (
@@ -73,9 +74,9 @@ export default function LoadingScreen() {
           >
             <AlumMark />
             <div className="flex flex-col items-center leading-none">
-              <span className="text-xl font-black tracking-[0.4em] text-white">ALUM</span>
+              <span className="text-xl font-black tracking-[0.4em] text-white">{SITE_NAME_PRIMARY}</span>
               <span className="mt-2 text-[11px] font-light tracking-[0.65em] text-gold">
-                DESIGN
+                {SITE_NAME_SECONDARY}
               </span>
             </div>
           </motion.div>

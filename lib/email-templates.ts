@@ -1,3 +1,5 @@
+import { SITE_NAME, SITE_TAGLINE } from "./site";
+
 const BRAND_GRADIENT = "linear-gradient(135deg, #b8882e 0%, #cfa15c 55%, #e8c896 100%)";
 
 export function escapeHtml(value: string): string {
@@ -53,7 +55,7 @@ export function renderEmailLayout({ previewText, bodyHtml }: { previewText?: str
           <table role="presentation" width="100%" style="max-width:560px;background-color:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e1da;">
             <tr>
               <td style="background:${BRAND_GRADIENT};padding:24px 32px;">
-                <span style="font-size:20px;font-weight:800;color:#1a1308;letter-spacing:0.08em;">ALUM DESIGN</span>
+                <span style="font-size:20px;font-weight:800;color:#1a1308;letter-spacing:0.08em;">${SITE_NAME}</span>
               </td>
             </tr>
             <tr>
@@ -63,7 +65,7 @@ export function renderEmailLayout({ previewText, bodyHtml }: { previewText?: str
             </tr>
             <tr>
               <td style="padding:16px 32px;background-color:#f7f5f2;border-top:1px solid #e5e1da;text-align:center;">
-                <span style="font-size:12px;color:#9a948c;">ALUM DESIGN — פרגולות, חלונות ומערכות אלומיניום</span>
+                <span style="font-size:12px;color:#9a948c;">${SITE_NAME} — ${SITE_TAGLINE}</span>
               </td>
             </tr>
           </table>

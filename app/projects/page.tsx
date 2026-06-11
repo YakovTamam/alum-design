@@ -12,12 +12,13 @@ import { getPortfolioItems } from "@/lib/portfolio-data";
 import { getContactInfo } from "@/lib/contact-data";
 import { getLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
+import { SITE_NAME } from "@/lib/site";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "פרויקטים | ALUM DESIGN",
-  description: "גלריית פרויקטים נבחרים — פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות ומערכות הצללה מתוצרת ALUM DESIGN.",
+  title: "פרויקטים",
+  description: `גלריית פרויקטים נבחרים — פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות ומערכות הצללה מתוצרת ${SITE_NAME}.`,
 };
 
 export default async function ProjectsPage() {

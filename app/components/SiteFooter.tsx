@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { phoneToTelHref } from "@/lib/contact";
 import { logoScale } from "@/lib/logo";
+import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY, SITE_TAGLINE } from "@/lib/site";
+import { SERVICES } from "@/lib/services";
 
 const COLUMNS = [
   {
@@ -9,7 +11,7 @@ const COLUMNS = [
   },
   {
     title: "מערכות",
-    links: ["פרגולות", "חלונות", "שערים", "סגירות זכוכית"],
+    links: SERVICES.map((s) => s.label),
   },
   {
     title: "החברה",
@@ -45,18 +47,18 @@ export default function SiteFooter({
           <div>
             {logoUrl ? (
               <div className="relative" style={{ width: 160 * scale, height: 48 * scale }}>
-                <Image src={logoUrl} alt="ALUM DESIGN" fill sizes="160px" className="object-contain object-right" />
+                <Image src={logoUrl} alt={SITE_NAME} fill sizes="160px" className="object-contain object-right" />
               </div>
             ) : (
               <div className="flex flex-col items-start leading-none">
                 <span className="text-xl font-semibold tracking-[0.2em] text-[var(--footer-text,#ffffff)]">
-                  ALUM
+                  {SITE_NAME_PRIMARY}
                 </span>
-                <span className="text-[10px] tracking-[0.4em] text-gold">DESIGN</span>
+                <span className="text-[10px] tracking-[0.4em] text-gold">{SITE_NAME_SECONDARY}</span>
               </div>
             )}
             <p className="mt-4 max-w-xs text-sm leading-7 text-[var(--footer-text,#a1a1aa)]">
-              פתרונות אלומיניום חכמים לפרויקטים מודרניים — תכנון, ייצור והתקנה
+              {SITE_TAGLINE} לפרויקטים מודרניים — תכנון, ייצור והתקנה
               במקום אחד.
             </p>
           </div>
@@ -80,7 +82,7 @@ export default function SiteFooter({
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-sm text-[var(--footer-text,#a1a1aa)] sm:flex-row">
-          <p>© {new Date().getFullYear()} ALUM DESIGN. כל הזכויות שמורות.</p>
+          <p>© {new Date().getFullYear()} {SITE_NAME}. כל הזכויות שמורות.</p>
           <div className="flex items-center gap-6">
             <a href={phoneToTelHref(phone)} className="flex items-center gap-2 transition-colors hover:text-gold">
               <span aria-hidden>☎</span> {phone}

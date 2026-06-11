@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { ConfiguratorSnapshot } from "@/lib/leads";
+import { SITE_NAME } from "@/lib/site";
 
 type LeadCaptureModalProps = {
   open: boolean;
@@ -50,7 +51,7 @@ export default function LeadCaptureModal({ open, onClose, configurator }: LeadCa
             </span>
             <h2 className="text-lg font-semibold text-white">הפנייה התקבלה!</h2>
             <p className="text-sm text-zinc-400">
-              נציג של ALUM DESIGN יחזור אליך בהקדם עם הצעת מחיר מדויקת.
+              נציג של {SITE_NAME} יחזור אליך בהקדם עם הצעת מחיר מדויקת.
             </p>
             <button
               type="button"

@@ -3,7 +3,7 @@ import { Heebo, Rubik, Frank_Ruhl_Libre, Suez_One } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
-import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { SITE_URL, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 import { getSiteContentMap } from "@/lib/content";
 import { phoneToInternational } from "@/lib/contact";
 import { getContactInfo } from "@/lib/contact-data";
@@ -30,9 +30,8 @@ const suezOne = Suez_One({
   weight: "400",
 });
 
-const TITLE = "ALUM DESIGN | פתרונות אלומיניום חכמים";
-const DESCRIPTION =
-  "ALUM DESIGN - פתרונות אלומיניום חכמים לפרויקטים מודרניים: פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות והצללות.";
+const TITLE = `${SITE_NAME} | ${SITE_TAGLINE}`;
+const DESCRIPTION = `${SITE_NAME} - ${SITE_TAGLINE} לפרויקטים מודרניים: פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות והצללות.`;
 
 export async function generateMetadata(): Promise<Metadata> {
   let faviconUrl = "/favicon.ico";
@@ -50,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${SITE_NAME}`,
     },
     description: DESCRIPTION,
-    keywords: ["אלומיניום", "פרגולות", "חלונות אלומיניום", "שערים חשמליים", "סגירות זכוכית", "חזיתות אלומיניום", "ALUM DESIGN"],
+    keywords: ["אלומיניום", "פרגולות", "חלונות אלומיניום", "שערים חשמליים", "סגירות זכוכית", "חזיתות אלומיניום", SITE_NAME],
     alternates: {
       canonical: "/",
     },

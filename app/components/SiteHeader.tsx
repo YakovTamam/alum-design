@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { logoScale } from "@/lib/logo";
+import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
 
 const NAV_LINKS = [
   { label: "דף הבית", href: "#" },
@@ -50,17 +51,17 @@ export default function SiteHeader({
         <a href="#" className="flex items-center gap-3">
           {logoUrl ? (
             <div className="relative shrink-0" style={{ width: 128 * scale, height: 40 * scale }}>
-              <Image src={logoUrl} alt="ALUM DESIGN" fill sizes="128px" className="object-contain object-right" />
+              <Image src={logoUrl} alt={SITE_NAME} fill sizes="128px" className="object-contain object-right" />
             </div>
           ) : (
             <>
               <AlumLogo />
               <div className="flex flex-col items-start leading-none">
                 <span className="text-base font-black tracking-[0.22em] text-[var(--header-text,#18181b)]">
-                  ALUM
+                  {SITE_NAME_PRIMARY}
                 </span>
                 <span className="text-[10px] font-light tracking-[0.45em] text-gold">
-                  DESIGN
+                  {SITE_NAME_SECONDARY}
                 </span>
               </div>
             </>

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import LogoutButton from "../../components/admin/LogoutButton";
+import { SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
 
 export default function ClientDashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -7,8 +8,8 @@ export default function ClientDashboardLayout({ children }: { children: ReactNod
       <div className="flex items-center justify-between border-b border-white/5 px-5 py-4 lg:px-10">
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-start leading-none">
-            <span className="text-base font-semibold tracking-[0.2em] text-white">ALUM</span>
-            <span className="text-[9px] tracking-[0.4em] text-gold">DESIGN</span>
+            <span className="text-base font-semibold tracking-[0.2em] text-white">{SITE_NAME_PRIMARY}</span>
+            <span className="text-[9px] tracking-[0.4em] text-gold">{SITE_NAME_SECONDARY}</span>
           </div>
           <span className="h-5 w-px bg-white/10" />
           <span className="text-sm font-semibold text-white">אזור לקוחות</span>
