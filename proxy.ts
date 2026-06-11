@@ -6,7 +6,7 @@ const ADMIN_ONLY_PREFIXES = ["/admin/content", "/admin/media"];
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/admin/login") {
+  if (pathname === "/admin/login" || pathname.startsWith("/admin/reset-password/")) {
     return NextResponse.next();
   }
 

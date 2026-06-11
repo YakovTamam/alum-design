@@ -70,3 +70,9 @@ export async function createUser(data: {
 export async function verifyPassword(user: User, password: string): Promise<boolean> {
   return bcrypt.compare(password, user.passwordHash);
 }
+
+export async function updateUserPassword(id: string, password: string): Promise<void> {
+  const db = await getDb();
+  const passwordHash = await bcrypt.hash(password, 10);
+  await db.collection<User>(USERS_COLLECTION).updateOne({ _id: new ObjectId(id) }, { $set: { passwordHash } });
+}
