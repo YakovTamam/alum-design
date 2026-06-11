@@ -33,12 +33,12 @@ const DESCRIPTION =
   "ALUM DESIGN - פתרונות אלומיניום חכמים לפרויקטים מודרניים: פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות והצללות.";
 
 export async function generateMetadata(): Promise<Metadata> {
-  let faviconUrl: string | undefined;
+  let faviconUrl = "/favicon.ico";
   try {
     const content = await getSiteContentMap();
-    faviconUrl = content.favicon;
+    if (content.favicon) faviconUrl = content.favicon;
   } catch {
-    // MongoDB unavailable — fall back to the static app/favicon.ico
+    // MongoDB unavailable — fall back to the default /favicon.ico
   }
 
   return {
@@ -65,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: TITLE,
       description: DESCRIPTION,
     },
-    ...(faviconUrl ? { icons: { icon: faviconUrl } } : {}),
+    icons: { icon: faviconUrl },
   };
 }
 
