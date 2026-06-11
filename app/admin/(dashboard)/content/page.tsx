@@ -10,12 +10,16 @@ import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getScrollSection } from "@/lib/scroll-sections-data";
 import { getContactInfo } from "@/lib/contact-data";
+import { getLogoSize } from "@/lib/logo-data";
+import { getSiteTheme } from "@/lib/theme-data";
 import ContentAccordion from "../../../components/admin/ContentAccordion";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
 import HeroHeightSetting from "../../../components/admin/HeroHeightSetting";
 import ScrollSectionManager from "../../../components/admin/ScrollSectionManager";
 import ContactInfoSettings from "../../../components/admin/ContactInfoSettings";
+import LogoSizeSetting from "../../../components/admin/LogoSizeSetting";
+import ThemeColorsSettings from "../../../components/admin/ThemeColorsSettings";
 import { SaveAllProvider } from "../../../components/admin/SaveAllContext";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +49,8 @@ export default async function ContentSlotsPage() {
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
   const contactInfo = await getContactInfo();
+  const logoSize = await getLogoSize();
+  const siteTheme = await getSiteTheme();
 
   const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
   const categorySlots = CONTENT_SLOTS.filter((slot) => slot.key.startsWith("category-"));
@@ -84,15 +90,32 @@ export default async function ContentSlotsPage() {
             id: "site-logo",
             title: "לוגו האתר",
             description: "החלפת הלוגו המוצג בכותרת העליונה ובפוטר, וה-favicon המוצג בלשונית הדפדפן",
-            content: loadError ? (
-              slotsUnavailable
-            ) : (
-              <ContentSlotsManager
-                slots={logoSlots}
-                media={media}
-                initialAssignments={assignments}
-              />
+            content: (
+              <div className="flex flex-col gap-8">
+                {loadError ? (
+                  slotsUnavailable
+                ) : (
+                  <ContentSlotsManager
+                    slots={logoSlots}
+                    media={media}
+                    initialAssignments={assignments}
+                  />
+                )}
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-white">גודל הלוגו</h3>
+                  <p className="mb-4 text-xs text-zinc-500">
+                    קובע את גודל הלוגו (תמונה) בכותרת ובפוטר, ביחס לגודל המקורי.
+                  </p>
+                  <LogoSizeSetting initialValue={logoSize} />
+                </div>
+              </div>
             ),
+          },
+          {
+            id: "header-footer-colors",
+            title: "צבעי הדר ופוטר",
+            description: "צבע הרקע וצבע הטקסטים של הכותרת העליונה והפוטר",
+            content: <ThemeColorsSettings initialTheme={siteTheme} />,
           },
           {
             id: "hero",

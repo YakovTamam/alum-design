@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoScale } from "@/lib/logo";
 
 const NAV_LINKS = [
   { label: "דף הבית", href: "#" },
@@ -24,20 +25,38 @@ function AlumLogo() {
   );
 }
 
-export default function SiteHeader({ logoUrl, isStaff }: { logoUrl?: string; isStaff?: boolean }) {
+export default function SiteHeader({
+  logoUrl,
+  isStaff,
+  logoSize,
+  headerBg,
+  headerText,
+}: {
+  logoUrl?: string;
+  isStaff?: boolean;
+  logoSize?: string;
+  headerBg?: string;
+  headerText?: string;
+}) {
+  const scale = logoScale(logoSize ?? "100");
+  const headerStyle = {
+    ...(headerBg ? { backgroundColor: headerBg } : {}),
+    ...(headerText ? { "--header-text": headerText } : {}),
+  } as React.CSSProperties;
+
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur-md" style={headerStyle}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-10">
         <a href="#" className="flex items-center gap-3">
           {logoUrl ? (
-            <div className="relative h-10 w-32 shrink-0">
+            <div className="relative shrink-0" style={{ width: 128 * scale, height: 40 * scale }}>
               <Image src={logoUrl} alt="ALUM DESIGN" fill sizes="128px" className="object-contain object-right" />
             </div>
           ) : (
             <>
               <AlumLogo />
               <div className="flex flex-col items-start leading-none">
-                <span className="text-base font-black tracking-[0.22em] text-zinc-900">
+                <span className="text-base font-black tracking-[0.22em] text-[var(--header-text,#18181b)]">
                   ALUM
                 </span>
                 <span className="text-[10px] font-light tracking-[0.45em] text-gold">
@@ -48,12 +67,12 @@ export default function SiteHeader({ logoUrl, isStaff }: { logoUrl?: string; isS
           )}
         </a>
 
-        <nav className="hidden items-center gap-8 text-sm text-zinc-500 lg:flex">
+        <nav className="hidden items-center gap-8 text-sm lg:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="transition-colors hover:text-zinc-900"
+              className="text-[var(--header-text,#71717a)] transition-colors hover:text-zinc-900"
             >
               {link.label}
             </a>
@@ -64,7 +83,7 @@ export default function SiteHeader({ logoUrl, isStaff }: { logoUrl?: string; isS
           {isStaff && (
             <a
               href="/admin"
-              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-zinc-600 transition-all hover:border-zinc-400 hover:text-zinc-900"
+              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" strokeLinejoin="round" />

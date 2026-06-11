@@ -10,6 +10,8 @@ import { getSiteContentMap } from "@/lib/content";
 import { getStaffSession } from "@/lib/auth";
 import { getPortfolioItems } from "@/lib/portfolio-data";
 import { getContactInfo } from "@/lib/contact-data";
+import { getLogoSize } from "@/lib/logo-data";
+import { getSiteTheme } from "@/lib/theme-data";
 
 export const revalidate = 60;
 
@@ -29,6 +31,8 @@ export default async function ProjectsPage() {
   const staffSession = await getStaffSession();
   const items = await getPortfolioItems();
   const { phone, email } = await getContactInfo();
+  const logoSize = await getLogoSize();
+  const theme = await getSiteTheme();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -36,7 +40,13 @@ export default async function ProjectsPage() {
       <AccessibilityWidget />
       <StickyLeadButton phone={phone} />
       <CookieBanner />
-      <SiteHeader logoUrl={images["site-logo"]} isStaff={Boolean(staffSession)} />
+      <SiteHeader
+        logoUrl={images["site-logo"]}
+        isStaff={Boolean(staffSession)}
+        logoSize={logoSize}
+        headerBg={theme.headerBg}
+        headerText={theme.headerText}
+      />
       <main className="flex flex-1 flex-col">
         <section className="bg-white py-12 lg:py-20">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -53,7 +63,14 @@ export default async function ProjectsPage() {
           </div>
         </section>
       </main>
-      <SiteFooter logoUrl={images["site-logo"]} phone={phone} email={email} />
+      <SiteFooter
+        logoUrl={images["site-logo"]}
+        phone={phone}
+        email={email}
+        logoSize={logoSize}
+        footerBg={theme.footerBg}
+        footerText={theme.footerText}
+      />
     </div>
   );
 }

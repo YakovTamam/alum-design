@@ -1,11 +1,11 @@
 "use client";
 
-import { phoneToInternational } from "@/lib/contact";
+import { whatsAppLink } from "@/lib/email-templates";
 
 export default function FloatingWhatsApp({ phone }: { phone: string }) {
   return (
     <a
-      href={`https://wa.me/${phoneToInternational(phone)}`}
+      href={whatsAppLink(phone, "היי, אני מעוניין לשמוע עוד פרטים")}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="פנה אלינו בוואטסאפ"
