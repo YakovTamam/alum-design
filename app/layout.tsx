@@ -7,6 +7,7 @@ import { SITE_URL, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 import { getSiteContentMap } from "@/lib/content";
 import { phoneToInternational } from "@/lib/contact";
 import { getContactInfo } from "@/lib/contact-data";
+import { getLoadingScreenSettings } from "@/lib/loading-screen-data";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -82,6 +83,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { phone, email } = await getContactInfo();
+  const loadingScreen = await getLoadingScreenSettings();
+
+  let logoUrl: string | undefined;
+  try {
+    const content = await getSiteContentMap();
+    logoUrl = content["site-logo"];
+  } catch {
+    // MongoDB unavailable — fall back to the default loading screen mark
+  }
 
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
@@ -108,7 +118,7 @@ export default async function RootLayout({
         <noscript>
           <style>{`#loading-screen{display:none!important}`}</style>
         </noscript>
-        <LoadingScreen />
+        <LoadingScreen settings={loadingScreen} logoUrl={logoUrl} />
         <SmoothScroll />
         {children}
       </body>
