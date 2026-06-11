@@ -29,6 +29,17 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Setting up a new client
+
+This project is built to be cloned per client. After forking the repo:
+
+1. Update the code-level branding in `lib/site.ts` (site name, tagline, URL) and `lib/services.tsx` (services list).
+2. Set up `.env.local` (see `.env.local.example`) pointing at the new client's MongoDB database.
+3. Copy `client.config.example.mjs` to `client.config.mjs`, fill in their contact info, theme colors, loading screen, etc.
+4. Run `npm run seed` to write those values into the database as initial settings.
+5. Start the app and log in at `/admin/login` — the first account created becomes the super-admin.
+6. Use the admin panel to upload the logo, hero images, gallery images, etc.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

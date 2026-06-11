@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env*.example
 
+# per-client seed config (copy from client.config.example.mjs)
+client.config.mjs
+
 # vercel
 .vercel
 
