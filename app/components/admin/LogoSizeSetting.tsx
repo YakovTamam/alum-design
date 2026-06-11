@@ -5,13 +5,19 @@ import { useSaveAll } from "./SaveAllContext";
 
 const PRESETS = ["75", "100", "125", "150", "175", "200"];
 
-export default function LogoSizeSetting({ initialValue }: { initialValue: string }) {
+export default function LogoSizeSetting({
+  initialValue,
+  settingKey = "logo-size",
+}: {
+  initialValue: string;
+  settingKey?: string;
+}) {
   const [value, setValue] = useState(initialValue);
   const [persisted, setPersisted] = useState(initialValue);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   async function persist(): Promise<void> {
-    const res = await fetch("/api/admin/settings/logo-size", {
+    const res = await fetch(`/api/admin/settings/${settingKey}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value }),
@@ -20,7 +26,7 @@ export default function LogoSizeSetting({ initialValue }: { initialValue: string
     setPersisted(value);
   }
 
-  useSaveAll("logo-size", value.trim() !== persisted.trim(), persist);
+  useSaveAll(settingKey, value.trim() !== persisted.trim(), persist);
 
   async function save() {
     setStatus("saving");

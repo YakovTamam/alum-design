@@ -25,7 +25,7 @@ import { getContactInfo } from "@/lib/contact-data";
 import { getScrollSection } from "@/lib/scroll-sections-data";
 import { getStaffSession } from "@/lib/auth";
 import { getTestimonials } from "@/lib/testimonials-data";
-import { getLogoSize } from "@/lib/logo-data";
+import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { getGallerySection } from "@/lib/gallery-data";
 
@@ -47,6 +47,7 @@ export default async function Home() {
   const testimonials = await getTestimonials();
   const { phone, email } = await getContactInfo();
   const logoSize = await getLogoSize();
+  const footerLogoSize = await getFooterLogoSize();
   const theme = await getSiteTheme();
   const gallerySection = await getGallerySection();
 
@@ -95,10 +96,10 @@ export default async function Home() {
         </Reveal>
       </main>
       <SiteFooter
-        logoUrl={images["site-logo"]}
+        logoUrl={images["footer-logo"] ?? images["site-logo"]}
         phone={phone}
         email={email}
-        logoSize={logoSize}
+        logoSize={footerLogoSize}
         footerBg={theme.footerBg}
         footerText={theme.footerText}
       />

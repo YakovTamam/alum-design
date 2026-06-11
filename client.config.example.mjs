@@ -29,6 +29,7 @@ const config = {
 
   // Logo size as a percentage of its original size (50–200).
   logoSize: "100",
+  footerLogoSize: "100",
 
   loadingScreen: {
     enabled: true,

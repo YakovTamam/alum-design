@@ -1,7 +1,8 @@
 import { getDb } from "./mongodb";
 
 export const CONTENT_SLOTS = [
-  { key: "site-logo", label: "לוגו האתר (כותרת ופוטר)" },
+  { key: "site-logo", label: "לוגו האתר (כותרת)" },
+  { key: "footer-logo", label: "לוגו פוטר (אופציונלי — ברירת מחדל: לוגו הכותרת)" },
   { key: "favicon", label: "Favicon (סמל האתר בלשונית הדפדפן)" },
   { key: "final-cta", label: "באנר סיום (Final CTA)" },
   { key: "category-luxury-villas", label: "קטגוריה: וילות יוקרה" },
