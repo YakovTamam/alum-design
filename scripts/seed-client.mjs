@@ -38,6 +38,7 @@ const settings = {
   "footer-bg-color": config.theme?.footerBg,
   "footer-text-color": config.theme?.footerText,
   "logo-size": config.logoSize,
+  "footer-logo-size": config.footerLogoSize,
   "loading-screen-enabled": config.loadingScreen?.enabled,
   "loading-screen-use-site-logo": config.loadingScreen?.useSiteLogo,
   "loading-screen-bg-color": config.loadingScreen?.backgroundColor,

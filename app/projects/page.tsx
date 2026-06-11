@@ -10,7 +10,7 @@ import { getSiteContentMap } from "@/lib/content";
 import { getStaffSession } from "@/lib/auth";
 import { getPortfolioItems } from "@/lib/portfolio-data";
 import { getContactInfo } from "@/lib/contact-data";
-import { getLogoSize } from "@/lib/logo-data";
+import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { SITE_NAME } from "@/lib/site";
 
@@ -33,6 +33,7 @@ export default async function ProjectsPage() {
   const items = await getPortfolioItems();
   const { phone, email } = await getContactInfo();
   const logoSize = await getLogoSize();
+  const footerLogoSize = await getFooterLogoSize();
   const theme = await getSiteTheme();
 
   return (
@@ -65,10 +66,10 @@ export default async function ProjectsPage() {
         </section>
       </main>
       <SiteFooter
-        logoUrl={images["site-logo"]}
+        logoUrl={images["footer-logo"] ?? images["site-logo"]}
         phone={phone}
         email={email}
-        logoSize={logoSize}
+        logoSize={footerLogoSize}
         footerBg={theme.footerBg}
         footerText={theme.footerText}
       />

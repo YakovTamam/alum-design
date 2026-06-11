@@ -10,7 +10,7 @@ import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getScrollSection } from "@/lib/scroll-sections-data";
 import { getContactInfo } from "@/lib/contact-data";
-import { getLogoSize } from "@/lib/logo-data";
+import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { getGallerySection } from "@/lib/gallery-data";
 import { getLoadingScreenSettings } from "@/lib/loading-screen-data";
@@ -54,11 +54,13 @@ export default async function ContentSlotsPage() {
   const scrollSection = await getScrollSection();
   const contactInfo = await getContactInfo();
   const logoSize = await getLogoSize();
+  const footerLogoSize = await getFooterLogoSize();
   const siteTheme = await getSiteTheme();
   const gallerySection = await getGallerySection();
   const loadingScreenSettings = await getLoadingScreenSettings();
 
-  const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
+  const headerLogoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
+  const footerLogoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "footer-logo");
   const categorySlots = CONTENT_SLOTS.filter((slot) => slot.key.startsWith("category-"));
   const finalCtaSlots = CONTENT_SLOTS.filter((slot) => slot.key === "final-cta");
 
@@ -95,24 +97,47 @@ export default async function ContentSlotsPage() {
           {
             id: "site-logo",
             title: "לוגו האתר",
-            description: "החלפת הלוגו המוצג בכותרת העליונה ובפוטר, וה-favicon המוצג בלשונית הדפדפן",
+            description: "החלפת הלוגו בכותרת העליונה ובפוטר (בנפרד), גדלים וה-favicon המוצג בלשונית הדפדפן",
             content: (
               <div className="flex flex-col gap-8">
                 {loadError ? (
                   slotsUnavailable
                 ) : (
-                  <ContentSlotsManager
-                    slots={logoSlots}
-                    media={media}
-                    initialAssignments={assignments}
-                  />
+                  <div>
+                    <h3 className="mb-3 text-sm font-semibold text-white">לוגו כותרת ו-Favicon</h3>
+                    <ContentSlotsManager
+                      slots={headerLogoSlots}
+                      media={media}
+                      initialAssignments={assignments}
+                    />
+                  </div>
                 )}
                 <div>
-                  <h3 className="mb-1 text-sm font-semibold text-white">גודל הלוגו</h3>
+                  <h3 className="mb-1 text-sm font-semibold text-white">גודל לוגו הכותרת</h3>
                   <p className="mb-4 text-xs text-zinc-500">
-                    קובע את גודל הלוגו (תמונה) בכותרת ובפוטר, ביחס לגודל המקורי.
+                    קובע את גודל הלוגו בכותרת העליונה, ביחס לגודל המקורי.
                   </p>
                   <LogoSizeSetting initialValue={logoSize} />
+                </div>
+                {!loadError && (
+                  <div>
+                    <h3 className="mb-3 text-sm font-semibold text-white">לוגו פוטר</h3>
+                    <p className="mb-4 text-xs text-zinc-500">
+                      אופציונלי — אם לא נבחרת תמונה, יוצג בפוטר לוגו הכותרת.
+                    </p>
+                    <ContentSlotsManager
+                      slots={footerLogoSlots}
+                      media={media}
+                      initialAssignments={assignments}
+                    />
+                  </div>
+                )}
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-white">גודל לוגו הפוטר</h3>
+                  <p className="mb-4 text-xs text-zinc-500">
+                    קובע את גודל הלוגו בפוטר, ביחס לגודל המקורי.
+                  </p>
+                  <LogoSizeSetting initialValue={footerLogoSize} settingKey="footer-logo-size" />
                 </div>
               </div>
             ),
