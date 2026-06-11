@@ -12,6 +12,7 @@ import { getScrollSection } from "@/lib/scroll-sections-data";
 import { getContactInfo } from "@/lib/contact-data";
 import { getLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
+import { getGallerySection } from "@/lib/gallery-data";
 import ContentAccordion from "../../../components/admin/ContentAccordion";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
@@ -20,6 +21,7 @@ import ScrollSectionManager from "../../../components/admin/ScrollSectionManager
 import ContactInfoSettings from "../../../components/admin/ContactInfoSettings";
 import LogoSizeSetting from "../../../components/admin/LogoSizeSetting";
 import ThemeColorsSettings from "../../../components/admin/ThemeColorsSettings";
+import GalleryManager from "../../../components/admin/GalleryManager";
 import { SaveAllProvider } from "../../../components/admin/SaveAllContext";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +53,7 @@ export default async function ContentSlotsPage() {
   const contactInfo = await getContactInfo();
   const logoSize = await getLogoSize();
   const siteTheme = await getSiteTheme();
+  const gallerySection = await getGallerySection();
 
   const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
   const categorySlots = CONTENT_SLOTS.filter((slot) => slot.key.startsWith("category-"));
@@ -166,6 +169,16 @@ export default async function ContentSlotsPage() {
                 media={media}
                 initialAssignments={assignments}
               />
+            ),
+          },
+          {
+            id: "image-gallery",
+            title: "גלריית תמונות (קרוסלה אינסופית)",
+            description: "רצועת תמונות נעה ברציפות — שליטה בתמונות, מהירות, כיוון וגובה",
+            content: loadError ? (
+              slotsUnavailable
+            ) : (
+              <GalleryManager initialSection={gallerySection} media={media} />
             ),
           },
         ]}

@@ -17,6 +17,7 @@ import Reveal from "./components/Reveal";
 import ScrollVideoSection from "./components/ScrollVideoSection";
 import TrackingScripts from "./components/TrackingScripts";
 import Testimonials from "./components/Testimonials";
+import ImageGallery from "./components/ImageGallery";
 import { getSiteContentMap } from "@/lib/content";
 import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
@@ -26,6 +27,7 @@ import { getStaffSession } from "@/lib/auth";
 import { getTestimonials } from "@/lib/testimonials-data";
 import { getLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
+import { getGallerySection } from "@/lib/gallery-data";
 
 export const revalidate = 60;
 
@@ -46,6 +48,7 @@ export default async function Home() {
   const { phone, email } = await getContactInfo();
   const logoSize = await getLogoSize();
   const theme = await getSiteTheme();
+  const gallerySection = await getGallerySection();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -86,6 +89,7 @@ export default async function Home() {
         <Reveal>
           <Testimonials testimonials={testimonials} />
         </Reveal>
+        <ImageGallery section={gallerySection} />
         <Reveal>
           <ContactSection phone={phone} email={email} />
         </Reveal>

@@ -78,6 +78,12 @@ body {
   animation: wa-pulse 2.2s ease infinite;
 }
 
+/* Infinite image gallery marquee */
+@keyframes gallery-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Accessibility widget modes */
 html.a11y-grayscale {
   filter: grayscale(1);
