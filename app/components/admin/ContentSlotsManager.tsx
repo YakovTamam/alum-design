@@ -73,7 +73,11 @@ export default function ContentSlotsManager({ slots, media, initialAssignments }
             <div key={slot.key} className="overflow-hidden rounded-2xl border border-white/10 bg-panel/60">
               <div
                 className={`relative w-full bg-black/30 ${
-                  slot.key === "site-logo" ? "aspect-[3/1]" : "aspect-video"
+                  slot.key === "site-logo"
+                    ? "aspect-[3/1]"
+                    : slot.key === "favicon"
+                      ? "aspect-square max-w-[160px]"
+                      : "aspect-video"
                 }`}
               >
                 {assignedMedia ? (
@@ -82,7 +86,9 @@ export default function ContentSlotsManager({ slots, media, initialAssignments }
                     alt={slot.label}
                     fill
                     sizes="(min-width: 640px) 50vw, 100vw"
-                    className={slot.key === "site-logo" ? "object-contain p-4" : "object-cover"}
+                    className={
+                      slot.key === "site-logo" || slot.key === "favicon" ? "object-contain p-4" : "object-cover"
+                    }
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-xs text-zinc-500">

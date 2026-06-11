@@ -43,7 +43,7 @@ export default async function ContentSlotsPage() {
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
 
-  const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo");
+  const logoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
   const categorySlots = CONTENT_SLOTS.filter((slot) => slot.key.startsWith("category-"));
   const finalCtaSlots = CONTENT_SLOTS.filter((slot) => slot.key === "final-cta");
 
@@ -72,7 +72,7 @@ export default async function ContentSlotsPage() {
           {
             id: "site-logo",
             title: "לוגו האתר",
-            description: "החלפת הלוגו המוצג בכותרת העליונה ובפוטר",
+            description: "החלפת הלוגו המוצג בכותרת העליונה ובפוטר, וה-favicon המוצג בלשונית הדפדפן",
             content: loadError ? (
               slotsUnavailable
             ) : (

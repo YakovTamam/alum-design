@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
 import { SITE_URL, SITE_NAME, SITE_PHONE, SITE_EMAIL } from "@/lib/site";
+import { getSiteContentMap } from "@/lib/content";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -31,31 +32,42 @@ const TITLE = "ALUM DESIGN | פתרונות אלומיניום חכמים";
 const DESCRIPTION =
   "ALUM DESIGN - פתרונות אלומיניום חכמים לפרויקטים מודרניים: פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות והצללות.";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: TITLE,
-    template: `%s | ${SITE_NAME}`,
-  },
-  description: DESCRIPTION,
-  keywords: ["אלומיניום", "פרגולות", "חלונות אלומיניום", "שערים חשמליים", "סגירות זכוכית", "חזיתות אלומיניום", "ALUM DESIGN"],
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: TITLE,
+export async function generateMetadata(): Promise<Metadata> {
+  let faviconUrl: string | undefined;
+  try {
+    const content = await getSiteContentMap();
+    faviconUrl = content.favicon;
+  } catch {
+    // MongoDB unavailable — fall back to the static app/favicon.ico
+  }
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: TITLE,
+      template: `%s | ${SITE_NAME}`,
+    },
     description: DESCRIPTION,
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    locale: "he_IL",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-};
+    keywords: ["אלומיניום", "פרגולות", "חלונות אלומיניום", "שערים חשמליים", "סגירות זכוכית", "חזיתות אלומיניום", "ALUM DESIGN"],
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      title: TITLE,
+      description: DESCRIPTION,
+      url: SITE_URL,
+      siteName: SITE_NAME,
+      locale: "he_IL",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: TITLE,
+      description: DESCRIPTION,
+    },
+    ...(faviconUrl ? { icons: { icon: faviconUrl } } : {}),
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",
