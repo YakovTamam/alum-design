@@ -97,7 +97,7 @@ export default function CategoryCarousel({ images = {} }: Props) {
   return (
     <div
       ref={scrollRef}
-      className="carousel-snap flex gap-4 overflow-x-auto snap-x snap-mandatory ps-4 pe-4 scroll-ps-4 lg:ps-10 lg:pe-10 lg:scroll-ps-10"
+      className="carousel-snap -my-4 flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 ps-4 pe-4 scroll-ps-4 lg:ps-10 lg:pe-10 lg:scroll-ps-10"
     >
       {TRACK.map((c, i) => (
         <a

@@ -50,7 +50,13 @@ export default function SiteHeader({
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-10">
         <a href="#" className="flex items-center gap-3">
           {logoUrl ? (
-            <div className="relative shrink-0" style={{ width: 128 * scale, height: 40 * scale }}>
+            <div
+              className="relative shrink-0"
+              style={{
+                width: `clamp(64px, ${128 * scale}px, 45vw)`,
+                height: `clamp(20px, ${40 * scale}px, 14.0625vw)`,
+              }}
+            >
               <Image src={logoUrl} alt={SITE_NAME} fill sizes="128px" className="object-contain object-right" />
             </div>
           ) : (
@@ -95,7 +101,7 @@ export default function SiteHeader({
           )}
           <a
             href="#contact"
-            className="flex items-center gap-2 rounded-full border border-gold/60 bg-gold/[0.08] px-5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold/15 hover:border-gold/80"
+            className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-gold/60 bg-gold/[0.08] px-5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold/15 hover:border-gold/80"
           >
             <span>צור קשר</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
