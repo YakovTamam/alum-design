@@ -42,7 +42,10 @@ export default function ImageGallery({ section }: { section: SerializedGallerySe
           className="flex w-max"
           style={{
             gap: section.gap,
-            animation: `gallery-marquee ${duration}s linear infinite`,
+            animationName: "gallery-marquee",
+            animationDuration: `${duration}s`,
+            animationTimingFunction: "linear",
+            animationIterationCount: "infinite",
             animationDirection: section.direction === "right" ? "reverse" : "normal",
           }}
         >
