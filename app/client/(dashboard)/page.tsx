@@ -1,6 +1,7 @@
 import { getClientSession } from "@/lib/auth";
 import { listProjects, PROJECT_STATUS_LABELS, serializeProject, type ProjectStatus } from "@/lib/projects";
-import { SITE_NAME } from "@/lib/site";
+import { getSiteCopy } from "@/lib/site-copy-data";
+import { getSiteName } from "@/lib/site-copy";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ function formatDate(value: string) {
 
 export default async function ClientDashboardPage() {
   const session = await getClientSession();
+  const { siteIdentity } = await getSiteCopy();
 
   let projects: ReturnType<typeof serializeProject>[] = [];
   let loadError: string | null = null;
@@ -36,7 +38,7 @@ export default async function ClientDashboardPage() {
     <div>
       <div>
         <h1 className="text-lg font-semibold text-white">הפרויקטים שלי</h1>
-        <p className="mt-1 text-sm text-zinc-400">סטטוס עדכני של הפרויקטים שלכם אצל {SITE_NAME}.</p>
+        <p className="mt-1 text-sm text-zinc-400">סטטוס עדכני של הפרויקטים שלכם אצל {getSiteName(siteIdentity)}.</p>
       </div>
 
       <div className="mt-8">

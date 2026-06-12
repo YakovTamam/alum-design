@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { phoneToTelHref } from "@/lib/contact";
-import { SITE_NAME } from "@/lib/site";
+import { getSiteName, type SiteIdentity } from "@/lib/site-copy";
 
 const PROJECT_TYPES = [
   "פרגולות אלומיניום",
@@ -60,7 +60,7 @@ const BENEFITS = [
   },
 ];
 
-export default function ContractorLeads({ phone: contactPhone }: { phone: string }) {
+export default function ContractorLeads({ phone: contactPhone, siteIdentity }: { phone: string; siteIdentity: SiteIdentity }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
@@ -110,7 +110,7 @@ export default function ContractorLeads({ phone: contactPhone }: { phone: string
             </h2>
 
             <p className="mt-5 max-w-lg text-base leading-7 text-zinc-600">
-              {SITE_NAME} מתמחה בפתרונות אלומיניום לקבלנים, יזמים ומפתחי
+              {getSiteName(siteIdentity)} מתמחה בפתרונות אלומיניום לקבלנים, יזמים ומפתחי
               נדל&quot;ן — פרגולות, חלונות, שערים וסגירות זכוכית בהיקפים גדולים,
               עם מחירי נפח, לוחות זמנים ברורים וליווי מקצועי צמוד.
             </p>

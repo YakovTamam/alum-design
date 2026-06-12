@@ -3,8 +3,7 @@
  *
  * To set up a new client:
  *   1. Copy this file to `client.config.mjs` (gitignored) and fill in their details.
- *   2. Update the code-level branding in lib/site.ts (site name, tagline, URL) —
- *      this is not seeded here.
+ *   2. Update SITE_URL in lib/site.ts to the client's domain — this is not seeded here.
  *   3. Set MONGODB_URI / MONGODB_DB in .env.local for the client's database.
  *   4. Run `npm run seed`.
  *
@@ -14,6 +13,14 @@
  * use the admin panel for day-to-day changes.
  */
 const config = {
+  // Site name (shown in the header/footer logo, browser tab title, etc.)
+  // and the marketing tagline used across the site and emails.
+  siteIdentity: {
+    namePrimary: "ALUM",
+    nameSecondary: "DESIGN",
+    tagline: "פתרונות אלומיניום חכמים",
+  },
+
   contact: {
     phone: "058-0000000",
     email: "info@example.co.il",

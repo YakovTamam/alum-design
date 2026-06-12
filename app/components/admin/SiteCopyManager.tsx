@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { SerializedSiteCopy, NavLink, ServiceItem, CategoryVariant } from "@/lib/site-copy";
+import type { SerializedSiteCopy, NavLink, ServiceItem, CategoryVariant, SiteIdentity } from "@/lib/site-copy";
 import { ServiceIconSvg, SERVICE_ICONS, type ServiceIcon } from "@/lib/services";
 import { useSaveAll } from "./SaveAllContext";
 
@@ -79,6 +79,11 @@ export default function SiteCopyManager({ initialCopy, categorySlots }: Props) {
     });
   }
 
+  // --- Site identity ---
+  function updateSiteIdentity(patch: Partial<SiteIdentity>) {
+    setCopy((prev) => ({ ...prev, siteIdentity: { ...prev.siteIdentity, ...patch } }));
+  }
+
   // --- Categories ---
   function updateCategory(index: number, patch: Partial<{ title: string; desc: string; variant: CategoryVariant }>) {
     setCopy((prev) => ({
@@ -123,6 +128,36 @@ export default function SiteCopyManager({ initialCopy, categorySlots }: Props) {
           {error}
         </p>
       )}
+
+      {/* Site identity */}
+      <div>
+        <h3 className="mb-1 text-sm font-semibold text-white">זהות האתר</h3>
+        <p className="mb-3 text-xs text-zinc-500">
+          שם האתר (מוצג בלוגו הטקסטואלי בכותרת, בפוטר ובמסכי ניהול) והטאגליין המשווקת.
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <input
+            value={copy.siteIdentity.namePrimary}
+            onChange={(e) => updateSiteIdentity({ namePrimary: e.target.value })}
+            placeholder="שם ראשי (לדוגמה ALUM)"
+            dir="ltr"
+            className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold/50"
+          />
+          <input
+            value={copy.siteIdentity.nameSecondary}
+            onChange={(e) => updateSiteIdentity({ nameSecondary: e.target.value })}
+            placeholder="שם משני (לדוגמה DESIGN)"
+            dir="ltr"
+            className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold/50"
+          />
+          <input
+            value={copy.siteIdentity.tagline}
+            onChange={(e) => updateSiteIdentity({ tagline: e.target.value })}
+            placeholder="טאגליין"
+            className="flex-[2] rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold/50"
+          />
+        </div>
+      </div>
 
       {/* Nav links */}
       <div>
