@@ -14,6 +14,7 @@ import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { getGallerySection } from "@/lib/gallery-data";
 import { getLoadingScreenSettings } from "@/lib/loading-screen-data";
+import { getSiteCopy } from "@/lib/site-copy-data";
 import ContentAccordion from "../../../components/admin/ContentAccordion";
 import ContentSlotsManager from "../../../components/admin/ContentSlotsManager";
 import HeroSlidesManager from "../../../components/admin/HeroSlidesManager";
@@ -24,6 +25,7 @@ import LogoSizeSetting from "../../../components/admin/LogoSizeSetting";
 import ThemeColorsSettings from "../../../components/admin/ThemeColorsSettings";
 import GalleryManager from "../../../components/admin/GalleryManager";
 import LoadingScreenSettings from "../../../components/admin/LoadingScreenSettings";
+import SiteCopyManager from "../../../components/admin/SiteCopyManager";
 import { SaveAllProvider } from "../../../components/admin/SaveAllContext";
 
 export const dynamic = "force-dynamic";
@@ -58,6 +60,7 @@ export default async function ContentSlotsPage() {
   const siteTheme = await getSiteTheme();
   const gallerySection = await getGallerySection();
   const loadingScreenSettings = await getLoadingScreenSettings();
+  const siteCopy = await getSiteCopy();
 
   const headerLogoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "site-logo" || slot.key === "favicon");
   const footerLogoSlots = CONTENT_SLOTS.filter((slot) => slot.key === "footer-logo");
@@ -93,6 +96,12 @@ export default async function ContentSlotsPage() {
             content: (
               <ContactInfoSettings initialPhone={contactInfo.phone} initialEmail={contactInfo.email} />
             ),
+          },
+          {
+            id: "site-copy",
+            title: "ניווט, קטגוריות ושירותים",
+            description: "קישורי הניווט בכותרת, כותרות/תיאורים של קטגוריות הפרויקטים, ורשימת השירותים",
+            content: <SiteCopyManager initialCopy={siteCopy} categorySlots={categorySlots} />,
           },
           {
             id: "site-logo",

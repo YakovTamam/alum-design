@@ -1,20 +1,6 @@
 export type ServiceIcon = "pergola" | "window" | "gate" | "glass" | "facade" | "shade";
 
-export type Service = {
-  id: string;
-  label: string;
-  desc: string;
-  icon: ServiceIcon;
-};
-
-export const SERVICES: Service[] = [
-  { id: "pergolas", label: "פרגולות", desc: "פתרונות צל מודרניים ומעוצבים", icon: "pergola" },
-  { id: "windows", label: "חלונות", desc: "חלונות אלומיניום לכל פתח ומידה", icon: "window" },
-  { id: "gates", label: "שערים", desc: "שערי כניסה ממונעים ובטיחותיים", icon: "gate" },
-  { id: "glass", label: "סגירות זכוכית", desc: "מערכות אלומיניום עם זכוכית להגדלים", icon: "glass" },
-  { id: "facades", label: "חזיתות", desc: "חזיתות אלומיניום מודרניות למבנים", icon: "facade" },
-  { id: "shading", label: "הצללות", desc: "מערכות הצללה אלגנטיות ומתקדמות", icon: "shade" },
-];
+export const SERVICE_ICONS: ServiceIcon[] = ["pergola", "window", "gate", "glass", "facade", "shade"];
 
 export function ServiceIconSvg({ kind }: { kind: ServiceIcon }) {
   const common = { width: 26, height: 26, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.5 };

@@ -12,6 +12,7 @@ import { getPortfolioItems } from "@/lib/portfolio-data";
 import { getContactInfo } from "@/lib/contact-data";
 import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
+import { getSiteCopy } from "@/lib/site-copy-data";
 import { SITE_NAME } from "@/lib/site";
 
 export const revalidate = 60;
@@ -35,6 +36,7 @@ export default async function ProjectsPage() {
   const logoSize = await getLogoSize();
   const footerLogoSize = await getFooterLogoSize();
   const theme = await getSiteTheme();
+  const siteCopy = await getSiteCopy();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -48,6 +50,7 @@ export default async function ProjectsPage() {
         logoSize={logoSize}
         headerBg={theme.headerBg}
         headerText={theme.headerText}
+        navLinks={siteCopy.navLinks}
       />
       <main className="flex flex-1 flex-col">
         <section className="bg-white py-12 lg:py-20">
@@ -72,6 +75,7 @@ export default async function ProjectsPage() {
         logoSize={footerLogoSize}
         footerBg={theme.footerBg}
         footerText={theme.footerText}
+        services={siteCopy.services}
       />
     </div>
   );
