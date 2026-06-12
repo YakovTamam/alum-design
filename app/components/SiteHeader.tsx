@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { logoScale } from "@/lib/logo";
-import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
-import type { NavLink } from "@/lib/site-copy";
+import { getSiteName, type NavLink, type SiteIdentity } from "@/lib/site-copy";
 
 function AlumLogo() {
   return (
@@ -25,6 +24,7 @@ export default function SiteHeader({
   headerBg,
   headerText,
   navLinks,
+  siteIdentity,
 }: {
   logoUrl?: string;
   isStaff?: boolean;
@@ -32,6 +32,7 @@ export default function SiteHeader({
   headerBg?: string;
   headerText?: string;
   navLinks: NavLink[];
+  siteIdentity: SiteIdentity;
 }) {
   const scale = logoScale(logoSize ?? "100");
   const headerStyle = {
@@ -51,17 +52,17 @@ export default function SiteHeader({
                 height: `clamp(20px, ${40 * scale}px, 14.0625vw)`,
               }}
             >
-              <Image src={logoUrl} alt={SITE_NAME} fill sizes="128px" className="object-contain object-right" />
+              <Image src={logoUrl} alt={getSiteName(siteIdentity)} fill sizes="128px" className="object-contain object-right" />
             </div>
           ) : (
             <>
               <AlumLogo />
               <div className="flex flex-col items-start leading-none">
                 <span className="text-base font-black tracking-[0.22em] text-[var(--header-text,#18181b)]">
-                  {SITE_NAME_PRIMARY}
+                  {siteIdentity.namePrimary}
                 </span>
                 <span className="text-[10px] font-light tracking-[0.45em] text-gold">
-                  {SITE_NAME_SECONDARY}
+                  {siteIdentity.nameSecondary}
                 </span>
               </div>
             </>

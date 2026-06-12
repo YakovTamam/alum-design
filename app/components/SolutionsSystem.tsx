@@ -1,8 +1,7 @@
 import { ServiceIconSvg } from "@/lib/services";
-import { SITE_NAME } from "@/lib/site";
-import type { ServiceItem } from "@/lib/site-copy";
+import { getSiteName, type ServiceItem, type SiteIdentity } from "@/lib/site-copy";
 
-export default function SolutionsSystem({ services }: { services: ServiceItem[] }) {
+export default function SolutionsSystem({ services, siteIdentity }: { services: ServiceItem[]; siteIdentity: SiteIdentity }) {
   return (
     <section id="systems" className="border-y border-zinc-100 bg-[#f0ece5]">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-20">
@@ -33,7 +32,7 @@ export default function SolutionsSystem({ services }: { services: ServiceItem[] 
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-7 text-zinc-500 lg:mt-14">
           כל המערכות מתחברות לחוויה אחת מושלמת — מהבחירה הראשונית ועד ההתקנה
-          הסופית, בליווי צמוד של צוות {SITE_NAME}.
+          הסופית, בליווי צמוד של צוות {getSiteName(siteIdentity)}.
         </p>
       </div>
     </section>

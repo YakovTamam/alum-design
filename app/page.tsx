@@ -67,6 +67,7 @@ export default async function Home() {
         headerBg={theme.headerBg}
         headerText={theme.headerText}
         navLinks={siteCopy.navLinks}
+        siteIdentity={siteCopy.siteIdentity}
       />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} mobileHeight={heroMobileHeight} phone={phone} />
@@ -77,16 +78,16 @@ export default async function Home() {
           <ScrollVideoSection section={scrollSection} />
         </Reveal>
         <Reveal>
-          <SolutionsSystem services={siteCopy.services} />
+          <SolutionsSystem services={siteCopy.services} siteIdentity={siteCopy.siteIdentity} />
         </Reveal>
         <Reveal>
-          <ContractorLeads phone={phone} />
+          <ContractorLeads phone={phone} siteIdentity={siteCopy.siteIdentity} />
         </Reveal>
         <TrustBar />
         <Reveal>
           <ProcessSteps />
         </Reveal>
-        <FinalCta imageUrl={images["final-cta"]} />
+        <FinalCta imageUrl={images["final-cta"]} siteIdentity={siteCopy.siteIdentity} />
         <Reveal>
           <StatsSection />
         </Reveal>
@@ -106,6 +107,7 @@ export default async function Home() {
         footerBg={theme.footerBg}
         footerText={theme.footerText}
         services={siteCopy.services}
+        siteIdentity={siteCopy.siteIdentity}
       />
     </div>
   );

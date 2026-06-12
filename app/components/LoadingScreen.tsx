@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
 import { DEFAULT_LOADING_SCREEN, type LoadingScreenSettings } from "@/lib/loading-screen";
+import { getSiteName, DEFAULT_SITE_IDENTITY, type SiteIdentity } from "@/lib/site-copy";
 
 function AlumMark({ color }: { color: string }) {
   return (
@@ -24,9 +24,10 @@ function AlumMark({ color }: { color: string }) {
 type Props = {
   settings?: LoadingScreenSettings;
   logoUrl?: string;
+  siteIdentity?: SiteIdentity;
 };
 
-export default function LoadingScreen({ settings = DEFAULT_LOADING_SCREEN, logoUrl }: Props) {
+export default function LoadingScreen({ settings = DEFAULT_LOADING_SCREEN, logoUrl, siteIdentity = DEFAULT_SITE_IDENTITY }: Props) {
   const [loading, setLoading] = useState(settings.enabled);
 
   useEffect(() => {
@@ -87,18 +88,18 @@ export default function LoadingScreen({ settings = DEFAULT_LOADING_SCREEN, logoU
           >
             {showLogo ? (
               <div className="relative h-12 w-40">
-                <Image src={logoUrl!} alt={SITE_NAME} fill sizes="160px" className="object-contain" />
+                <Image src={logoUrl!} alt={getSiteName(siteIdentity)} fill sizes="160px" className="object-contain" />
               </div>
             ) : (
               <>
                 <AlumMark color={settings.accentColor} />
                 <div className="flex flex-col items-center leading-none">
-                  <span className="text-xl font-black tracking-[0.4em] text-white">{SITE_NAME_PRIMARY}</span>
+                  <span className="text-xl font-black tracking-[0.4em] text-white">{siteIdentity.namePrimary}</span>
                   <span
                     className="mt-2 text-[11px] font-light tracking-[0.65em]"
                     style={{ color: settings.accentColor }}
                   >
-                    {SITE_NAME_SECONDARY}
+                    {siteIdentity.nameSecondary}
                   </span>
                 </div>
               </>

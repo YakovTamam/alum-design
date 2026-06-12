@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { phoneToTelHref } from "@/lib/contact";
 import { logoScale } from "@/lib/logo";
-import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY, SITE_TAGLINE } from "@/lib/site";
-import type { ServiceItem } from "@/lib/site-copy";
+import { getSiteName, type ServiceItem, type SiteIdentity } from "@/lib/site-copy";
 
 export default function SiteFooter({
   logoUrl,
@@ -12,6 +11,7 @@ export default function SiteFooter({
   footerBg,
   footerText,
   services,
+  siteIdentity,
 }: {
   logoUrl?: string;
   phone: string;
@@ -20,6 +20,7 @@ export default function SiteFooter({
   footerBg?: string;
   footerText?: string;
   services: ServiceItem[];
+  siteIdentity: SiteIdentity;
 }) {
   const scale = logoScale(logoSize ?? "100");
   const footerStyle = {
@@ -49,18 +50,18 @@ export default function SiteFooter({
           <div>
             {logoUrl ? (
               <div className="relative" style={{ width: 160 * scale, height: 48 * scale }}>
-                <Image src={logoUrl} alt={SITE_NAME} fill sizes="160px" className="object-contain object-right" />
+                <Image src={logoUrl} alt={getSiteName(siteIdentity)} fill sizes="160px" className="object-contain object-right" />
               </div>
             ) : (
               <div className="flex flex-col items-start leading-none">
                 <span className="text-xl font-semibold tracking-[0.2em] text-[var(--footer-text,#ffffff)]">
-                  {SITE_NAME_PRIMARY}
+                  {siteIdentity.namePrimary}
                 </span>
-                <span className="text-[10px] tracking-[0.4em] text-gold">{SITE_NAME_SECONDARY}</span>
+                <span className="text-[10px] tracking-[0.4em] text-gold">{siteIdentity.nameSecondary}</span>
               </div>
             )}
             <p className="mt-4 max-w-xs text-sm leading-7 text-[var(--footer-text,#a1a1aa)]">
-              {SITE_TAGLINE} לפרויקטים מודרניים — תכנון, ייצור והתקנה
+              {siteIdentity.tagline} לפרויקטים מודרניים — תכנון, ייצור והתקנה
               במקום אחד.
             </p>
           </div>
@@ -84,7 +85,7 @@ export default function SiteFooter({
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-sm text-[var(--footer-text,#a1a1aa)] sm:flex-row">
-          <p>© {new Date().getFullYear()} {SITE_NAME}. כל הזכויות שמורות.</p>
+          <p>© {new Date().getFullYear()} {getSiteName(siteIdentity)}. כל הזכויות שמורות.</p>
           <div className="flex items-center gap-6">
             <a href={phoneToTelHref(phone)} className="flex items-center gap-2 transition-colors hover:text-gold">
               <span aria-hidden>☎</span> {phone}

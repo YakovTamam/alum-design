@@ -1,11 +1,12 @@
 import PhotoPlaceholder from "./PhotoPlaceholder";
-import { SITE_NAME } from "@/lib/site";
+import { getSiteName, type SiteIdentity } from "@/lib/site-copy";
 
-export default function FinalCta({ imageUrl }: { imageUrl?: string }) {
+export default function FinalCta({ imageUrl, siteIdentity }: { imageUrl?: string; siteIdentity: SiteIdentity }) {
+  const siteName = getSiteName(siteIdentity);
   return (
     <section className="relative overflow-hidden">
       <PhotoPlaceholder
-        label={`פרויקט ${SITE_NAME} | תכנון חכם, ביצוע מדויק`}
+        label={`פרויקט ${siteName} | תכנון חכם, ביצוע מדויק`}
         imageUrl={imageUrl}
         className="absolute inset-0 h-full w-full"
       />
@@ -20,7 +21,7 @@ export default function FinalCta({ imageUrl }: { imageUrl?: string }) {
         <p className="max-w-lg text-sm leading-7 text-zinc-300">
           מגוון רחב של פתרונות אלומיניום — פרגולות, חלונות, שערים וסגירות
           זכוכית — מתוכננים ומותאמים במקום אחד, בליווי צמוד של צוות{" "}
-          <span className="text-gold">{SITE_NAME}</span> משלב הרעיון ועד
+          <span className="text-gold">{siteName}</span> משלב הרעיון ועד
           ההתקנה הסופית.
         </p>
         <a
