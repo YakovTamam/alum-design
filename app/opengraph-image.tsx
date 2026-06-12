@@ -1,11 +1,15 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { getSiteCopy } from "@/lib/site-copy-data";
+import { getSiteName, DEFAULT_SITE_IDENTITY } from "@/lib/site-copy";
 
-export const alt = `${SITE_NAME} - ${SITE_TAGLINE}`;
+export const alt = `${getSiteName(DEFAULT_SITE_IDENTITY)} - ${DEFAULT_SITE_IDENTITY.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function Image() {
+export default async function Image() {
+  const { siteIdentity } = await getSiteCopy();
+  const siteName = getSiteName(siteIdentity);
+
   return new ImageResponse(
     (
       <div
@@ -28,7 +32,7 @@ export default function Image() {
             color: "#ffffff",
           }}
         >
-          {SITE_NAME}
+          {siteName}
         </div>
         <div
           style={{
@@ -41,7 +45,7 @@ export default function Image() {
             color: "transparent",
           }}
         >
-          {SITE_TAGLINE}
+          {siteIdentity.tagline}
         </div>
       </div>
     ),

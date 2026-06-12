@@ -1,7 +1,7 @@
 import { getInvitationByToken, isInvitationValid } from "@/lib/invitations";
 import { ROLE_LABELS } from "@/lib/users";
 import AcceptInviteForm from "../../components/AcceptInviteForm";
-import { SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
+import { getSiteCopy } from "@/lib/site-copy-data";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +16,14 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
   }
 
   const valid = !!invitation && isInvitationValid(invitation);
+  const { siteIdentity } = await getSiteCopy();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0b0b0d] px-6">
       <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-panel/70 p-8 shadow-2xl shadow-black/40">
         <div className="flex flex-col items-start leading-none">
-          <span className="text-xl font-semibold tracking-[0.2em] text-white">{SITE_NAME_PRIMARY}</span>
-          <span className="text-[10px] tracking-[0.4em] text-gold">{SITE_NAME_SECONDARY}</span>
+          <span className="text-xl font-semibold tracking-[0.2em] text-white">{siteIdentity.namePrimary}</span>
+          <span className="text-[10px] tracking-[0.4em] text-gold">{siteIdentity.nameSecondary}</span>
         </div>
 
         {valid && invitation ? (

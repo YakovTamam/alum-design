@@ -13,14 +13,18 @@ import { getContactInfo } from "@/lib/contact-data";
 import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { getSiteCopy } from "@/lib/site-copy-data";
-import { SITE_NAME } from "@/lib/site";
+import { getSiteName } from "@/lib/site-copy";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "פרויקטים",
-  description: `גלריית פרויקטים נבחרים — פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות ומערכות הצללה מתוצרת ${SITE_NAME}.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const siteCopy = await getSiteCopy();
+  const siteName = getSiteName(siteCopy.siteIdentity);
+  return {
+    title: "פרויקטים",
+    description: `גלריית פרויקטים נבחרים — פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות ומערכות הצללה מתוצרת ${siteName}.`,
+  };
+}
 
 export default async function ProjectsPage() {
   let images: Awaited<ReturnType<typeof getSiteContentMap>> = {};
@@ -51,6 +55,7 @@ export default async function ProjectsPage() {
         headerBg={theme.headerBg}
         headerText={theme.headerText}
         navLinks={siteCopy.navLinks}
+        siteIdentity={siteCopy.siteIdentity}
       />
       <main className="flex flex-1 flex-col">
         <section className="bg-white py-12 lg:py-20">
@@ -76,6 +81,7 @@ export default async function ProjectsPage() {
         footerBg={theme.footerBg}
         footerText={theme.footerText}
         services={siteCopy.services}
+        siteIdentity={siteCopy.siteIdentity}
       />
     </div>
   );

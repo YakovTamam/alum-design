@@ -24,11 +24,18 @@ export type ServiceItem = {
   icon: ServiceIcon;
 };
 
+export type SiteIdentity = {
+  namePrimary: string;
+  nameSecondary: string;
+  tagline: string;
+};
+
 export type SiteCopy = {
   _id: "main";
   navLinks: NavLink[];
   categories: CategoryItem[];
   services: ServiceItem[];
+  siteIdentity: SiteIdentity;
   updatedAt: Date;
 };
 
@@ -81,10 +88,17 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
   { id: "shading", label: "הצללות", desc: "מערכות הצללה אלגנטיות ומתקדמות", icon: "shade" },
 ];
 
+export const DEFAULT_SITE_IDENTITY: SiteIdentity = {
+  namePrimary: "ALUM",
+  nameSecondary: "DESIGN",
+  tagline: "פתרונות אלומיניום חכמים",
+};
+
 export const DEFAULT_SITE_COPY: SerializedSiteCopy = {
   navLinks: DEFAULT_NAV_LINKS,
   categories: DEFAULT_CATEGORIES,
   services: DEFAULT_SERVICES,
+  siteIdentity: DEFAULT_SITE_IDENTITY,
   updatedAt: new Date(0).toISOString(),
 };
 
@@ -92,4 +106,8 @@ export function serializeSiteCopy(s: SiteCopy): SerializedSiteCopy {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _id, ...rest } = s;
   return { ...rest, updatedAt: s.updatedAt.toISOString() };
+}
+
+export function getSiteName(identity: SiteIdentity): string {
+  return `${identity.namePrimary} ${identity.nameSecondary}`;
 }

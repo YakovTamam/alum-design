@@ -87,11 +87,12 @@ try {
     console.log('Wrote gallery defaults to "image_gallery".');
   }
 
-  if (config.navLinks || config.categories || config.services) {
+  if (config.siteIdentity || config.navLinks || config.categories || config.services) {
     await db.collection("site_copy").updateOne(
       { _id: "main" },
       {
         $set: {
+          ...(config.siteIdentity ? { siteIdentity: config.siteIdentity } : {}),
           ...(config.navLinks ? { navLinks: config.navLinks } : {}),
           ...(config.categories ? { categories: config.categories } : {}),
           ...(config.services
@@ -109,7 +110,7 @@ try {
       },
       { upsert: true }
     );
-    console.log('Wrote nav links, categories and services to "site_copy".');
+    console.log('Wrote site identity, nav links, categories and services to "site_copy".');
   }
 
   console.log("Seed complete.");

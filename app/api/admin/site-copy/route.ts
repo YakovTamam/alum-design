@@ -7,12 +7,14 @@ import { SERVICE_ICONS, type ServiceIcon } from "@/lib/services";
 import {
   SITE_COPY_COLLECTION,
   DEFAULT_CATEGORIES,
+  DEFAULT_SITE_IDENTITY,
   serializeSiteCopy,
   type SiteCopy,
   type NavLink,
   type CategoryItem,
   type ServiceItem,
   type CategoryVariant,
+  type SiteIdentity,
 } from "@/lib/site-copy";
 import { getSiteCopy } from "@/lib/site-copy-data";
 
@@ -40,7 +42,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "JSON לא תקין" }, { status: 400 });
   }
 
-  const { navLinks, categories, services } = body;
+  const { navLinks, categories, services, siteIdentity } = body;
 
   const sanitizedNavLinks: NavLink[] = (Array.isArray(navLinks) ? navLinks : [])
     .map((link): NavLink | null => {
@@ -85,12 +87,24 @@ export async function PUT(request: Request) {
     })
     .filter((s): s is ServiceItem => s !== null);
 
+  const rawIdentity = siteIdentity && typeof siteIdentity === "object" ? (siteIdentity as Record<string, unknown>) : {};
+  const sanitizedIdentity: SiteIdentity = {
+    namePrimary: typeof rawIdentity.namePrimary === "string" && rawIdentity.namePrimary.trim()
+      ? rawIdentity.namePrimary.trim()
+      : DEFAULT_SITE_IDENTITY.namePrimary,
+    nameSecondary: typeof rawIdentity.nameSecondary === "string" && rawIdentity.nameSecondary.trim()
+      ? rawIdentity.nameSecondary.trim()
+      : DEFAULT_SITE_IDENTITY.nameSecondary,
+    tagline: typeof rawIdentity.tagline === "string" ? rawIdentity.tagline.trim() : DEFAULT_SITE_IDENTITY.tagline,
+  };
+
   const db = await getDb();
   const updated: SiteCopy = {
     _id: "main",
     navLinks: sanitizedNavLinks,
     categories: sanitizedCategories,
     services: sanitizedServices,
+    siteIdentity: sanitizedIdentity,
     updatedAt: new Date(),
   };
 

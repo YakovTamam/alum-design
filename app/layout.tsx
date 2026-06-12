@@ -3,11 +3,13 @@ import { Heebo, Rubik, Frank_Ruhl_Libre, Suez_One } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
-import { SITE_URL, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { getSiteContentMap } from "@/lib/content";
 import { phoneToInternational } from "@/lib/contact";
 import { getContactInfo } from "@/lib/contact-data";
 import { getLoadingScreenSettings } from "@/lib/loading-screen-data";
+import { getSiteCopy } from "@/lib/site-copy-data";
+import { getSiteName } from "@/lib/site-copy";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -31,9 +33,6 @@ const suezOne = Suez_One({
   weight: "400",
 });
 
-const TITLE = `${SITE_NAME} | ${SITE_TAGLINE}`;
-const DESCRIPTION = `${SITE_NAME} - ${SITE_TAGLINE} לפרויקטים מודרניים: פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות והצללות.`;
-
 export async function generateMetadata(): Promise<Metadata> {
   let faviconUrl = "/favicon.ico";
   try {
@@ -42,6 +41,11 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     // MongoDB unavailable — fall back to the default /favicon.ico
   }
+
+  const { siteIdentity } = await getSiteCopy();
+  const SITE_NAME = getSiteName(siteIdentity);
+  const TITLE = `${SITE_NAME} | ${siteIdentity.tagline}`;
+  const DESCRIPTION = `${SITE_NAME} - ${siteIdentity.tagline} לפרויקטים מודרניים: פרגולות, חלונות, שערים, סגירות זכוכית, חזיתות והצללות.`;
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -84,6 +88,7 @@ export default async function RootLayout({
 }>) {
   const { phone, email } = await getContactInfo();
   const loadingScreen = await getLoadingScreenSettings();
+  const { siteIdentity } = await getSiteCopy();
 
   let logoUrl: string | undefined;
   try {
@@ -96,7 +101,7 @@ export default async function RootLayout({
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     "@type": "HomeAndConstructionBusiness",
-    name: SITE_NAME,
+    name: getSiteName(siteIdentity),
     url: SITE_URL,
     telephone: `+${phoneToInternational(phone)}`,
     email,
@@ -118,7 +123,7 @@ export default async function RootLayout({
         <noscript>
           <style>{`#loading-screen{display:none!important}`}</style>
         </noscript>
-        <LoadingScreen settings={loadingScreen} logoUrl={logoUrl} />
+        <LoadingScreen settings={loadingScreen} logoUrl={logoUrl} siteIdentity={siteIdentity} />
         <SmoothScroll />
         {children}
       </body>
