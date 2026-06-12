@@ -87,6 +87,31 @@ try {
     console.log('Wrote gallery defaults to "image_gallery".');
   }
 
+  if (config.navLinks || config.categories || config.services) {
+    await db.collection("site_copy").updateOne(
+      { _id: "main" },
+      {
+        $set: {
+          ...(config.navLinks ? { navLinks: config.navLinks } : {}),
+          ...(config.categories ? { categories: config.categories } : {}),
+          ...(config.services
+            ? {
+                services: config.services.map((s) => ({
+                  id: s.id ?? crypto.randomUUID(),
+                  label: s.label,
+                  desc: s.desc ?? "",
+                  icon: s.icon ?? "pergola",
+                })),
+              }
+            : {}),
+          updatedAt: new Date(),
+        },
+      },
+      { upsert: true }
+    );
+    console.log('Wrote nav links, categories and services to "site_copy".');
+  }
+
   console.log("Seed complete.");
 } finally {
   await client.close();

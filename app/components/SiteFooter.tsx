@@ -2,22 +2,7 @@ import Image from "next/image";
 import { phoneToTelHref } from "@/lib/contact";
 import { logoScale } from "@/lib/logo";
 import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY, SITE_TAGLINE } from "@/lib/site";
-import { SERVICES } from "@/lib/services";
-
-const COLUMNS = [
-  {
-    title: "ניווט",
-    links: ["דף הבית", "מערכות", "פרויקטים", "אודות"],
-  },
-  {
-    title: "מערכות",
-    links: SERVICES.map((s) => s.label),
-  },
-  {
-    title: "החברה",
-    links: ["אודותינו", "לקוחותינו", "קריירה", "צור קשר"],
-  },
-];
+import type { ServiceItem } from "@/lib/site-copy";
 
 export default function SiteFooter({
   logoUrl,
@@ -26,6 +11,7 @@ export default function SiteFooter({
   logoSize,
   footerBg,
   footerText,
+  services,
 }: {
   logoUrl?: string;
   phone: string;
@@ -33,12 +19,28 @@ export default function SiteFooter({
   logoSize?: string;
   footerBg?: string;
   footerText?: string;
+  services: ServiceItem[];
 }) {
   const scale = logoScale(logoSize ?? "100");
   const footerStyle = {
     ...(footerBg ? { backgroundColor: footerBg } : {}),
     ...(footerText ? { "--footer-text": footerText } : {}),
   } as React.CSSProperties;
+
+  const columns = [
+    {
+      title: "ניווט",
+      links: ["דף הבית", "מערכות", "פרויקטים", "אודות"],
+    },
+    {
+      title: "מערכות",
+      links: services.map((s) => s.label),
+    },
+    {
+      title: "החברה",
+      links: ["אודותינו", "לקוחותינו", "קריירה", "צור קשר"],
+    },
+  ];
 
   return (
     <footer className="border-t border-zinc-800 bg-[#1a1614]" style={footerStyle}>
@@ -64,7 +66,7 @@ export default function SiteFooter({
           </div>
 
           <div className="flex justify-between gap-2 sm:contents">
-            {COLUMNS.map((col) => (
+            {columns.map((col) => (
               <div key={col.title} className="w-[30%] sm:w-auto">
                 <h3 className="text-sm font-semibold text-[var(--footer-text,#ffffff)]">{col.title}</h3>
                 <ul className="mt-4 flex flex-col gap-3 text-sm text-[var(--footer-text,#a1a1aa)]">
