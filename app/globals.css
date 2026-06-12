@@ -78,10 +78,11 @@ body {
   animation: wa-pulse 2.2s ease infinite;
 }
 
-/* Infinite image gallery marquee */
+/* Infinite image gallery marquee — shifts by exactly one image-set width
+   (--marquee-shift, measured client-side; -50% approximates it before then) */
 @keyframes gallery-marquee {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(calc(-1 * var(--marquee-shift, 50%))); }
 }
 
 /* Accessibility widget modes */
