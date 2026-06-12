@@ -28,6 +28,7 @@ import { getTestimonials } from "@/lib/testimonials-data";
 import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { getGallerySection } from "@/lib/gallery-data";
+import { getSiteCopy } from "@/lib/site-copy-data";
 
 export const revalidate = 60;
 
@@ -50,6 +51,7 @@ export default async function Home() {
   const footerLogoSize = await getFooterLogoSize();
   const theme = await getSiteTheme();
   const gallerySection = await getGallerySection();
+  const siteCopy = await getSiteCopy();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -64,17 +66,18 @@ export default async function Home() {
         logoSize={logoSize}
         headerBg={theme.headerBg}
         headerText={theme.headerText}
+        navLinks={siteCopy.navLinks}
       />
       <main className="flex flex-1 flex-col">
         <Hero slides={heroSlides} mobileHeight={heroMobileHeight} phone={phone} />
         <Reveal>
-          <ProjectCategories images={images} />
+          <ProjectCategories images={images} categories={siteCopy.categories} />
         </Reveal>
         <Reveal>
           <ScrollVideoSection section={scrollSection} />
         </Reveal>
         <Reveal>
-          <SolutionsSystem />
+          <SolutionsSystem services={siteCopy.services} />
         </Reveal>
         <Reveal>
           <ContractorLeads phone={phone} />
@@ -102,6 +105,7 @@ export default async function Home() {
         logoSize={footerLogoSize}
         footerBg={theme.footerBg}
         footerText={theme.footerText}
+        services={siteCopy.services}
       />
     </div>
   );

@@ -1,15 +1,7 @@
 import Image from "next/image";
 import { logoScale } from "@/lib/logo";
 import { SITE_NAME, SITE_NAME_PRIMARY, SITE_NAME_SECONDARY } from "@/lib/site";
-
-const NAV_LINKS = [
-  { label: "דף הבית", href: "#" },
-  { label: "מערכות", href: "#systems" },
-  { label: "פרויקטים", href: "/projects" },
-  { label: "לקוחותינו", href: "#categories" },
-  { label: "אודות", href: "#" },
-  { label: "צור קשר", href: "#contact" },
-];
+import type { NavLink } from "@/lib/site-copy";
 
 function AlumLogo() {
   return (
@@ -32,12 +24,14 @@ export default function SiteHeader({
   logoSize,
   headerBg,
   headerText,
+  navLinks,
 }: {
   logoUrl?: string;
   isStaff?: boolean;
   logoSize?: string;
   headerBg?: string;
   headerText?: string;
+  navLinks: NavLink[];
 }) {
   const scale = logoScale(logoSize ?? "100");
   const headerStyle = {
@@ -75,7 +69,7 @@ export default function SiteHeader({
         </a>
 
         <nav className="hidden items-center gap-8 text-sm lg:flex">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}

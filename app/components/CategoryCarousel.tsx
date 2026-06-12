@@ -3,42 +3,18 @@
 import { useRef, useEffect, useCallback } from "react";
 import PhotoPlaceholder from "./PhotoPlaceholder";
 import type { ContentSlotKey } from "@/lib/content";
+import type { CategoryItem } from "@/lib/site-copy";
 
-const CATEGORIES = [
-  {
-    title: "וילות יוקרה",
-    desc: "פרויקטי בית יוקרתיים בהתאמה אישית מלאה",
-    variant: "warm" as const,
-    slot: "category-luxury-villas" as ContentSlotKey,
-  },
-  {
-    title: "בנייני מגורים",
-    desc: "פתרונות אלומיניום מתקדמים לבנייה רוויה",
-    variant: "cool" as const,
-    slot: "category-residential" as ContentSlotKey,
-  },
-  {
-    title: "עסקים ומסעדות",
-    desc: "חזיתות, פרגולות ופרטיזיציה מקצועית",
-    variant: "warm" as const,
-    slot: "category-business" as ContentSlotKey,
-  },
-  {
-    title: "מתחמים מסחריים",
-    desc: "פתרונות אלומיניום למרכזים מסחריים",
-    variant: "cool" as const,
-    slot: "category-commercial" as ContentSlotKey,
-  },
-];
+type Props = {
+  images?: Partial<Record<ContentSlotKey, string>>;
+  categories: CategoryItem[];
+};
 
-// Triple-duplicate: [copy][original][copy] — start at original, loop infinitely
-const TRACK = [...CATEGORIES, ...CATEGORIES, ...CATEGORIES];
-const N = CATEGORIES.length; // 4
-
-type Props = { images?: Partial<Record<ContentSlotKey, string>> };
-
-export default function CategoryCarousel({ images = {} }: Props) {
+export default function CategoryCarousel({ images = {}, categories }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const N = categories.length;
+  // Triple-duplicate: [copy][original][copy] — start at original, loop infinitely
+  const TRACK = [...categories, ...categories, ...categories];
 
   const getStep = (): number => {
     const el = scrollRef.current;
@@ -58,7 +34,7 @@ export default function CategoryCarousel({ images = {} }: Props) {
   // On mount: position at the center copy (index N) so there's room to swipe both ways
   useEffect(() => {
     requestAnimationFrame(() => requestAnimationFrame(() => jumpTo(N)));
-  }, [jumpTo]);
+  }, [jumpTo, N]);
 
   // After each swipe settles, teleport from a clone back to the equivalent original
   const checkLoop = useCallback(() => {
@@ -71,7 +47,7 @@ export default function CategoryCarousel({ images = {} }: Props) {
     } else if (idx >= N * 2) {
       jumpTo(idx - N); // entered left clone → jump to center copy
     }
-  }, [jumpTo]);
+  }, [jumpTo, N]);
 
   useEffect(() => {
     const el = scrollRef.current;

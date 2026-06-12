@@ -3,8 +3,8 @@
  *
  * To set up a new client:
  *   1. Copy this file to `client.config.mjs` (gitignored) and fill in their details.
- *   2. Update the code-level branding in lib/site.ts (site name, tagline, URL)
- *      and lib/services.tsx (services list) — these are not seeded here.
+ *   2. Update the code-level branding in lib/site.ts (site name, tagline, URL) —
+ *      this is not seeded here.
  *   3. Set MONGODB_URI / MONGODB_DB in .env.local for the client's database.
  *   4. Run `npm run seed`.
  *
@@ -58,6 +58,38 @@ const config = {
     "pixel-ga": "",
     "pixel-clarity": "",
   },
+
+  // Navigation links shown in the header. "href" can be an in-page anchor
+  // (e.g. "#contact") or a separate page route (e.g. "/projects").
+  navLinks: [
+    { label: "דף הבית", href: "#" },
+    { label: "מערכות", href: "#systems" },
+    { label: "פרויקטים", href: "/projects" },
+    { label: "לקוחותינו", href: "#categories" },
+    { label: "אודות", href: "#" },
+    { label: "צור קשר", href: "#contact" },
+  ],
+
+  // The 4 project-category cards. Each "slot" maps to one of the image slots
+  // configured in the admin panel — keep the slots as-is and only change the
+  // title/desc/variant ("warm" or "cool") to match the new client's business.
+  categories: [
+    { slot: "category-luxury-villas", title: "וילות יוקרה", desc: "פרויקטי בית יוקרתיים בהתאמה אישית מלאה", variant: "warm" },
+    { slot: "category-residential", title: "בנייני מגורים", desc: "פתרונות אלומיניום מתקדמים לבנייה רוויה", variant: "cool" },
+    { slot: "category-business", title: "עסקים ומסעדות", desc: "חזיתות, פרגולות ופרטיזיציה מקצועית", variant: "warm" },
+    { slot: "category-commercial", title: "מתחמים מסחריים", desc: "פתרונות אלומיניום למרכזים מסחריים", variant: "cool" },
+  ],
+
+  // Service cards shown in the "מערכת פתרונות" section and the footer.
+  // "icon" must be one of: pergola, window, gate, glass, facade, shade.
+  services: [
+    { id: "pergolas", label: "פרגולות", desc: "פתרונות צל מודרניים ומעוצבים", icon: "pergola" },
+    { id: "windows", label: "חלונות", desc: "חלונות אלומיניום לכל פתח ומידה", icon: "window" },
+    { id: "gates", label: "שערים", desc: "שערי כניסה ממונעים ובטיחותיים", icon: "gate" },
+    { id: "glass", label: "סגירות זכוכית", desc: "מערכות אלומיניום עם זכוכית להגדלים", icon: "glass" },
+    { id: "facades", label: "חזיתות", desc: "חזיתות אלומיניום מודרניות למבנים", icon: "facade" },
+    { id: "shading", label: "הצללות", desc: "מערכות הצללה אלגנטיות ומתקדמות", icon: "shade" },
+  ],
 };
 
 export default config;
