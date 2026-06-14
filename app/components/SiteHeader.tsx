@@ -44,17 +44,17 @@ export default function SiteHeader({
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur-md" style={headerStyle}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-10">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:gap-6 sm:px-6 lg:px-10">
         <a href="#" className="flex items-center gap-3">
           {logoUrl ? (
             <div
               className="relative shrink-0"
               style={{
-                width: `clamp(64px, ${128 * scale}px, 45vw)`,
-                height: `clamp(20px, ${40 * scale}px, 14.0625vw)`,
+                width: `clamp(72px, ${144 * scale}px, 48vw)`,
+                height: `clamp(24px, ${46 * scale}px, 15.3vw)`,
               }}
             >
-              <Image src={logoUrl} alt={getSiteName(siteIdentity)} fill sizes="128px" className="object-contain object-right" />
+              <Image src={logoUrl} alt={getSiteName(siteIdentity)} fill sizes="144px" className="object-contain object-right" />
             </div>
           ) : (
             <>
@@ -83,47 +83,47 @@ export default function SiteHeader({
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {isStaff ? (
             <a
               href="/admin"
-              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900 sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-2.5"
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="shrink-0">
                 <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" strokeLinejoin="round" />
                 <path d="M4 10h16M10 10v10" strokeLinecap="round" />
               </svg>
-              <span>פאנל ניהול</span>
+              <span className="hidden text-sm font-medium sm:inline">פאנל ניהול</span>
             </a>
           ) : isClient ? (
             <a
               href="/client"
-              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900 sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-2.5"
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="shrink-0">
                 <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" strokeLinejoin="round" />
                 <path d="M4 10h16M10 10v10" strokeLinecap="round" />
               </svg>
-              <span>אזור לקוחות</span>
+              <span className="hidden text-sm font-medium sm:inline">אזור לקוחות</span>
             </a>
           ) : (
             <a
               href="/login"
-              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900 sm:h-auto sm:w-auto sm:gap-2 sm:px-4 sm:py-2.5"
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="shrink-0">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>התחברות</span>
+              <span className="hidden text-sm font-medium sm:inline">התחברות</span>
             </a>
           )}
           <a
             href="#contact"
-            className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-gold/60 bg-gold/[0.08] px-5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold/15 hover:border-gold/80"
+            className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/60 bg-gold/[0.08] px-3.5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold/15 hover:border-gold/80 sm:gap-2 sm:px-5"
           >
             <span>צור קשר</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="shrink-0">
               <path d="M3 5.5C3 4.67 3.67 4 4.5 4h2.6c.5 0 .94.34 1.07.83l1 3.6a1.1 1.1 0 0 1-.32 1.13l-1.4 1.25a12.5 12.5 0 0 0 5.74 5.74l1.25-1.4a1.1 1.1 0 0 1 1.13-.32l3.6 1c.5.13.83.57.83 1.07v2.6c0 .83-.67 1.5-1.5 1.5C10.6 21 3 13.4 3 5.5Z" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
