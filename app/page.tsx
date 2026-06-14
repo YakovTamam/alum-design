@@ -23,7 +23,7 @@ import { getHeroSlides } from "@/lib/hero-slides-data";
 import { getSetting } from "@/lib/settings";
 import { getContactInfo } from "@/lib/contact-data";
 import { getScrollSection } from "@/lib/scroll-sections-data";
-import { getStaffSession } from "@/lib/auth";
+import { getClientSession, getStaffSession } from "@/lib/auth";
 import { getTestimonials } from "@/lib/testimonials-data";
 import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
@@ -45,6 +45,7 @@ export default async function Home() {
   const heroMobileHeight = await getSetting("hero-mobile-height", "75vh");
   const scrollSection = await getScrollSection();
   const staffSession = await getStaffSession();
+  const clientSession = await getClientSession();
   const testimonials = await getTestimonials();
   const { phone, email, social } = await getContactInfo();
   const logoSize = await getLogoSize();
@@ -63,6 +64,7 @@ export default async function Home() {
       <SiteHeader
         logoUrl={images["site-logo"]}
         isStaff={Boolean(staffSession)}
+        isClient={Boolean(clientSession)}
         logoSize={logoSize}
         headerBg={theme.headerBg}
         headerText={theme.headerText}

@@ -16,7 +16,7 @@ export default async function ClientDashboardLayout({ children }: { children: Re
           <span className="h-5 w-px bg-white/10" />
           <span className="text-sm font-semibold text-white">אזור לקוחות</span>
         </div>
-        <LogoutButton logoutUrl="/api/client/logout" redirectUrl="/client/login" />
+        <LogoutButton logoutUrl="/api/client/logout" redirectUrl="/login" />
       </div>
 
       <main className="mx-auto max-w-5xl px-5 py-8 lg:px-10">{children}</main>
