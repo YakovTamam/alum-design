@@ -1,0 +1,58 @@
+import { redirect } from "next/navigation";
+import { getClientSession, getStaffSession } from "@/lib/auth";
+import { countUsers } from "@/lib/users";
+import UnifiedLoginForm from "../components/UnifiedLoginForm";
+import { getSiteCopy } from "@/lib/site-copy-data";
+
+export const dynamic = "force-dynamic";
+
+export default async function LoginPage() {
+  const [staffSession, clientSession] = await Promise.all([getStaffSession(), getClientSession()]);
+  if (staffSession) redirect("/admin");
+  if (clientSession) redirect("/client");
+
+  let bootstrap = false;
+  try {
+    bootstrap = (await countUsers()) === 0;
+  } catch {
+    bootstrap = false;
+  }
+
+  const { siteIdentity } = await getSiteCopy();
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#0b0b0d] px-6">
+      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-panel/70 p-8 shadow-2xl shadow-black/40">
+        <div className="flex flex-col items-start leading-none">
+          <span className="text-xl font-semibold tracking-[0.2em] text-white">{siteIdentity.namePrimary}</span>
+          <span className="text-[10px] tracking-[0.4em] text-gold">{siteIdentity.nameSecondary}</span>
+        </div>
+
+        {bootstrap ? (
+          <>
+            <h1 className="mt-6 text-lg font-semibold text-white">הקמת חשבון סופר אדמין</h1>
+            <p className="mt-1 text-sm text-zinc-400">
+              לא נמצאו משתמשים במערכת. צרו את חשבון סופר האדמין הראשון.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="mt-6 text-lg font-semibold text-white">התחברות</h1>
+            <p className="mt-1 text-sm text-zinc-400">הזינו אימייל וסיסמה כדי להיכנס</p>
+          </>
+        )}
+
+        <UnifiedLoginForm bootstrap={bootstrap} />
+
+        {!bootstrap && (
+          <p className="mt-6 text-center text-sm text-zinc-400">
+            אין לכם חשבון?{" "}
+            <a href="/signup" className="text-gold hover:underline">
+              ליצירת משתמש לחצו כאן
+            </a>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}

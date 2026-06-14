@@ -1,6 +1,7 @@
 import { getStaffSession } from "@/lib/auth";
 import { listInvitations, serializeInvitation } from "@/lib/invitations";
 import { listUsers, serializeUser } from "@/lib/users";
+import { listSignupRequests, serializeSignupRequest } from "@/lib/signup-requests";
 import UsersManager from "../../../components/admin/UsersManager";
 
 export const dynamic = "force-dynamic";
@@ -11,15 +12,18 @@ export default async function AdminUsersPage() {
 
   let users: ReturnType<typeof serializeUser>[] = [];
   let invitations: ReturnType<typeof serializeInvitation>[] = [];
+  let signupRequests: ReturnType<typeof serializeSignupRequest>[] = [];
   let loadError: string | null = null;
 
   try {
-    const [userDocs, invitationDocs] = await Promise.all([
+    const [userDocs, invitationDocs, signupRequestDocs] = await Promise.all([
       listUsers(roleFilter),
       listInvitations(roleFilter),
+      listSignupRequests(),
     ]);
     users = userDocs.map(serializeUser);
     invitations = invitationDocs.map(serializeInvitation);
+    signupRequests = signupRequestDocs.map(serializeSignupRequest);
   } catch (err) {
     console.error("Failed to load users", err);
     loadError = "טעינת המשתמשים נכשלה. ודאו שמחרוזת ה-MongoDB מוגדרת כראוי.";
@@ -45,6 +49,7 @@ export default async function AdminUsersPage() {
           <UsersManager
             initialUsers={users}
             initialInvitations={invitations}
+            initialSignupRequests={signupRequests}
             canInviteAdmins={session?.role === "super-admin"}
             currentUserId={session?.uid ?? ""}
           />

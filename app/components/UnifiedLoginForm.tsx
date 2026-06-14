@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { sanitizeEmailInput } from "@/lib/strings";
 
-export default function AdminLoginForm({ bootstrap }: { bootstrap: boolean }) {
+export default function UnifiedLoginForm({ bootstrap }: { bootstrap: boolean }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,19 +19,19 @@ export default function AdminLoginForm({ bootstrap }: { bootstrap: boolean }) {
     setSubmitting(true);
 
     try {
-      const res = await fetch("/api/admin/login", {
+      const res = await fetch(bootstrap ? "/api/admin/login" : "/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bootstrap ? { name, email, password } : { email, password }),
       });
 
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         setError(data.error || "ההתחברות נכשלה");
         return;
       }
 
-      router.replace("/admin");
+      router.replace(data.redirect || "/admin");
       router.refresh();
     } catch {
       setError("שגיאת רשת, נסו שוב");

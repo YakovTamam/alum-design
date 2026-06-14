@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { CLIENT_SESSION_COOKIE, SESSION_TTL_SECONDS, createSessionToken } from "@/lib/auth";
+import {
+  ADMIN_SESSION_COOKIE,
+  CLIENT_SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  createSessionToken,
+} from "@/lib/auth";
 import { getUserByEmail, verifyPassword } from "@/lib/users";
 
 export async function POST(request: Request) {
@@ -25,15 +30,19 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!user || user.role !== "client" || !(await verifyPassword(user, password))) {
+  if (!user || !(await verifyPassword(user, password))) {
     return NextResponse.json({ error: "אימייל או סיסמה שגויים" }, { status: 401 });
   }
   if (user.status === "disabled") {
     return NextResponse.json({ error: "החשבון הושבת" }, { status: 403 });
   }
 
-  const response = NextResponse.json({ ok: true });
-  response.cookies.set(CLIENT_SESSION_COOKIE, createSessionToken(user._id!.toString(), user.role), {
+  const isClient = user.role === "client";
+  const cookieName = isClient ? CLIENT_SESSION_COOKIE : ADMIN_SESSION_COOKIE;
+  const redirectTo = isClient ? "/client" : "/admin";
+
+  const response = NextResponse.json({ ok: true, redirect: redirectTo });
+  response.cookies.set(cookieName, createSessionToken(user._id!.toString(), user.role), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

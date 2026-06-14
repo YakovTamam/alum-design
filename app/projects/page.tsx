@@ -7,7 +7,7 @@ import AccessibilityWidget from "../components/AccessibilityWidget";
 import CookieBanner from "../components/CookieBanner";
 import ProjectsGallery from "../components/ProjectsGallery";
 import { getSiteContentMap } from "@/lib/content";
-import { getStaffSession } from "@/lib/auth";
+import { getClientSession, getStaffSession } from "@/lib/auth";
 import { getPortfolioItems } from "@/lib/portfolio-data";
 import { getContactInfo } from "@/lib/contact-data";
 import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
@@ -35,6 +35,7 @@ export default async function ProjectsPage() {
   }
 
   const staffSession = await getStaffSession();
+  const clientSession = await getClientSession();
   const items = await getPortfolioItems();
   const { phone, email, social } = await getContactInfo();
   const logoSize = await getLogoSize();
@@ -51,6 +52,7 @@ export default async function ProjectsPage() {
       <SiteHeader
         logoUrl={images["site-logo"]}
         isStaff={Boolean(staffSession)}
+        isClient={Boolean(clientSession)}
         logoSize={logoSize}
         headerBg={theme.headerBg}
         headerText={theme.headerText}
