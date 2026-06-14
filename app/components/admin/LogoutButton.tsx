@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function LogoutButton({
   logoutUrl = "/api/admin/logout",
-  redirectUrl = "/admin/login",
+  redirectUrl = "/login",
 }: {
   logoutUrl?: string;
   redirectUrl?: string;

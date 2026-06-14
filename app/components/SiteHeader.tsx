@@ -20,6 +20,7 @@ function AlumLogo() {
 export default function SiteHeader({
   logoUrl,
   isStaff,
+  isClient,
   logoSize,
   headerBg,
   headerText,
@@ -28,6 +29,7 @@ export default function SiteHeader({
 }: {
   logoUrl?: string;
   isStaff?: boolean;
+  isClient?: boolean;
   logoSize?: string;
   headerBg?: string;
   headerText?: string;
@@ -82,7 +84,7 @@ export default function SiteHeader({
         </nav>
 
         <div className="flex items-center gap-3">
-          {isStaff && (
+          {isStaff ? (
             <a
               href="/admin"
               className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
@@ -92,6 +94,28 @@ export default function SiteHeader({
                 <path d="M4 10h16M10 10v10" strokeLinecap="round" />
               </svg>
               <span>פאנל ניהול</span>
+            </a>
+          ) : isClient ? (
+            <a
+              href="/client"
+              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" strokeLinejoin="round" />
+                <path d="M4 10h16M10 10v10" strokeLinecap="round" />
+              </svg>
+              <span>אזור לקוחות</span>
+            </a>
+          ) : (
+            <a
+              href="/login"
+              className="flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2.5 text-sm font-medium text-[var(--header-text,#52525b)] transition-all hover:border-zinc-400 hover:text-zinc-900"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>התחברות</span>
             </a>
           )}
           <a

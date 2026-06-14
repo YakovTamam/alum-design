@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { ROLE_LABELS, type SerializedUser, type UserRole, type UserStatus } from "@/lib/user-roles";
 import type { SerializedInvitation } from "@/lib/invitations";
+import type { SerializedSignupRequest } from "@/lib/signup-requests";
 import { sanitizeEmailInput, isValidEmail } from "@/lib/strings";
 
 function formatDate(value: string) {
@@ -19,19 +20,32 @@ function invitationStatus(invite: SerializedInvitation): { label: string; classN
   return { label: "ממתינה", className: "border-gold/50 bg-gold/10 text-gold" };
 }
 
+function signupRequestStatus(request: SerializedSignupRequest): { label: string; className: string } {
+  if (request.status === "approved") {
+    return { label: "אושרה", className: "border-green-500/40 bg-green-500/10 text-green-300" };
+  }
+  if (request.status === "rejected") {
+    return { label: "נדחתה", className: "border-red-500/40 bg-red-500/10 text-red-300" };
+  }
+  return { label: "ממתינה", className: "border-gold/50 bg-gold/10 text-gold" };
+}
+
 export default function UsersManager({
   initialUsers,
   initialInvitations,
+  initialSignupRequests,
   canInviteAdmins,
   currentUserId,
 }: {
   initialUsers: SerializedUser[];
   initialInvitations: SerializedInvitation[];
+  initialSignupRequests: SerializedSignupRequest[];
   canInviteAdmins: boolean;
   currentUserId: string;
 }) {
   const [users, setUsers] = useState(initialUsers);
   const [invitations, setInvitations] = useState(initialInvitations);
+  const [signupRequests, setSignupRequests] = useState(initialSignupRequests);
   const [mode, setMode] = useState<"invite" | "direct">("invite");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -42,6 +56,8 @@ export default function UsersManager({
   const [submitting, setSubmitting] = useState(false);
   const [statusError, setStatusError] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [signupError, setSignupError] = useState<string | null>(null);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -108,6 +124,32 @@ export default function UsersManager({
       setStatusError("שגיאת רשת, נסו שוב");
     } finally {
       setTogglingId(null);
+    }
+  }
+
+  async function handleSignupReview(request: SerializedSignupRequest, action: "approve" | "reject") {
+    setSignupError(null);
+    setReviewingId(request._id);
+
+    try {
+      const res = await fetch(`/api/admin/signup-requests/${request._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setSignupError(data.error || "הפעולה נכשלה");
+        return;
+      }
+
+      setSignupRequests((curr) =>
+        curr.map((r) => (r._id === request._id ? data.request : r)),
+      );
+    } catch {
+      setSignupError("שגיאת רשת, נסו שוב");
+    } finally {
+      setReviewingId(null);
     }
   }
 
@@ -224,6 +266,76 @@ export default function UsersManager({
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         {success && <p className="mt-3 text-sm text-green-400">{success}</p>}
       </div>
+
+      {/* Signup requests */}
+      {signupRequests.length > 0 && (
+        <div>
+          <h2 className="mb-4 text-sm font-semibold text-white">בקשות הרשמה</h2>
+          {signupError && <p className="mb-3 text-sm text-red-400">{signupError}</p>}
+          <div className="overflow-x-auto rounded-2xl border border-white/10">
+            <table className="w-full min-w-[700px] text-right text-sm">
+              <thead className="bg-panel-light text-xs text-zinc-400">
+                <tr>
+                  <th className="px-4 py-3 font-medium">שם</th>
+                  <th className="px-4 py-3 font-medium">אימייל</th>
+                  <th className="px-4 py-3 font-medium">טלפון</th>
+                  <th className="px-4 py-3 font-medium">עיר</th>
+                  <th className="px-4 py-3 font-medium">נשלחה</th>
+                  <th className="px-4 py-3 font-medium">סטטוס</th>
+                  <th className="px-4 py-3 font-medium"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {signupRequests.map((request) => {
+                  const status = signupRequestStatus(request);
+                  return (
+                    <tr key={request._id} className="text-zinc-200">
+                      <td className="px-4 py-3 font-medium text-white">{request.name}</td>
+                      <td className="whitespace-nowrap px-4 py-3" dir="ltr">
+                        {request.email}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3" dir="ltr">
+                        {request.phone}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">{request.city}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-xs text-zinc-400">
+                        {formatDate(request.createdAt)}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <span className={`rounded-full border px-2.5 py-1 text-xs ${status.className}`}>
+                          {status.label}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        {request.status === "pending" && (
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleSignupReview(request, "approve")}
+                              disabled={reviewingId === request._id}
+                              className="rounded-lg border border-gold/50 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10 disabled:opacity-60"
+                            >
+                              {reviewingId === request._id ? "מעדכן…" : "אישור"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSignupReview(request, "reject")}
+                              disabled={reviewingId === request._id}
+                              className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-zinc-300 transition-colors hover:border-red-500/50 hover:text-red-300 disabled:opacity-60"
+                            >
+                              {reviewingId === request._id ? "מעדכן…" : "דחייה"}
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Pending invitations */}
       {invitations.length > 0 && (
