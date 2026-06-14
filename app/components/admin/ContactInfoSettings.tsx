@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSaveAll } from "./SaveAllContext";
+import type { SocialLinks } from "@/lib/contact";
 
 async function saveSetting(key: string, value: string): Promise<void> {
   const res = await fetch(`/api/admin/settings/${key}`, {
@@ -9,20 +10,24 @@ async function saveSetting(key: string, value: string): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value }),
   });
-  if (!res.ok) throw new Error("שמירת פרטי הקשר נכשלה");
+  if (!res.ok) throw new Error("השמירה נכשלה");
 }
 
 export default function ContactInfoSettings({
   initialPhone,
   initialEmail,
+  initialSocial,
 }: {
   initialPhone: string;
   initialEmail: string;
+  initialSocial: SocialLinks;
 }) {
   const [phone, setPhone] = useState(initialPhone);
   const [email, setEmail] = useState(initialEmail);
+  const [social, setSocial] = useState(initialSocial);
   const [persistedPhone, setPersistedPhone] = useState(initialPhone);
   const [persistedEmail, setPersistedEmail] = useState(initialEmail);
+  const [persistedSocial, setPersistedSocial] = useState(initialSocial);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   async function persist(): Promise<void> {
@@ -34,9 +39,21 @@ export default function ContactInfoSettings({
       await saveSetting("contact-email", email.trim());
       setPersistedEmail(email.trim());
     }
+    const socialKeys = ["instagram", "facebook", "waze"] as const;
+    for (const key of socialKeys) {
+      if (social[key].trim() !== persistedSocial[key].trim()) {
+        await saveSetting(`social-${key}`, social[key].trim());
+      }
+    }
+    if (JSON.stringify(social) !== JSON.stringify(persistedSocial)) {
+      setPersistedSocial({ ...social, instagram: social.instagram.trim(), facebook: social.facebook.trim(), waze: social.waze.trim() });
+    }
   }
 
-  const dirty = phone.trim() !== persistedPhone.trim() || email.trim() !== persistedEmail.trim();
+  const dirty =
+    phone.trim() !== persistedPhone.trim() ||
+    email.trim() !== persistedEmail.trim() ||
+    JSON.stringify(social) !== JSON.stringify(persistedSocial);
   useSaveAll("contact-info", dirty, persist);
 
   async function save() {
@@ -73,6 +90,45 @@ export default function ContactInfoSettings({
             dir="ltr"
             className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20"
           />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-1 text-sm font-semibold text-white">רשתות חברתיות</h3>
+        <p className="mb-3 text-xs text-zinc-500">
+          קישורים המוצגים כאייקונים בפוטר. השדה ריק = האייקון לא מוצג.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div>
+            <label className="mb-1.5 block text-xs text-zinc-500">Instagram</label>
+            <input
+              value={social.instagram}
+              onChange={(e) => setSocial((prev) => ({ ...prev, instagram: e.target.value }))}
+              placeholder="https://instagram.com/..."
+              dir="ltr"
+              className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs text-zinc-500">Facebook</label>
+            <input
+              value={social.facebook}
+              onChange={(e) => setSocial((prev) => ({ ...prev, facebook: e.target.value }))}
+              placeholder="https://facebook.com/..."
+              dir="ltr"
+              className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs text-zinc-500">Waze</label>
+            <input
+              value={social.waze}
+              onChange={(e) => setSocial((prev) => ({ ...prev, waze: e.target.value }))}
+              placeholder="https://waze.com/ul/..."
+              dir="ltr"
+              className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20"
+            />
+          </div>
         </div>
       </div>
 

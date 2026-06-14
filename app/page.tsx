@@ -46,7 +46,7 @@ export default async function Home() {
   const scrollSection = await getScrollSection();
   const staffSession = await getStaffSession();
   const testimonials = await getTestimonials();
-  const { phone, email } = await getContactInfo();
+  const { phone, email, social } = await getContactInfo();
   const logoSize = await getLogoSize();
   const footerLogoSize = await getFooterLogoSize();
   const theme = await getSiteTheme();
@@ -107,6 +107,7 @@ export default async function Home() {
         footerBg={theme.footerBg}
         footerText={theme.footerText}
         services={siteCopy.services}
+        social={social}
         siteIdentity={siteCopy.siteIdentity}
       />
     </div>
