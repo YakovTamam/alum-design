@@ -46,6 +46,7 @@ export default async function AdminUsersPage() {
             initialUsers={users}
             initialInvitations={invitations}
             canInviteAdmins={session?.role === "super-admin"}
+            currentUserId={session?.uid ?? ""}
           />
         )}
       </div>

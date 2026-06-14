@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
-import type { UserRole } from "./users";
+import { getUserById, type UserRole } from "./users";
 
 export const ADMIN_SESSION_COOKIE = "alum_admin_session";
 export const CLIENT_SESSION_COOKIE = "alum_client_session";
@@ -56,10 +56,23 @@ export function readSessionToken(token: string | undefined | null): SessionPaylo
   }
 }
 
+// Sessions are stateless signed tokens, so a disabled user's existing cookie
+// would otherwise stay valid until it expires. Re-check the account status
+// against the database on every request to revoke access immediately.
+async function isAccountActive(uid: string): Promise<boolean> {
+  try {
+    const user = await getUserById(uid);
+    return Boolean(user) && user!.status !== "disabled";
+  } catch {
+    return false;
+  }
+}
+
 export async function getStaffSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const session = readSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
   if (!session || (session.role !== "super-admin" && session.role !== "admin")) return null;
+  if (!(await isAccountActive(session.uid))) return null;
   return session;
 }
 
@@ -67,6 +80,7 @@ export async function getClientSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const session = readSessionToken(cookieStore.get(CLIENT_SESSION_COOKIE)?.value);
   if (!session || session.role !== "client") return null;
+  if (!(await isAccountActive(session.uid))) return null;
   return session;
 }
 
