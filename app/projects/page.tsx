@@ -36,7 +36,7 @@ export default async function ProjectsPage() {
 
   const staffSession = await getStaffSession();
   const items = await getPortfolioItems();
-  const { phone, email } = await getContactInfo();
+  const { phone, email, social } = await getContactInfo();
   const logoSize = await getLogoSize();
   const footerLogoSize = await getFooterLogoSize();
   const theme = await getSiteTheme();
@@ -82,6 +82,7 @@ export default async function ProjectsPage() {
         footerText={theme.footerText}
         services={siteCopy.services}
         siteIdentity={siteCopy.siteIdentity}
+        social={social}
       />
     </div>
   );

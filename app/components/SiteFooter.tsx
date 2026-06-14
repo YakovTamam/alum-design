@@ -1,7 +1,34 @@
 import Image from "next/image";
-import { phoneToTelHref } from "@/lib/contact";
+import { phoneToTelHref, type SocialLinks } from "@/lib/contact";
 import { logoScale } from "@/lib/logo";
 import { getSiteName, type ServiceItem, type SiteIdentity } from "@/lib/site-copy";
+
+function InstagramIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function WazeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
 
 export default function SiteFooter({
   logoUrl,
@@ -12,6 +39,7 @@ export default function SiteFooter({
   footerText,
   services,
   siteIdentity,
+  social,
 }: {
   logoUrl?: string;
   phone: string;
@@ -21,6 +49,7 @@ export default function SiteFooter({
   footerText?: string;
   services: ServiceItem[];
   siteIdentity: SiteIdentity;
+  social: SocialLinks;
 }) {
   const scale = logoScale(logoSize ?? "100");
   const footerStyle = {
@@ -50,7 +79,7 @@ export default function SiteFooter({
           <div>
             {logoUrl ? (
               <div className="relative" style={{ width: 160 * scale, height: 48 * scale }}>
-                <Image src={logoUrl} alt={getSiteName(siteIdentity)} fill sizes="160px" className="object-contain object-right" />
+                <Image src={logoUrl} alt={getSiteName(siteIdentity)} fill sizes="160px" className="object-contain object-center" />
               </div>
             ) : (
               <div className="flex flex-col items-start leading-none">
@@ -64,6 +93,43 @@ export default function SiteFooter({
               {siteIdentity.tagline} לפרויקטים מודרניים — תכנון, ייצור והתקנה
               במקום אחד.
             </p>
+            {(social.instagram || social.facebook || social.waze) && (
+              <div className="mt-4 flex items-center gap-3 text-[var(--footer-text,#a1a1aa)]">
+                {social.instagram && (
+                  <a
+                    href={social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="transition-colors hover:text-gold"
+                  >
+                    <InstagramIcon />
+                  </a>
+                )}
+                {social.facebook && (
+                  <a
+                    href={social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="transition-colors hover:text-gold"
+                  >
+                    <FacebookIcon />
+                  </a>
+                )}
+                {social.waze && (
+                  <a
+                    href={social.waze}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Waze"
+                    className="transition-colors hover:text-gold"
+                  >
+                    <WazeIcon />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-between gap-2 sm:contents">

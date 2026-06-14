@@ -26,6 +26,13 @@ const config = {
     email: "info@example.co.il",
   },
 
+  // Social media links shown as icons in the footer. Leave empty to hide an icon.
+  social: {
+    instagram: "",
+    facebook: "",
+    waze: "",
+  },
+
   // Header/footer colors. Leave empty strings to use the site's default theme.
   theme: {
     headerBg: "",
