@@ -28,6 +28,9 @@ export async function POST(request: Request) {
   if (!user || user.role !== "client" || !(await verifyPassword(user, password))) {
     return NextResponse.json({ error: "אימייל או סיסמה שגויים" }, { status: 401 });
   }
+  if (user.status === "disabled") {
+    return NextResponse.json({ error: "החשבון הושבת" }, { status: 403 });
+  }
 
   const response = NextResponse.json({ ok: true });
   response.cookies.set(CLIENT_SESSION_COOKIE, createSessionToken(user._id!.toString(), user.role), {

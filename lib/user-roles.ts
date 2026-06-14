@@ -6,10 +6,13 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   client: "לקוח",
 };
 
+export type UserStatus = "active" | "disabled";
+
 export type SerializedUser = {
   _id: string;
   email: string;
   name: string;
   role: UserRole;
+  status: UserStatus;
   createdAt: string;
 };

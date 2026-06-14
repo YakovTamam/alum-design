@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { ROLE_LABELS, type SerializedUser, type UserRole } from "@/lib/user-roles";
+import { ROLE_LABELS, type SerializedUser, type UserRole, type UserStatus } from "@/lib/user-roles";
 import type { SerializedInvitation } from "@/lib/invitations";
+import { sanitizeEmailInput, isValidEmail } from "@/lib/strings";
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("he-IL", { dateStyle: "short", timeStyle: "short" }).format(
@@ -22,10 +23,12 @@ export default function UsersManager({
   initialUsers,
   initialInvitations,
   canInviteAdmins,
+  currentUserId,
 }: {
   initialUsers: SerializedUser[];
   initialInvitations: SerializedInvitation[];
   canInviteAdmins: boolean;
+  currentUserId: string;
 }) {
   const [users, setUsers] = useState(initialUsers);
   const [invitations, setInvitations] = useState(initialInvitations);
@@ -37,11 +40,19 @@ export default function UsersManager({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [statusError, setStatusError] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setSuccess(null);
+
+    if (!isValidEmail(email)) {
+      setError("כתובת אימייל לא תקינה");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -72,6 +83,31 @@ export default function UsersManager({
       setError("שגיאת רשת, נסו שוב");
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleToggleStatus(user: SerializedUser) {
+    const nextStatus: UserStatus = user.status === "disabled" ? "active" : "disabled";
+    setStatusError(null);
+    setTogglingId(user._id);
+
+    try {
+      const res = await fetch(`/api/admin/users/${user._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: nextStatus }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatusError(data.error || "הפעולה נכשלה");
+        return;
+      }
+
+      setUsers((curr) => curr.map((u) => (u._id === user._id ? { ...u, status: nextStatus } : u)));
+    } catch {
+      setStatusError("שגיאת רשת, נסו שוב");
+    } finally {
+      setTogglingId(null);
     }
   }
 
@@ -126,11 +162,12 @@ export default function UsersManager({
             </label>
             <input
               id="invite-email"
-              type="email"
+              type="text"
+              inputMode="email"
               required
               dir="ltr"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(sanitizeEmailInput(e.target.value))}
               className="w-64 rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
             />
           </div>
@@ -235,6 +272,7 @@ export default function UsersManager({
       {/* Existing users */}
       <div>
         <h2 className="mb-4 text-sm font-semibold text-white">משתמשים</h2>
+        {statusError && <p className="mb-3 text-sm text-red-400">{statusError}</p>}
         {users.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-white/10 p-12 text-center text-sm text-zinc-400">
             אין משתמשים להצגה.
@@ -247,22 +285,54 @@ export default function UsersManager({
                   <th className="px-4 py-3 font-medium">שם</th>
                   <th className="px-4 py-3 font-medium">אימייל</th>
                   <th className="px-4 py-3 font-medium">תפקיד</th>
+                  <th className="px-4 py-3 font-medium">סטטוס</th>
                   <th className="px-4 py-3 font-medium">נוצר</th>
+                  <th className="px-4 py-3 font-medium"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {users.map((user) => (
-                  <tr key={user._id} className="text-zinc-200">
-                    <td className="px-4 py-3 font-medium text-white">{user.name}</td>
-                    <td className="whitespace-nowrap px-4 py-3" dir="ltr">
-                      {user.email}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3">{ROLE_LABELS[user.role]}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-xs text-zinc-400">
-                      {formatDate(user.createdAt)}
-                    </td>
-                  </tr>
-                ))}
+                {users.map((user) => {
+                  const isDisabled = user.status === "disabled";
+                  const canManage =
+                    user._id !== currentUserId &&
+                    user.role !== "super-admin" &&
+                    (canInviteAdmins || user.role === "client");
+                  return (
+                    <tr key={user._id} className="text-zinc-200">
+                      <td className="px-4 py-3 font-medium text-white">{user.name}</td>
+                      <td className="whitespace-nowrap px-4 py-3" dir="ltr">
+                        {user.email}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">{ROLE_LABELS[user.role]}</td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <span
+                          className={`rounded-full border px-2.5 py-1 text-xs ${
+                            isDisabled
+                              ? "border-red-500/40 bg-red-500/10 text-red-300"
+                              : "border-green-500/40 bg-green-500/10 text-green-300"
+                          }`}
+                        >
+                          {isDisabled ? "מושבת" : "פעיל"}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-xs text-zinc-400">
+                        {formatDate(user.createdAt)}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        {canManage && (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleStatus(user)}
+                            disabled={togglingId === user._id}
+                            className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-zinc-300 transition-colors hover:border-gold/50 hover:text-gold disabled:opacity-60"
+                          >
+                            {togglingId === user._id ? "מעדכן…" : isDisabled ? "הפעלה" : "השבתה"}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { sanitizeEmailInput } from "@/lib/strings";
 
 export default function ClientLoginForm() {
   const router = useRouter();
@@ -44,12 +45,13 @@ export default function ClientLoginForm() {
       </label>
       <input
         id="email"
-        type="email"
+        type="text"
+        inputMode="email"
         required
         autoFocus
         dir="ltr"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => setEmail(sanitizeEmailInput(e.target.value))}
         className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white outline-none focus:border-gold/60"
       />
 
