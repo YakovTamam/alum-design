@@ -33,6 +33,9 @@ const { default: config } = await import(pathToFileURL(configPath).href);
 const settings = {
   "contact-phone": config.contact?.phone,
   "contact-email": config.contact?.email,
+  "social-instagram": config.social?.instagram,
+  "social-facebook": config.social?.facebook,
+  "social-waze": config.social?.waze,
   "header-bg-color": config.theme?.headerBg,
   "header-text-color": config.theme?.headerText,
   "footer-bg-color": config.theme?.footerBg,

@@ -92,9 +92,13 @@ export default async function ContentSlotsPage() {
           {
             id: "contact-info",
             title: "פרטי יצירת קשר",
-            description: "מספר הטלפון והאימייל המוצגים באתר ובהתראות מיילים",
+            description: "מספר הטלפון והאימייל המוצגים באתר ובהתראות מיילים, וקישורים לרשתות חברתיות בפוטר",
             content: (
-              <ContactInfoSettings initialPhone={contactInfo.phone} initialEmail={contactInfo.email} />
+              <ContactInfoSettings
+                initialPhone={contactInfo.phone}
+                initialEmail={contactInfo.email}
+                initialSocial={contactInfo.social}
+              />
             ),
           },
           {
