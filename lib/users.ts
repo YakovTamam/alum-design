@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 import { getDb } from "./mongodb";
-import { type SerializedUser, type UserRole } from "./user-roles";
+import { type SerializedUser, type UserRole, type UserStatus } from "./user-roles";
 
-export { ROLE_LABELS, type SerializedUser, type UserRole } from "./user-roles";
+export { ROLE_LABELS, type SerializedUser, type UserRole, type UserStatus } from "./user-roles";
 
 export const USERS_COLLECTION = "users";
 
@@ -13,6 +13,7 @@ export type User = {
   passwordHash: string;
   name: string;
   role: UserRole;
+  status?: UserStatus;
   createdAt: Date;
 };
 
@@ -22,6 +23,7 @@ export function serializeUser(user: User): SerializedUser {
     email: user.email,
     name: user.name,
     role: user.role,
+    status: user.status ?? "active",
     createdAt: user.createdAt.toISOString(),
   };
 }
@@ -61,6 +63,7 @@ export async function createUser(data: {
     passwordHash,
     name: data.name.trim(),
     role: data.role,
+    status: "active",
     createdAt: new Date(),
   };
   const result = await db.collection<User>(USERS_COLLECTION).insertOne(user);
@@ -75,4 +78,9 @@ export async function updateUserPassword(id: string, password: string): Promise<
   const db = await getDb();
   const passwordHash = await bcrypt.hash(password, 10);
   await db.collection<User>(USERS_COLLECTION).updateOne({ _id: new ObjectId(id) }, { $set: { passwordHash } });
+}
+
+export async function updateUserStatus(id: string, status: UserStatus): Promise<void> {
+  const db = await getDb();
+  await db.collection<User>(USERS_COLLECTION).updateOne({ _id: new ObjectId(id) }, { $set: { status } });
 }

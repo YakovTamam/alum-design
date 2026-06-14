@@ -38,6 +38,9 @@ export async function POST(request: Request) {
       if (existing.role !== "super-admin" && existing.role !== "admin") {
         return NextResponse.json({ error: "אין הרשאה לפאנל הניהול" }, { status: 403 });
       }
+      if (existing.status === "disabled") {
+        return NextResponse.json({ error: "החשבון הושבת" }, { status: 403 });
+      }
       user = existing;
     }
   } catch {
