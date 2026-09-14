@@ -3,6 +3,9 @@ import { Heebo, Rubik, Frank_Ruhl_Libre, Suez_One } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
+import { QuoteModalProvider } from "./components/QuoteModalContext";
+import QuoteModal from "./components/QuoteModal";
+import { CookieConsentProvider } from "./components/CookieConsentContext";
 import { SITE_URL } from "@/lib/site";
 import { getSiteContentMap } from "@/lib/content";
 import { phoneToInternational } from "@/lib/contact";
@@ -125,7 +128,12 @@ export default async function RootLayout({
         </noscript>
         <LoadingScreen settings={loadingScreen} logoUrl={logoUrl} siteIdentity={siteIdentity} />
         <SmoothScroll />
-        {children}
+        <CookieConsentProvider>
+          <QuoteModalProvider>
+            {children}
+            <QuoteModal phone={phone} />
+          </QuoteModalProvider>
+        </CookieConsentProvider>
       </body>
     </html>
   );

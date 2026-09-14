@@ -1,34 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-
-const STORAGE_KEY = "cookie-consent";
+import { useCookieConsent } from "./CookieConsentContext";
 
 export default function CookieBanner() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from localStorage on mount
-      if (!localStorage.getItem(STORAGE_KEY)) setVisible(true);
-    } catch {
-      setVisible(true);
-    }
-  }, []);
-
-  function accept() {
-    try {
-      localStorage.setItem(STORAGE_KEY, "accepted");
-    } catch {
-      // ignore
-    }
-    setVisible(false);
-  }
+  const { bannerVisible, accept } = useCookieConsent();
 
   return (
     <AnimatePresence>
-      {visible && (
+      {bannerVisible && (
         <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

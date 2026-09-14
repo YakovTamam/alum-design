@@ -43,7 +43,7 @@ export default async function PrivacyPolicyPage() {
     <div className="flex flex-1 flex-col">
       <FloatingWhatsApp phone={phone} />
       <AccessibilityWidget />
-      <StickyLeadButton phone={phone} />
+      <StickyLeadButton />
       <CookieBanner />
       <SiteHeader
         logoUrl={images["site-logo"]}

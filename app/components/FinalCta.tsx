@@ -1,8 +1,12 @@
+"use client";
+
 import PhotoPlaceholder from "./PhotoPlaceholder";
+import { useQuoteModal } from "./QuoteModalContext";
 import { getSiteName, type SiteIdentity } from "@/lib/site-copy";
 
 export default function FinalCta({ imageUrl, siteIdentity }: { imageUrl?: string; siteIdentity: SiteIdentity }) {
   const siteName = getSiteName(siteIdentity);
+  const { open } = useQuoteModal();
   return (
     <section className="relative overflow-hidden">
       <PhotoPlaceholder
@@ -24,12 +28,13 @@ export default function FinalCta({ imageUrl, siteIdentity }: { imageUrl?: string
           <span className="text-gold">{siteName}</span> משלב הרעיון ועד
           ההתקנה הסופית.
         </p>
-        <a
-          href="#contact"
+        <button
+          type="button"
+          onClick={open}
           className="btn-gold mt-2 flex w-fit items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold text-[#1a1308]"
         >
           בואו נתחיל <span aria-hidden>←</span>
-        </a>
+        </button>
       </div>
     </section>
   );

@@ -59,7 +59,7 @@ export default async function Home() {
       <TrackingScripts />
       <FloatingWhatsApp phone={phone} />
       <AccessibilityWidget />
-      <StickyLeadButton phone={phone} />
+      <StickyLeadButton />
       <CookieBanner />
       <SiteHeader
         logoUrl={images["site-logo"]}

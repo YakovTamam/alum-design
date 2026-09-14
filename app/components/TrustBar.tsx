@@ -1,3 +1,8 @@
+"use client";
+
+import Link from "next/link";
+import { useQuoteModal } from "./QuoteModalContext";
+
 const BADGES = [
   { label: "אחריות מלאה", icon: "shield" },
   { label: "ייעוץ ללא עלות", icon: "spark" },
@@ -40,24 +45,27 @@ function BadgeIcon({ kind }: { kind: (typeof BADGES)[number]["icon"] }) {
 }
 
 export default function TrustBar() {
+  const { open } = useQuoteModal();
+
   return (
     <section className="border-y border-zinc-200 bg-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a
-            href="#contact"
+          <button
+            type="button"
+            onClick={open}
             className="btn-gold flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#1a1308]"
           >
             <span aria-hidden>←</span>
             קבל הצעת מחיר
-          </a>
-          <a
+          </button>
+          <Link
             href="/projects"
             className="flex items-center justify-center gap-2 rounded-full border border-zinc-300 px-6 py-3 text-sm text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900"
           >
             <span aria-hidden>↻</span>
             צפה בתוכניות
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-sm text-zinc-700 sm:flex sm:flex-wrap sm:items-center sm:gap-8">
