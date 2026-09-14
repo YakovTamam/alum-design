@@ -162,7 +162,11 @@ export default function SiteFooter({
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-sm text-[var(--footer-text,#a1a1aa)] sm:flex-row">
-          <p>© {new Date().getFullYear()} {getSiteName(siteIdentity)}. כל הזכויות שמורות.</p>
+          <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <span>© {new Date().getFullYear()} {getSiteName(siteIdentity)}. כל הזכויות שמורות.</span>
+            <a href="/privacy" className="transition-colors hover:text-gold">מדיניות פרטיות</a>
+            <a href="/accessibility" className="transition-colors hover:text-gold">הצהרת נגישות</a>
+          </p>
           <div className="flex items-center gap-6">
             <a href={phoneToTelHref(phone)} className="flex items-center gap-2 transition-colors hover:text-gold">
               <span aria-hidden>☎</span> {phone}

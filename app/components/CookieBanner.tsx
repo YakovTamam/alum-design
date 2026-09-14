@@ -41,8 +41,8 @@ export default function CookieBanner() {
           <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-4 text-sm leading-7 text-zinc-300 sm:flex-row sm:justify-between lg:px-10">
             <p>
               אנו משתמשים בעוגיות (Cookies) כדי לשפר את חוויית הגלישה שלכם, להציג
-              תוכן מותאם אישית ולנתח את השימוש באתר. בהמשך הגלישה הינכם מסכימים
-              למדיניות העוגיות שלנו.
+              תוכן מותאם אישית ולנתח את השימוש באתר. בהמשך הגלישה הינכם מסכימים{" "}
+              <a href="/privacy" className="underline hover:text-gold">למדיניות הפרטיות שלנו</a>.
             </p>
             <button
               type="button"

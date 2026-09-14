@@ -155,6 +155,13 @@ export default function AccessibilityWidget() {
           >
             איפוס כל ההגדרות
           </button>
+
+          <a
+            href="/accessibility"
+            className="text-center text-xs text-zinc-400 underline transition-colors hover:text-gold"
+          >
+            הצהרת נגישות
+          </a>
         </div>
       )}
 
