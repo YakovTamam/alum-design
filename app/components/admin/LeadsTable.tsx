@@ -223,7 +223,7 @@ export default function LeadsTable({
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-white/10">
           <table className="w-full min-w-[860px] text-right text-sm">
-            <thead className="bg-panel-light text-xs text-zinc-400">
+            <thead className="bg-white/5 text-xs text-zinc-400">
               <tr>
                 <th className="px-4 py-3 font-medium">תאריך</th>
                 <th className="px-4 py-3 font-medium">שם</th>

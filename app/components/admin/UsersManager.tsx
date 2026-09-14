@@ -274,7 +274,7 @@ export default function UsersManager({
           {signupError && <p className="mb-3 text-sm text-red-400">{signupError}</p>}
           <div className="overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full min-w-[700px] text-right text-sm">
-              <thead className="bg-panel-light text-xs text-zinc-400">
+              <thead className="bg-white/5 text-xs text-zinc-400">
                 <tr>
                   <th className="px-4 py-3 font-medium">שם</th>
                   <th className="px-4 py-3 font-medium">אימייל</th>
@@ -343,7 +343,7 @@ export default function UsersManager({
           <h2 className="mb-4 text-sm font-semibold text-white">הזמנות</h2>
           <div className="overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full min-w-[600px] text-right text-sm">
-              <thead className="bg-panel-light text-xs text-zinc-400">
+              <thead className="bg-white/5 text-xs text-zinc-400">
                 <tr>
                   <th className="px-4 py-3 font-medium">אימייל</th>
                   <th className="px-4 py-3 font-medium">תפקיד</th>
@@ -392,7 +392,7 @@ export default function UsersManager({
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full min-w-[600px] text-right text-sm">
-              <thead className="bg-panel-light text-xs text-zinc-400">
+              <thead className="bg-white/5 text-xs text-zinc-400">
                 <tr>
                   <th className="px-4 py-3 font-medium">שם</th>
                   <th className="px-4 py-3 font-medium">אימייל</th>

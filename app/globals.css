@@ -5,7 +5,10 @@
   --foreground: #1a1614;
   --gold: #cfa15c;
   --gold-light: #e8c896;
-  --panel: #ffffff;
+  /* Dark elevated-surface color: used only by the dark admin panel and
+     auth pages (login/signup/invite/reset-password), never by light
+     public sections — those use --panel-light instead. */
+  --panel: #0e0e11;
   --panel-light: #f0ece5;
   --border-subtle: rgba(0, 0, 0, 0.08);
 }
