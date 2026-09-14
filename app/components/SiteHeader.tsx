@@ -122,7 +122,7 @@ export default function SiteHeader({
             </a>
           )}
           <Link
-            href="/#contact"
+            href="/contact"
             className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/60 bg-gold/[0.08] px-3.5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold/15 hover:border-gold/80 sm:gap-2 sm:px-5"
           >
             <span>צור קשר</span>

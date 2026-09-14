@@ -8,6 +8,7 @@ import StickyLeadButton from "../../components/StickyLeadButton";
 import AccessibilityWidget from "../../components/AccessibilityWidget";
 import CookieBanner from "../../components/CookieBanner";
 import ProjectGalleryViewer from "../../components/ProjectGalleryViewer";
+import QuoteModalButton from "../../components/QuoteModalButton";
 import { getSiteContentMap } from "@/lib/content";
 import { getClientSession, getStaffSession } from "@/lib/auth";
 import { getPortfolioItemById } from "@/lib/portfolio-data";
@@ -105,12 +106,9 @@ export default async function ProjectDetailPage({
 
             <div className="mt-10 flex flex-wrap items-center gap-4 rounded-2xl border border-zinc-200 bg-[#f0ece5] p-6">
               <p className="text-sm text-zinc-700">רוצים פרויקט דומה בבית שלכם?</p>
-              <Link
-                href="/#contact"
-                className="btn-gold flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-[#1a1308]"
-              >
+              <QuoteModalButton className="btn-gold flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-[#1a1308]">
                 קבלו הצעת מחיר <span aria-hidden>←</span>
-              </Link>
+              </QuoteModalButton>
             </div>
           </div>
         </section>

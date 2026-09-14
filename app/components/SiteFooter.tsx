@@ -79,7 +79,8 @@ export default function SiteFooter({
       title: "החברה",
       links: [
         { label: "לקוחותינו", href: "/#categories" },
-        { label: "צור קשר", href: "/#contact" },
+        { label: "שאלות נפוצות", href: "/faq" },
+        { label: "צור קשר", href: "/contact" },
       ],
     },
   ];

@@ -49,7 +49,7 @@ export const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: "פרויקטים", href: "/projects" },
   { label: "לקוחותינו", href: "/#categories" },
   { label: "אודות", href: "/about" },
-  { label: "צור קשר", href: "/#contact" },
+  { label: "צור קשר", href: "/contact" },
 ];
 
 export const DEFAULT_CATEGORIES: CategoryItem[] = [

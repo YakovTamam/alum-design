@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
@@ -7,6 +6,7 @@ import FloatingWhatsApp from "../../components/FloatingWhatsApp";
 import StickyLeadButton from "../../components/StickyLeadButton";
 import AccessibilityWidget from "../../components/AccessibilityWidget";
 import CookieBanner from "../../components/CookieBanner";
+import QuoteModalButton from "../../components/QuoteModalButton";
 import { ServiceIconSvg } from "@/lib/services";
 import { SERVICE_PAGES, SERVICE_PAGE_SLUGS, isServicePageSlug } from "@/lib/service-pages";
 import { PORTFOLIO_CATEGORY_LABELS } from "@/lib/portfolio-types";
@@ -95,12 +95,9 @@ export default async function ServicePage({
             <h1 className="mt-5 text-3xl font-bold text-zinc-900 sm:text-4xl">{content.title}</h1>
             {shortDesc && <p className="mt-3 text-sm font-medium text-gold">{shortDesc}</p>}
             <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-600">{content.intro}</p>
-            <Link
-              href="/#contact"
-              className="btn-gold mt-7 flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold text-[#1a1308]"
-            >
+            <QuoteModalButton className="btn-gold mt-7 flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold text-[#1a1308]">
               קבלו הצעת מחיר <span aria-hidden>←</span>
-            </Link>
+            </QuoteModalButton>
           </div>
         </section>
 
