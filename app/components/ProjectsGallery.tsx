@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import PhotoPlaceholder from "./PhotoPlaceholder";
 import {
   PORTFOLIO_CATEGORIES,
@@ -57,22 +58,23 @@ export default function ProjectsGallery({
       ) : (
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
           {filteredItems.map((item) => (
-            <div
+            <Link
               key={item._id}
-              className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200"
+              href={`/projects/${item._id}`}
+              className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg shadow-zinc-200 transition-shadow hover:shadow-xl"
             >
               <PhotoPlaceholder
                 label={PORTFOLIO_CATEGORY_LABELS[item.category]}
                 variant={WARM_CATEGORIES.has(item.category) ? "warm" : "cool"}
                 imageUrl={item.imageUrl}
-                className="aspect-[4/3] w-full"
+                className="aspect-[4/3] w-full transition-transform duration-300 group-hover:scale-105"
               />
               <div className="p-4">
                 <p className="text-xs font-medium text-gold">{PORTFOLIO_CATEGORY_LABELS[item.category]}</p>
                 <p className="mt-1 text-sm font-semibold text-zinc-900">{item.title}</p>
                 {item.description && <p className="mt-1 text-xs leading-5 text-zinc-500">{item.description}</p>}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

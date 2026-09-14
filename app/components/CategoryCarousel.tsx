@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import PhotoPlaceholder from "./PhotoPlaceholder";
 import type { ContentSlotKey } from "@/lib/content";
 import type { CategoryItem } from "@/lib/site-copy";
@@ -76,7 +77,7 @@ export default function CategoryCarousel({ images = {}, categories }: Props) {
       className="carousel-snap -my-4 flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 ps-4 pe-4 scroll-ps-4 lg:ps-10 lg:pe-10 lg:scroll-ps-10"
     >
       {TRACK.map((c, i) => (
-        <a
+        <Link
           key={i}
           href="/projects"
           className="group snap-start shrink-0 w-[72vw] sm:w-[42vw] lg:w-64 overflow-hidden rounded-3xl bg-white transition-all duration-300 hover:-translate-y-2"
@@ -101,7 +102,7 @@ export default function CategoryCarousel({ images = {}, categories }: Props) {
               ←
             </span>
           </div>
-        </a>
+        </Link>
       ))}
     </div>
   );

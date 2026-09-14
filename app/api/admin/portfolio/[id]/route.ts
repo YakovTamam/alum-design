@@ -7,7 +7,21 @@ import {
   PORTFOLIO_CATEGORIES,
   type PortfolioItem,
   type PortfolioCategory,
+  type PortfolioImage,
 } from "@/lib/portfolio";
+
+function parsePortfolioImages(value: unknown): PortfolioImage[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const images: PortfolioImage[] = [];
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object") continue;
+    const url = (entry as Record<string, unknown>).url;
+    const mediaId = (entry as Record<string, unknown>).mediaId;
+    if (typeof url !== "string" || !url) continue;
+    images.push({ url, mediaId: typeof mediaId === "string" ? mediaId : undefined });
+  }
+  return images;
+}
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await requireStaff())) {
@@ -26,7 +40,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const update: Partial<Pick<PortfolioItem, "title" | "category" | "description" | "imageUrl" | "mediaId" | "order">> = {};
+  const update: Partial<
+    Pick<PortfolioItem, "title" | "category" | "description" | "imageUrl" | "mediaId" | "images" | "order">
+  > = {};
 
   if (body.title !== undefined) {
     if (typeof body.title !== "string" || !body.title.trim()) {
@@ -68,6 +84,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "סדר לא תקין" }, { status: 400 });
     }
     update.order = body.order;
+  }
+
+  if (body.images !== undefined) {
+    const images = parsePortfolioImages(body.images);
+    if (!images) {
+      return NextResponse.json({ error: "תמונות גלריה לא תקינות" }, { status: 400 });
+    }
+    update.images = images;
   }
 
   await updatePortfolioItem(id, update);

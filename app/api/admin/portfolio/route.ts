@@ -6,7 +6,22 @@ import {
   serializePortfolioItem,
   PORTFOLIO_CATEGORIES,
   type PortfolioCategory,
+  type PortfolioImage,
 } from "@/lib/portfolio";
+
+function parsePortfolioImages(value: unknown): PortfolioImage[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) return undefined;
+  const images: PortfolioImage[] = [];
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object") continue;
+    const url = (entry as Record<string, unknown>).url;
+    const mediaId = (entry as Record<string, unknown>).mediaId;
+    if (typeof url !== "string" || !url) continue;
+    images.push({ url, mediaId: typeof mediaId === "string" ? mediaId : undefined });
+  }
+  return images;
+}
 
 export async function GET() {
   if (!(await requireStaff())) {
@@ -29,7 +44,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { title, category, description, imageUrl, mediaId, order } = body;
+  const { title, category, description, imageUrl, mediaId, images, order } = body;
 
   if (typeof title !== "string" || !title.trim()) {
     return NextResponse.json({ error: "יש להזין כותרת" }, { status: 400 });
@@ -56,6 +71,7 @@ export async function POST(request: Request) {
     description: typeof description === "string" ? description : undefined,
     imageUrl: typeof imageUrl === "string" ? imageUrl : undefined,
     mediaId: typeof mediaId === "string" ? mediaId : undefined,
+    images: parsePortfolioImages(images),
     order: typeof order === "number" ? order : undefined,
   });
 

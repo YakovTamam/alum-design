@@ -1,11 +1,13 @@
 import { ObjectId } from "mongodb";
 import { getDb } from "./mongodb";
-import type { PortfolioCategory, SerializedPortfolioItem } from "./portfolio-types";
+import type { PortfolioCategory, PortfolioImage, SerializedPortfolioItem } from "./portfolio-types";
 
 export {
   PORTFOLIO_CATEGORIES,
   PORTFOLIO_CATEGORY_LABELS,
+  getPortfolioGallery,
   type PortfolioCategory,
+  type PortfolioImage,
   type SerializedPortfolioItem,
 } from "./portfolio-types";
 
@@ -18,6 +20,7 @@ export type PortfolioItem = {
   description?: string;
   imageUrl?: string;
   mediaId?: string;
+  images?: PortfolioImage[];
   order: number;
   createdAt: Date;
   updatedAt: Date;
@@ -30,6 +33,7 @@ export function serializePortfolioItem(item: PortfolioItem): SerializedPortfolio
     description: item.description,
     imageUrl: item.imageUrl,
     mediaId: item.mediaId,
+    images: item.images,
     order: item.order,
     _id: item._id?.toString() ?? "",
     createdAt: item.createdAt.toISOString(),
@@ -42,12 +46,19 @@ export async function listPortfolioItems(): Promise<PortfolioItem[]> {
   return db.collection<PortfolioItem>(PORTFOLIO_COLLECTION).find({}).sort({ order: 1, createdAt: 1 }).toArray();
 }
 
+export async function getPortfolioItemById(id: string): Promise<PortfolioItem | null> {
+  if (!ObjectId.isValid(id)) return null;
+  const db = await getDb();
+  return db.collection<PortfolioItem>(PORTFOLIO_COLLECTION).findOne({ _id: new ObjectId(id) });
+}
+
 export async function createPortfolioItem(data: {
   title: string;
   category: PortfolioCategory;
   description?: string;
   imageUrl?: string;
   mediaId?: string;
+  images?: PortfolioImage[];
   order?: number;
 }): Promise<PortfolioItem> {
   const db = await getDb();
@@ -58,6 +69,7 @@ export async function createPortfolioItem(data: {
     description: data.description?.trim() || undefined,
     imageUrl: data.imageUrl,
     mediaId: data.mediaId,
+    images: data.images,
     order: data.order ?? 0,
     createdAt: now,
     updatedAt: now,
@@ -68,7 +80,7 @@ export async function createPortfolioItem(data: {
 
 export async function updatePortfolioItem(
   id: string,
-  data: Partial<Pick<PortfolioItem, "title" | "category" | "description" | "imageUrl" | "mediaId" | "order">>,
+  data: Partial<Pick<PortfolioItem, "title" | "category" | "description" | "imageUrl" | "mediaId" | "images" | "order">>,
 ): Promise<void> {
   if (!ObjectId.isValid(id)) return;
   const db = await getDb();

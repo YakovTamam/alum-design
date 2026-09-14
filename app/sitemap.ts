@@ -1,8 +1,22 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 import { SERVICE_PAGE_SLUGS } from "@/lib/service-pages";
+import { getPortfolioItems } from "@/lib/portfolio-data";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let projectEntries: MetadataRoute.Sitemap = [];
+  try {
+    const items = await getPortfolioItems();
+    projectEntries = items.map((item) => ({
+      url: `${SITE_URL}/projects/${item._id}`,
+      lastModified: new Date(item.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    }));
+  } catch (err) {
+    console.error("Failed to load portfolio items for sitemap", err);
+  }
+
   return [
     {
       url: SITE_URL,
@@ -16,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...projectEntries,
     ...SERVICE_PAGE_SLUGS.map((slug) => ({
       url: `${SITE_URL}/services/${slug}`,
       lastModified: new Date(),

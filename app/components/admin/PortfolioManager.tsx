@@ -7,8 +7,11 @@ import {
   PORTFOLIO_CATEGORIES,
   PORTFOLIO_CATEGORY_LABELS,
   type PortfolioCategory,
+  type PortfolioImage,
   type SerializedPortfolioItem,
 } from "@/lib/portfolio-types";
+
+type PickerTarget = { id: string | "new"; mode: "cover" | "gallery" };
 
 export default function PortfolioManager({
   initialItems,
@@ -24,8 +27,9 @@ export default function PortfolioManager({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [pickerId, setPickerId] = useState<string | "new" | null>(null);
+  const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
   const [newImage, setNewImage] = useState<{ mediaId: string; url: string } | null>(null);
+  const [newGalleryImages, setNewGalleryImages] = useState<PortfolioImage[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Partial<SerializedPortfolioItem>>>({});
 
   function getDraft(item: SerializedPortfolioItem): SerializedPortfolioItem {
@@ -56,6 +60,7 @@ export default function PortfolioManager({
           description,
           mediaId: newImage?.mediaId,
           imageUrl: newImage?.url,
+          images: newGalleryImages,
           order: items.length,
         }),
       });
@@ -69,6 +74,7 @@ export default function PortfolioManager({
       setDescription("");
       setCategory("pergola");
       setNewImage(null);
+      setNewGalleryImages([]);
     } catch {
       setError("שגיאת רשת, נסו שוב");
     } finally {
@@ -116,12 +122,35 @@ export default function PortfolioManager({
   }
 
   function selectImage(mediaId: string, url: string) {
-    if (pickerId === "new") {
-      setNewImage({ mediaId, url });
-    } else if (pickerId) {
-      setDraft(pickerId, { mediaId, imageUrl: url });
+    if (!pickerTarget) return;
+    const { id, mode } = pickerTarget;
+
+    if (mode === "cover") {
+      if (id === "new") {
+        setNewImage({ mediaId, url });
+      } else {
+        setDraft(id, { mediaId, imageUrl: url });
+      }
+    } else {
+      if (id === "new") {
+        setNewGalleryImages((imgs) => [...imgs, { mediaId, url }]);
+      } else {
+        const current = getDraft(items.find((i) => i._id === id)!).images ?? [];
+        setDraft(id, { images: [...current, { mediaId, url }] });
+      }
     }
-    setPickerId(null);
+    setPickerTarget(null);
+  }
+
+  function removeNewGalleryImage(index: number) {
+    setNewGalleryImages((imgs) => imgs.filter((_, i) => i !== index));
+  }
+
+  function removeGalleryImage(itemId: string, index: number) {
+    const item = items.find((i) => i._id === itemId);
+    if (!item) return;
+    const current = getDraft(item).images ?? [];
+    setDraft(itemId, { images: current.filter((_, i) => i !== index) });
   }
 
   return (
@@ -165,10 +194,10 @@ export default function PortfolioManager({
 
             <button
               type="button"
-              onClick={() => setPickerId("new")}
+              onClick={() => setPickerTarget({ id: "new", mode: "cover" })}
               className="self-stretch rounded-xl border border-white/10 px-4 py-2.5 text-sm text-zinc-300 transition-colors hover:border-gold/40 hover:text-gold"
             >
-              {newImage ? "החלפת תמונה" : "הוספת תמונה"}
+              {newImage ? "החלפת תמונת שער" : "הוספת תמונת שער"}
             </button>
 
             {newImage && (
@@ -176,6 +205,32 @@ export default function PortfolioManager({
                 <Image src={newImage.url} alt="" fill sizes="64px" className="object-cover" />
               </div>
             )}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs text-zinc-400">תמונות נוספות בגלריית הפרויקט (אופציונלי)</label>
+            <div className="flex flex-wrap items-center gap-2">
+              {newGalleryImages.map((img, i) => (
+                <div key={img.url + i} className="group relative h-14 w-20 overflow-hidden rounded-lg border border-white/10">
+                  <Image src={img.url} alt="" fill sizes="80px" className="object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeNewGalleryImage(i)}
+                    aria-label="הסרת תמונה"
+                    className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  >
+                    הסרה
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setPickerTarget({ id: "new", mode: "gallery" })}
+                className="flex h-14 w-20 items-center justify-center rounded-lg border border-dashed border-white/20 text-lg text-zinc-400 transition-colors hover:border-gold/40 hover:text-gold"
+              >
+                +
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -220,7 +275,7 @@ export default function PortfolioManager({
                   <div className="flex flex-wrap items-start gap-4">
                     <button
                       type="button"
-                      onClick={() => setPickerId(item._id)}
+                      onClick={() => setPickerTarget({ id: item._id, mode: "cover" })}
                       className="group relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10"
                     >
                       {draft.imageUrl ? (
@@ -271,6 +326,32 @@ export default function PortfolioManager({
                     </button>
                   </div>
 
+                  <div className="mt-4 flex flex-col gap-1.5">
+                    <label className="text-xs text-zinc-400">תמונות נוספות בגלריית הפרויקט</label>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {(draft.images ?? []).map((img, i) => (
+                        <div key={img.url + i} className="group relative h-14 w-20 overflow-hidden rounded-lg border border-white/10">
+                          <Image src={img.url} alt="" fill sizes="80px" className="object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryImage(item._id, i)}
+                            aria-label="הסרת תמונה"
+                            className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+                          >
+                            הסרה
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setPickerTarget({ id: item._id, mode: "gallery" })}
+                        className="flex h-14 w-20 items-center justify-center rounded-lg border border-dashed border-white/20 text-lg text-zinc-400 transition-colors hover:border-gold/40 hover:text-gold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end">
                     <textarea
                       rows={2}
@@ -296,20 +377,22 @@ export default function PortfolioManager({
       </div>
 
       {/* Image picker modal */}
-      {pickerId && (
+      {pickerTarget && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
-          onClick={() => setPickerId(null)}
+          onClick={() => setPickerTarget(null)}
         >
           <div
             className="flex max-h-[80vh] w-full max-w-3xl flex-col gap-4 overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e11] p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold text-white">בחירת תמונה</h2>
+              <h2 className="text-sm font-semibold text-white">
+                {pickerTarget.mode === "cover" ? "בחירת תמונת שער" : "הוספת תמונה לגלריה"}
+              </h2>
               <button
                 type="button"
-                onClick={() => setPickerId(null)}
+                onClick={() => setPickerTarget(null)}
                 className="text-zinc-400 hover:text-white"
                 aria-label="סגירה"
               >

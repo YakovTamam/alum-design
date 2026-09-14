@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { getDb } from "./mongodb";
 import {
   PORTFOLIO_COLLECTION,
@@ -94,5 +95,18 @@ export async function getPortfolioItems(): Promise<SerializedPortfolioItem[]> {
     return docs.map(serializePortfolioItem);
   } catch {
     return DEFAULT_ITEMS;
+  }
+}
+
+export async function getPortfolioItemById(id: string): Promise<SerializedPortfolioItem | null> {
+  const fallback = DEFAULT_ITEMS.find((item) => item._id === id) ?? null;
+  if (!ObjectId.isValid(id)) return fallback;
+
+  try {
+    const db = await getDb();
+    const doc = await db.collection<PortfolioItem>(PORTFOLIO_COLLECTION).findOne({ _id: new ObjectId(id) });
+    return doc ? serializePortfolioItem(doc) : fallback;
+  } catch {
+    return fallback;
   }
 }
