@@ -64,6 +64,7 @@ export default function SiteFooter({
         { label: "דף הבית", href: "/" },
         { label: "מערכות", href: "/#systems" },
         { label: "פרויקטים", href: "/projects" },
+        { label: "אודות", href: "/about" },
       ],
     },
     {

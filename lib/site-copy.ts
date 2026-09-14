@@ -48,6 +48,7 @@ export const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: "מערכות", href: "/#systems" },
   { label: "פרויקטים", href: "/projects" },
   { label: "לקוחותינו", href: "/#categories" },
+  { label: "אודות", href: "/about" },
   { label: "צור קשר", href: "/#contact" },
 ];
 
