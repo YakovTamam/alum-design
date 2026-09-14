@@ -45,14 +45,14 @@ export default function TrustBar() {
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
-            href="#configurator"
+            href="#contact"
             className="btn-gold flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#1a1308]"
           >
             <span aria-hidden>←</span>
             קבל הצעת מחיר
           </a>
           <a
-            href="#projects"
+            href="/projects"
             className="flex items-center justify-center gap-2 rounded-full border border-zinc-300 px-6 py-3 text-sm text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900"
           >
             <span aria-hidden>↻</span>

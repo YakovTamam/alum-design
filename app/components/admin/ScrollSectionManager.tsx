@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useMemo, useState } from "react";
 import type { SerializedScrollSection, TextOverlay } from "@/lib/scroll-sections";
 import { ANIM_TYPES, FONT_SIZES, FONT_FAMILIES, FONT_FAMILY_LABELS } from "@/lib/scroll-sections";
 import type { SerializedMedia } from "@/lib/media";
@@ -14,6 +13,7 @@ type Props = {
 };
 
 export default function ScrollSectionManager({ initialSection, media }: Props) {
+  const videoMedia = useMemo(() => media.filter((item) => item.fileType === "video"), [media]);
   const [section, setSection] = useState<SerializedScrollSection>(initialSection);
   const [persisted, setPersisted] = useState<SerializedScrollSection>(initialSection);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -576,50 +576,31 @@ export default function ScrollSectionManager({ initialSection, media }: Props) {
               </button>
             </div>
 
-            {media.length === 0 ? (
+            {videoMedia.length === 0 ? (
               <p className="text-sm text-zinc-400">
-                אין עדיין קבצים בספרייה. עברו ל&quot;ספריית המדיה&quot; כדי להעלות קובץ תחילה.
+                אין עדיין קובצי וידאו בספרייה. עברו ל&quot;ספריית המדיה&quot; כדי להעלות קובץ וידאו תחילה.
               </p>
             ) : (
               <div className="grid grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-4">
-                {media.map((item) => (
+                {videoMedia.map((item) => (
                   <button
                     key={item._id}
                     type="button"
                     onClick={() => {
-                      if (item.fileType !== "video") {
-                        // Allow but show implicit warning via badge
-                      }
                       setSection((s) => ({ ...s, videoUrl: item.url, mediaId: item._id }));
                       setPickerOpen(false);
                     }}
                     className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 transition-colors hover:border-gold/60"
                   >
-                    {item.fileType === "video" ? (
-                      <video
-                        src={item.url + "#t=0.001"}
-                        className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
-                        preload="metadata"
-                        muted
-                      />
-                    ) : (
-                      <Image
-                        src={item.url}
-                        alt=""
-                        fill
-                        sizes="200px"
-                        className="object-cover transition-transform group-hover:scale-105"
-                      />
-                    )}
-                    {item.fileType === "video" ? (
-                      <span className="absolute left-1.5 top-1.5 rounded-full bg-gold/90 px-1.5 py-0.5 text-[10px] font-semibold text-[#1a1308]">
-                        וידאו
-                      </span>
-                    ) : (
-                      <span className="absolute left-1.5 top-1.5 rounded-full bg-yellow-500/90 px-1.5 py-0.5 text-[10px] font-semibold text-black">
-                        תמונה ⚠
-                      </span>
-                    )}
+                    <video
+                      src={item.url + "#t=0.001"}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
+                      preload="metadata"
+                      muted
+                    />
+                    <span className="absolute left-1.5 top-1.5 rounded-full bg-gold/90 px-1.5 py-0.5 text-[10px] font-semibold text-[#1a1308]">
+                      וידאו
+                    </span>
                   </button>
                 ))}
               </div>

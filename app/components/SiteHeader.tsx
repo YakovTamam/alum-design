@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { logoScale } from "@/lib/logo";
 import { getSiteName, type NavLink, type SiteIdentity } from "@/lib/site-copy";
 
@@ -45,7 +46,7 @@ export default function SiteHeader({
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur-md" style={headerStyle}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:gap-6 sm:px-6 lg:px-10">
-        <a href="#" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           {logoUrl ? (
             <div
               className="relative shrink-0"
@@ -69,7 +70,7 @@ export default function SiteHeader({
               </div>
             </>
           )}
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-8 text-sm lg:flex">
           {navLinks.map((link) => (
@@ -118,15 +119,15 @@ export default function SiteHeader({
               <span className="hidden text-sm font-medium sm:inline">התחברות</span>
             </a>
           )}
-          <a
-            href="#contact"
+          <Link
+            href="/#contact"
             className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/60 bg-gold/[0.08] px-3.5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold/15 hover:border-gold/80 sm:gap-2 sm:px-5"
           >
             <span>צור קשר</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="shrink-0">
               <path d="M3 5.5C3 4.67 3.67 4 4.5 4h2.6c.5 0 .94.34 1.07.83l1 3.6a1.1 1.1 0 0 1-.32 1.13l-1.4 1.25a12.5 12.5 0 0 0 5.74 5.74l1.25-1.4a1.1 1.1 0 0 1 1.13-.32l3.6 1c.5.13.83.57.83 1.07v2.6c0 .83-.67 1.5-1.5 1.5C10.6 21 3 13.4 3 5.5Z" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </header>

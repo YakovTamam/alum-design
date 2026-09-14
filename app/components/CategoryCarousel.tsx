@@ -78,7 +78,7 @@ export default function CategoryCarousel({ images = {}, categories }: Props) {
       {TRACK.map((c, i) => (
         <a
           key={i}
-          href="#projects"
+          href="/projects"
           className="group snap-start shrink-0 w-[72vw] sm:w-[42vw] lg:w-64 overflow-hidden rounded-3xl bg-white transition-all duration-300 hover:-translate-y-2"
           style={{
             boxShadow: "0 2px 8px rgba(0,0,0,0.06), 0 8px 28px rgba(0,0,0,0.09)",

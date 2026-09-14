@@ -25,7 +25,7 @@ export default function FinalCta({ imageUrl, siteIdentity }: { imageUrl?: string
           ההתקנה הסופית.
         </p>
         <a
-          href="#configurator"
+          href="#contact"
           className="btn-gold mt-2 flex w-fit items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold text-[#1a1308]"
         >
           בואו נתחיל <span aria-hidden>←</span>

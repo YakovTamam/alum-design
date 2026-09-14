@@ -57,18 +57,25 @@ export default function SiteFooter({
     ...(footerText ? { "--footer-text": footerText } : {}),
   } as React.CSSProperties;
 
-  const columns = [
+  const columns: { title: string; links: { label: string; href?: string }[] }[] = [
     {
       title: "ניווט",
-      links: ["דף הבית", "מערכות", "פרויקטים", "אודות"],
+      links: [
+        { label: "דף הבית", href: "/" },
+        { label: "מערכות", href: "/#systems" },
+        { label: "פרויקטים", href: "/projects" },
+      ],
     },
     {
       title: "מערכות",
-      links: services.map((s) => s.label),
+      links: services.map((s) => ({ label: s.label, href: "/#systems" })),
     },
     {
       title: "החברה",
-      links: ["אודותינו", "לקוחותינו", "קריירה", "צור קשר"],
+      links: [
+        { label: "לקוחותינו", href: "/#categories" },
+        { label: "צור קשר", href: "/#contact" },
+      ],
     },
   ];
 
@@ -138,10 +145,14 @@ export default function SiteFooter({
                 <h3 className="text-sm font-semibold text-[var(--footer-text,#ffffff)]">{col.title}</h3>
                 <ul className="mt-4 flex flex-col gap-3 text-sm text-[var(--footer-text,#a1a1aa)]">
                   {col.links.map((link) => (
-                    <li key={link}>
-                      <a href="#" className="transition-colors hover:text-gold">
-                        {link}
-                      </a>
+                    <li key={link.label}>
+                      {link.href ? (
+                        <a href={link.href} className="transition-colors hover:text-gold">
+                          {link.label}
+                        </a>
+                      ) : (
+                        <span>{link.label}</span>
+                      )}
                     </li>
                   ))}
                 </ul>

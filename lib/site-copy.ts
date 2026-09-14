@@ -44,12 +44,11 @@ export type SerializedSiteCopy = Omit<SiteCopy, "_id" | "updatedAt"> & {
 };
 
 export const DEFAULT_NAV_LINKS: NavLink[] = [
-  { label: "דף הבית", href: "#" },
-  { label: "מערכות", href: "#systems" },
+  { label: "דף הבית", href: "/" },
+  { label: "מערכות", href: "/#systems" },
   { label: "פרויקטים", href: "/projects" },
-  { label: "לקוחותינו", href: "#categories" },
-  { label: "אודות", href: "#" },
-  { label: "צור קשר", href: "#contact" },
+  { label: "לקוחותינו", href: "/#categories" },
+  { label: "צור קשר", href: "/#contact" },
 ];
 
 export const DEFAULT_CATEGORIES: CategoryItem[] = [
