@@ -11,8 +11,14 @@ import {
 
 const WARM_CATEGORIES: ReadonlySet<PortfolioCategory> = new Set(["pergola", "gate", "facade"]);
 
-export default function ProjectsGallery({ items }: { items: SerializedPortfolioItem[] }) {
-  const [filter, setFilter] = useState<PortfolioCategory | "all">("all");
+export default function ProjectsGallery({
+  items,
+  initialCategory,
+}: {
+  items: SerializedPortfolioItem[];
+  initialCategory?: PortfolioCategory;
+}) {
+  const [filter, setFilter] = useState<PortfolioCategory | "all">(initialCategory ?? "all");
 
   const filteredItems = filter === "all" ? items : items.filter((item) => item.category === filter);
 

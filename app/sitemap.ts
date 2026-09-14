@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
+import { SERVICE_PAGE_SLUGS } from "@/lib/service-pages";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -15,6 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...SERVICE_PAGE_SLUGS.map((slug) => ({
+      url: `${SITE_URL}/services/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     {
       url: `${SITE_URL}/about`,
       lastModified: new Date(),

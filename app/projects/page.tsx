@@ -14,6 +14,7 @@ import { getLogoSize, getFooterLogoSize } from "@/lib/logo-data";
 import { getSiteTheme } from "@/lib/theme-data";
 import { getSiteCopy } from "@/lib/site-copy-data";
 import { getSiteName } from "@/lib/site-copy";
+import { PORTFOLIO_CATEGORIES, type PortfolioCategory } from "@/lib/portfolio-types";
 
 export const revalidate = 60;
 
@@ -26,7 +27,18 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ProjectsPage() {
+export default async function ProjectsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category } = await searchParams;
+  const initialCategory: PortfolioCategory | undefined = PORTFOLIO_CATEGORIES.includes(
+    category as PortfolioCategory,
+  )
+    ? (category as PortfolioCategory)
+    : undefined;
+
   let images: Awaited<ReturnType<typeof getSiteContentMap>> = {};
   try {
     images = await getSiteContentMap();
@@ -70,7 +82,7 @@ export default async function ProjectsPage() {
             </p>
 
             <div className="mt-10">
-              <ProjectsGallery items={items} />
+              <ProjectsGallery items={items} initialCategory={initialCategory} />
             </div>
           </div>
         </section>

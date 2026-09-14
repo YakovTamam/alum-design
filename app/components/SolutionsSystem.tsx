@@ -1,4 +1,5 @@
 import { ServiceIconSvg } from "@/lib/services";
+import { isServicePageSlug } from "@/lib/service-pages";
 import { getSiteName, type ServiceItem, type SiteIdentity } from "@/lib/site-copy";
 
 export default function SolutionsSystem({ services, siteIdentity }: { services: ServiceItem[]; siteIdentity: SiteIdentity }) {
@@ -16,17 +17,25 @@ export default function SolutionsSystem({ services, siteIdentity }: { services: 
             className="absolute top-9 right-0 left-0 hidden h-px bg-[repeating-linear-gradient(to_left,rgba(207,161,92,0.5)_0_8px,transparent_8px_16px)] lg:block"
           />
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
-            {services.map((s) => (
-              <div key={s.id} className="relative flex flex-col items-center text-center">
-                <span className="z-10 flex h-[72px] w-[72px] items-center justify-center rounded-2xl border border-zinc-200 bg-white text-gold shadow-lg shadow-zinc-200">
-                  <ServiceIconSvg kind={s.icon} />
-                </span>
-                <h3 className="mt-4 text-sm font-semibold text-zinc-900">{s.label}</h3>
-                <p className="mt-1 max-w-[11rem] text-xs leading-5 text-zinc-500">
-                  {s.desc}
-                </p>
-              </div>
-            ))}
+            {services.map((s) => {
+              const href = isServicePageSlug(s.id) ? `/services/${s.id}` : undefined;
+              const Wrapper = href ? "a" : "div";
+              return (
+                <Wrapper
+                  key={s.id}
+                  {...(href ? { href } : {})}
+                  className="group relative flex flex-col items-center text-center"
+                >
+                  <span className="z-10 flex h-[72px] w-[72px] items-center justify-center rounded-2xl border border-zinc-200 bg-white text-gold shadow-lg shadow-zinc-200 transition-transform group-hover:-translate-y-1">
+                    <ServiceIconSvg kind={s.icon} />
+                  </span>
+                  <h3 className="mt-4 text-sm font-semibold text-zinc-900 group-hover:text-gold">{s.label}</h3>
+                  <p className="mt-1 max-w-[11rem] text-xs leading-5 text-zinc-500">
+                    {s.desc}
+                  </p>
+                </Wrapper>
+              );
+            })}
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { phoneToTelHref, type SocialLinks } from "@/lib/contact";
 import { logoScale } from "@/lib/logo";
+import { isServicePageSlug } from "@/lib/service-pages";
 import { getSiteName, type ServiceItem, type SiteIdentity } from "@/lib/site-copy";
 
 function InstagramIcon() {
@@ -69,7 +70,10 @@ export default function SiteFooter({
     },
     {
       title: "מערכות",
-      links: services.map((s) => ({ label: s.label, href: "/#systems" })),
+      links: services.map((s) => ({
+        label: s.label,
+        href: isServicePageSlug(s.id) ? `/services/${s.id}` : "/#systems",
+      })),
     },
     {
       title: "החברה",
