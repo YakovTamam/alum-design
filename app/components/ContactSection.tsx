@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { phoneToTelHref } from "@/lib/contact";
+import HoneypotField from "./HoneypotField";
 
 export default function ContactSection({ phone: contactPhone, email: contactEmail }: { phone: string; email: string }) {
   const [name, setName] = useState("");
@@ -9,6 +10,7 @@ export default function ContactSection({ phone: contactPhone, email: contactEmai
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -26,6 +28,7 @@ export default function ContactSection({ phone: contactPhone, email: contactEmai
           city,
           email: email || undefined,
           message: message || undefined,
+          website,
         }),
       });
       if (!res.ok) throw new Error("failed");
@@ -75,6 +78,7 @@ export default function ContactSection({ phone: contactPhone, email: contactEmai
             </div>
           ) : (
             <>
+              <HoneypotField value={website} onChange={setWebsite} />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="contact-name" className="mb-1.5 block text-xs text-zinc-500">

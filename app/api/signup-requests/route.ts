@@ -11,7 +11,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { name, phone, city, email } = body;
+  const { name, phone, city, email, website } = body;
+
+  // Honeypot: real visitors never see or fill this field. Pretend success
+  // without touching the database so bots don't learn they were caught.
+  if (typeof website === "string" && website.trim()) {
+    return NextResponse.json({ ok: true });
+  }
+
   if (
     typeof name !== "string" || !name.trim() ||
     typeof phone !== "string" || !phone.trim() ||

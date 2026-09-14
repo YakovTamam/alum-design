@@ -17,7 +17,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "גוף הבקשה אינו JSON תקין" }, { status: 400 });
   }
 
-  const { source, name, phone, email, city, message, configurator } = body;
+  const { source, name, phone, email, city, message, configurator, website } = body;
+
+  // Honeypot: real visitors never see or fill this field. Pretend success
+  // without touching the database so bots don't learn they were caught.
+  if (isNonEmptyString(website)) {
+    return NextResponse.json({ ok: true });
+  }
 
   if (!SOURCES.includes(source as LeadSource)) {
     return NextResponse.json({ error: "מקור הליד אינו תקין" }, { status: 400 });

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { logoScale } from "@/lib/logo";
 import { getSiteName, type NavLink, type SiteIdentity } from "@/lib/site-copy";
+import MobileNav from "./MobileNav";
 
 function AlumLogo() {
   return (
@@ -85,6 +86,7 @@ export default function SiteHeader({
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <MobileNav navLinks={navLinks} />
           {isStaff ? (
             <a
               href="/admin"

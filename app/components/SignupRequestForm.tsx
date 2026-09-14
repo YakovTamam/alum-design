@@ -2,12 +2,14 @@
 
 import { useState, type FormEvent } from "react";
 import { sanitizeEmailInput } from "@/lib/strings";
+import HoneypotField from "./HoneypotField";
 
 export default function SignupRequestForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -21,7 +23,7 @@ export default function SignupRequestForm() {
       const res = await fetch("/api/signup-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, city, email }),
+        body: JSON.stringify({ name, phone, city, email, website }),
       });
 
       if (!res.ok) {
@@ -53,6 +55,7 @@ export default function SignupRequestForm() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <HoneypotField value={website} onChange={setWebsite} />
       <label className="mt-6 block text-xs text-zinc-400" htmlFor="signup-name">
         שם מלא
       </label>

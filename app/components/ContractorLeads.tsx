@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { phoneToTelHref } from "@/lib/contact";
 import { getSiteName, type SiteIdentity } from "@/lib/site-copy";
+import HoneypotField from "./HoneypotField";
 
 const PROJECT_TYPES = [
   "פרגולות אלומיניום",
@@ -68,6 +69,7 @@ export default function ContractorLeads({ phone: contactPhone, siteIdentity }: {
   const [projectType, setProjectType] = useState("");
   const [projectScale, setProjectScale] = useState("");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   async function handleSubmit(e: FormEvent) {
@@ -83,6 +85,7 @@ export default function ContractorLeads({ phone: contactPhone, siteIdentity }: {
           phone,
           city,
           message: [company && `חברה: ${company}`, projectType && `סוג: ${projectType}`, projectScale && `היקף: ${projectScale}`, message].filter(Boolean).join(" | "),
+          website,
         }),
       });
       if (!res.ok) throw new Error();
@@ -151,6 +154,7 @@ export default function ContractorLeads({ phone: contactPhone, siteIdentity }: {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <HoneypotField value={website} onChange={setWebsite} />
                 <div>
                   <h3 className="text-lg font-bold text-zinc-900">שלח פנייה עסקית</h3>
                   <p className="mt-1 text-sm text-zinc-500">נחזור אליכם תוך שעות ספורות</p>

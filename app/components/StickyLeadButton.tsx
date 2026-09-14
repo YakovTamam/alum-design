@@ -3,6 +3,7 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { phoneToTelHref } from "@/lib/contact";
+import HoneypotField from "./HoneypotField";
 
 const PROJECT_TYPES = [
   "פרגולות אלומיניום",
@@ -22,6 +23,7 @@ export default function StickyLeadButton({ phone: contactPhone }: { phone: strin
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [projectType, setProjectType] = useState("");
+  const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   // Show button once user scrolls past ~80% of the hero section
@@ -45,7 +47,7 @@ export default function StickyLeadButton({ phone: contactPhone }: { phone: strin
     // Reset after close animation
     setTimeout(() => {
       setStatus("idle");
-      setName(""); setPhone(""); setCity(""); setEmail(""); setProjectType("");
+      setName(""); setPhone(""); setCity(""); setEmail(""); setProjectType(""); setWebsite("");
     }, 300);
   }
 
@@ -65,6 +67,7 @@ export default function StickyLeadButton({ phone: contactPhone }: { phone: strin
             projectType && `סוג עבודה: ${projectType}`,
             email && `מייל: ${email}`,
           ].filter(Boolean).join(" | "),
+          website,
         }),
       });
       if (!res.ok) throw new Error();
@@ -136,6 +139,7 @@ export default function StickyLeadButton({ phone: contactPhone }: { phone: strin
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
+                  <HoneypotField value={website} onChange={setWebsite} />
                   {/* Header */}
                   <div className="flex items-start justify-between gap-3">
                     <div>
